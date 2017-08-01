@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="数据结构," />
 
 
 
@@ -87,15 +87,25 @@
 
 
 
-<meta name="description" content="To do one thing well.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wenqi's Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="一些术语
+参数化类的类型（parameterized type）:含有类型参数的类型，例如List\
+原生态类型（raw type）:没有类型参数的类型，例如List
+无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 基础（泛型）">
+<meta property="og:url" content="http://yoursite.com/2017/07/31/Java 基础（泛型）/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
-<meta property="og:description" content="To do one thing well.">
+<meta property="og:description" content="一些术语
+参数化类的类型（parameterized type）:含有类型参数的类型，例如List\
+原生态类型（raw type）:没有类型参数的类型，例如List
+无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
+<meta property="og:updated_time" content="2017-08-01T13:01:21.535Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Wenqi's Blog">
-<meta name="twitter:description" content="To do one thing well.">
+<meta name="twitter:title" content="Java 基础（泛型）">
+<meta name="twitter:description" content="一些术语
+参数化类的类型（parameterized type）:含有类型参数的类型，例如List\
+原生态类型（raw type）:没有类型参数的类型，例如List
+无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
 
 
 
@@ -123,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/07/31/Java 基础（泛型）/"/>
 
 
 
 
 
-  <title> Wenqi's Blog </title>
+  <title> Java 基础（泛型） | Wenqi's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -154,9 +164,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -247,9 +255,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -282,10 +290,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2017/07/31/Java 基础（泛型）/" itemprop="url">
-                  Java 基础（泛型）
-                </a>
+                Java 基础（泛型）
               
             
           </h1>
@@ -347,323 +352,128 @@
       
 
       
-        
-          <h2 id="一些术语"><a href="#一些术语" class="headerlink" title="一些术语"></a>一些术语</h2><ol>
-<li>参数化类的类型（parameterized type）:含有类型参数的类型，例如List\<String></li>
+        <h2 id="一些术语"><a href="#一些术语" class="headerlink" title="一些术语"></a>一些术语</h2><ol>
+<li>参数化类的类型（parameterized type）:含有类型参数的类型，例如List\<string></string></li>
 <li>原生态类型（raw type）:没有类型参数的类型，例如List</li>
 <li>无限制通配符类型（unbounded wildcard type）:例如List&lt;?&gt;</li>
 </ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/31/Java 基础（泛型）/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+<a id="more"></a>
+<p>原生态类型保留的原因：兼容性</p>
+<h2 id="List-List-List-List-lt-gt-的讨论"><a href="#List-List-List-List-lt-gt-的讨论" class="headerlink" title="List, List\, List\, List&lt;?&gt;的讨论"></a>List, List\<object>, List\<string>, List&lt;?&gt;的讨论</string></object></h2><ol>
+<li>形如List的是原生态类型，是类型不安全的，逃避了泛型检查</li>
+<li>List\<object>明确告诉编译器它可以持有Object类型的对象，List\<string>明确告诉编译器它可以持有String类型的对象，但是List类型的引用可以接受List\<object>，List\<string>的实例对象，但是List\<object>的引用不可以接受List\<string>的实例对象。也就是所谓的泛型集合是不具有协变性（covariant）的.</string></object></string></object></string></object></li>
+<li>无限制通配符类型如List&lt;?&gt;说明该List持有某种特定类型的对象，但是不知道具体是哪一种类型，所以不能向这种List中添加任何对象，因为编译器并不能 判定这种添加是否是正确的，所以会在编译阶段报错。相比原生态类型，List则可以添加任何对象，因为编译阶段并没有做类型检查。</li>
+</ol>
+<h2 id="优先使用列表而不是数组"><a href="#优先使用列表而不是数组" class="headerlink" title="优先使用列表而不是数组"></a>优先使用列表而不是数组</h2><p>数组是协变的（covariant），所谓数组是协变的，是指如果Sub是Super的子类型，那么数组类型Sub[]也是Super[]的子类型。</p>
+<p>而泛型是通过擦除（erasure）来实现的，泛型是只在编译时强化它们的类型信息，并在运行时丢弃它们的元素类型信息。所以泛型不是协变的，上面第2条List\<object>并不是List\<string>的父类。</string></object></p>
+<p>所以数组和泛型不能很好的混用，如创建泛型对象数组：new E[]，参数化类型或者类型参数的数组：new List\<e>[], new List\<string>[]是非法的。</string></e></p>
+<h2 id="类型擦除对泛型的限制"><a href="#类型擦除对泛型的限制" class="headerlink" title="类型擦除对泛型的限制"></a>类型擦除对泛型的限制</h2><p>由于泛型仅仅是在编译时有了较强的类型检查，而实际编译后所产生的是没有泛型信息的运行代码，所以这导致泛型有许多限制。</p>
+<ol>
+<li>泛型类中，static方法和static域均不可引用类的类型变量</li>
+<li>不能实例化泛型类型实例，也就是使用类似于new T()的形式</li>
+<li>不能实例化泛型数组</li>
+</ol>
+<h2 id="Comparable-接口"><a href="#Comparable-接口" class="headerlink" title="Comparable\接口"></a>Comparable\<t>接口</t></h2><p>实现Comparable\<t>接口，实现其中的compareTo方法可以使对象的对比更高效。</t></p>
+
       
     </div>
 
     <div>
       
+        
+
+      
     </div>
 
     <div>
       
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/10/hello-world/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Wenqi">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/me.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Wenqi's Blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Wenqi's Blog" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
         
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/10/hello-world/" itemprop="url">
-                  Hello World
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-10T16:29:53+08:00">
-                2017-07-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/07/10/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="Wenqi WeChat Pay"/>
+          <p>微信打赏</p>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
       
-      
-
-      
-        
-          <p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info.<br>If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a><br>or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/10/hello-world/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
       
     </div>
+  </div>
 
-    <div>
-      
-    </div>
 
-    <div>
       
     </div>
 
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/14/testblog/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Wenqi">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/me.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Wenqi's Blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Wenqi's Blog" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/14/testblog/" itemprop="url">
-                  testblog
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-14T16:05:27+08:00">
-                2017-02-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
           
-            
-          
-
-          
-          
-             <span id="/2017/02/14/testblog/" class="leancloud_visitors" data-flag-title="testblog">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
         
-          <p>This is first blog.<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/02/14/testblog/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/10/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
 
-    <div>
-      
-    </div>
+          <span class="post-nav-divider"></span>
 
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
 
           
           </div>
@@ -671,6 +481,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -690,8 +504,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/me.jpg"
@@ -760,6 +583,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些术语"><span class="nav-number">1.</span> <span class="nav-text">一些术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-List-List-List-lt-gt-的讨论"><span class="nav-number">2.</span> <span class="nav-text">List, List\, List\, List<?>的讨论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优先使用列表而不是数组"><span class="nav-number">3.</span> <span class="nav-text">优先使用列表而不是数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型擦除对泛型的限制"><span class="nav-number">4.</span> <span class="nav-text">类型擦除对泛型的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comparable-接口"><span class="nav-number">5.</span> <span class="nav-text">Comparable\接口</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
@@ -859,6 +698,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
