@@ -88,7 +88,7 @@
 
 
 <meta name="description" content="一些术语
-参数化类的类型（parameterized type）:含有类型参数的类型，例如List
+参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
 原生态类型（raw type）:没有类型参数的类型，例如List
 无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
 <meta property="og:type" content="article">
@@ -96,14 +96,14 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/31/Java 基础（泛型）/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
 <meta property="og:description" content="一些术语
-参数化类的类型（parameterized type）:含有类型参数的类型，例如List
+参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
 原生态类型（raw type）:没有类型参数的类型，例如List
 无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
-<meta property="og:updated_time" content="2017-08-01T13:14:19.381Z">
+<meta property="og:updated_time" content="2017-08-01T13:20:34.047Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 基础（泛型）">
 <meta name="twitter:description" content="一些术语
-参数化类的类型（parameterized type）:含有类型参数的类型，例如List
+参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
 原生态类型（raw type）:没有类型参数的类型，例如List
 无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
 
@@ -353,27 +353,27 @@
 
       
         <h2 id="一些术语"><a href="#一些术语" class="headerlink" title="一些术语"></a>一些术语</h2><ol>
-<li>参数化类的类型（parameterized type）:含有类型参数的类型，例如List<string></string></li>
+<li>参数化类的类型（parameterized type）:含有类型参数的类型，例如List&lt;String&gt;</li>
 <li>原生态类型（raw type）:没有类型参数的类型，例如List</li>
 <li>无限制通配符类型（unbounded wildcard type）:例如List&lt;?&gt;</li>
 </ol>
 <a id="more"></a>
 <p>原生态类型保留的原因：兼容性</p>
-<h2 id="List-List-List-List-lt-gt-的讨论"><a href="#List-List-List-List-lt-gt-的讨论" class="headerlink" title="List, List, List, List&lt;?&gt;的讨论"></a>List, List<object>, List<string>, List&lt;?&gt;的讨论</string></object></h2><ol>
+<h2 id="List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论"><a href="#List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论" class="headerlink" title="List, List&lt;Object&gt;, List&lt;String&gt;, List&lt;?&gt;的讨论"></a>List, List&lt;Object&gt;, List&lt;String&gt;, List&lt;?&gt;的讨论</h2><ol>
 <li>形如List的是原生态类型，是类型不安全的，逃避了泛型检查</li>
-<li>List<object>明确告诉编译器它可以持有Object类型的对象，List<string>明确告诉编译器它可以持有String类型的对象，但是List类型的引用可以接受List<object>，List<string>的实例对象，但是List<object>的引用不可以接受List<string>的实例对象。也就是所谓的泛型集合是不具有协变性（covariant）的.</string></object></string></object></string></object></li>
+<li>List&lt;Object&gt;明确告诉编译器它可以持有Object类型的对象，List&lt;String&gt;明确告诉编译器它可以持有String类型的对象，但是List类型的引用可以接受List&lt;Object&gt;，List&lt;String&gt;的实例对象，但是List&lt;Object&gt;的引用不可以接受List&lt;String&gt;的实例对象。也就是所谓的泛型集合是不具有协变性（covariant）的.</li>
 <li>无限制通配符类型如List&lt;?&gt;说明该List持有某种特定类型的对象，但是不知道具体是哪一种类型，所以不能向这种List中添加任何对象，因为编译器并不能 判定这种添加是否是正确的，所以会在编译阶段报错。相比原生态类型，List则可以添加任何对象，因为编译阶段并没有做类型检查。</li>
 </ol>
 <h2 id="优先使用列表而不是数组"><a href="#优先使用列表而不是数组" class="headerlink" title="优先使用列表而不是数组"></a>优先使用列表而不是数组</h2><p>数组是协变的（covariant），所谓数组是协变的，是指如果Sub是Super的子类型，那么数组类型Sub[]也是Super[]的子类型。</p>
-<p>而泛型是通过擦除（erasure）来实现的，泛型是只在编译时强化它们的类型信息，并在运行时丢弃它们的元素类型信息。所以泛型不是协变的，上面第2条List<object>并不是List<string>的父类。</string></object></p>
-<p>所以数组和泛型不能很好的混用，如创建泛型对象数组：new E[]，参数化类型或者类型参数的数组：new List<e>[], new List<string>[]是非法的。</string></e></p>
+<p>而泛型是通过擦除（erasure）来实现的，泛型是只在编译时强化它们的类型信息，并在运行时丢弃它们的元素类型信息。所以泛型不是协变的，上面第2条List&lt;Object&gt;并不是List&lt;String&gt;的父类。</p>
+<p>所以数组和泛型不能很好的混用，如创建泛型对象数组：new E[]，参数化类型或者类型参数的数组：new List&lt;E&gt;[], new List&lt;String&gt;[]是非法的。</p>
 <h2 id="类型擦除对泛型的限制"><a href="#类型擦除对泛型的限制" class="headerlink" title="类型擦除对泛型的限制"></a>类型擦除对泛型的限制</h2><p>由于泛型仅仅是在编译时有了较强的类型检查，而实际编译后所产生的是没有泛型信息的运行代码，所以这导致泛型有许多限制。</p>
 <ol>
 <li>泛型类中，static方法和static域均不可引用类的类型变量</li>
 <li>不能实例化泛型类型实例，也就是使用类似于new T()的形式</li>
 <li>不能实例化泛型数组</li>
 </ol>
-<h2 id="Comparable接口"><a href="#Comparable接口" class="headerlink" title="Comparable接口"></a>Comparable<t>接口</t></h2><p>实现Comparable<t>接口，实现其中的compareTo方法可以使对象的对比更高效。</t></p>
+<h2 id="Comparable-lt-T-gt-接口"><a href="#Comparable-lt-T-gt-接口" class="headerlink" title="Comparable&lt;T&gt;接口"></a>Comparable&lt;T&gt;接口</h2><p>实现Comparable&lt;T&gt;接口，实现其中的compareTo方法可以使对象的对比更高效。</p>
 
       
     </div>
@@ -593,7 +593,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些术语"><span class="nav-number">1.</span> <span class="nav-text">一些术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-List-List-List-lt-gt-的讨论"><span class="nav-number">2.</span> <span class="nav-text">List, List, List, List<?>的讨论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优先使用列表而不是数组"><span class="nav-number">3.</span> <span class="nav-text">优先使用列表而不是数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型擦除对泛型的限制"><span class="nav-number">4.</span> <span class="nav-text">类型擦除对泛型的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comparable接口"><span class="nav-number">5.</span> <span class="nav-text">Comparable接口</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些术语"><span class="nav-number">1.</span> <span class="nav-text">一些术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论"><span class="nav-number">2.</span> <span class="nav-text">List, List<Object>, List<String>, List<?>的讨论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优先使用列表而不是数组"><span class="nav-number">3.</span> <span class="nav-text">优先使用列表而不是数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型擦除对泛型的限制"><span class="nav-number">4.</span> <span class="nav-text">类型擦除对泛型的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comparable-lt-T-gt-接口"><span class="nav-number">5.</span> <span class="nav-text">Comparable<T>接口</span></a></li></ol></div>
             
 
           </div>
