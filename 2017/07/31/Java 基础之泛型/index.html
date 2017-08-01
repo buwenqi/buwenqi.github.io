@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="test," />
+  <meta name="keywords" content="数据结构," />
 
 
 
@@ -87,16 +87,25 @@
 
 
 
-<meta name="description" content="This is first blog.">
+<meta name="description" content="一些术语
+参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
+原生态类型（raw type）:没有类型参数的类型，例如List
+无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="testblog">
-<meta property="og:url" content="http://yoursite.com/2017/02/14/testblog/index.html">
+<meta property="og:title" content="Java 基础之泛型">
+<meta property="og:url" content="http://yoursite.com/2017/07/31/Java 基础之泛型/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
-<meta property="og:description" content="This is first blog.">
-<meta property="og:updated_time" content="2017-02-15T02:59:21.305Z">
+<meta property="og:description" content="一些术语
+参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
+原生态类型（raw type）:没有类型参数的类型，例如List
+无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
+<meta property="og:updated_time" content="2017-08-01T14:26:39.585Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="testblog">
-<meta name="twitter:description" content="This is first blog.">
+<meta name="twitter:title" content="Java 基础之泛型">
+<meta name="twitter:description" content="一些术语
+参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
+原生态类型（raw type）:没有类型参数的类型，例如List
+无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
 
 
 
@@ -124,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/14/testblog/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/07/31/Java 基础之泛型/"/>
 
 
 
 
 
-  <title> testblog | Wenqi's Blog </title>
+  <title> Java 基础之泛型 | Wenqi's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -257,7 +266,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/14/testblog/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/31/Java 基础之泛型/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Wenqi">
@@ -281,7 +290,7 @@
             
             
               
-                testblog
+                Java 基础之泛型
               
             
           </h1>
@@ -296,8 +305,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-14T16:05:27+08:00">
-                2017-02-14
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-31T21:48:51+08:00">
+                2017-07-31
               </time>
             
 
@@ -314,7 +323,7 @@
 
           
           
-             <span id="/2017/02/14/testblog/" class="leancloud_visitors" data-flag-title="testblog">
+             <span id="/2017/07/31/Java 基础之泛型/" class="leancloud_visitors" data-flag-title="Java 基础之泛型">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -343,7 +352,28 @@
       
 
       
-        <p>This is first blog.<br><a id="more"></a><br>This is first blog.<br>This is first blog.<br>This is first blog.<br>This is first blog.<br>This is first blog.<br>This is first blog.</p>
+        <h2 id="一些术语"><a href="#一些术语" class="headerlink" title="一些术语"></a>一些术语</h2><ol>
+<li>参数化类的类型（parameterized type）:含有类型参数的类型，例如List&lt;String&gt;</li>
+<li>原生态类型（raw type）:没有类型参数的类型，例如List</li>
+<li>无限制通配符类型（unbounded wildcard type）:例如List&lt;?&gt;</li>
+</ol>
+<a id="more"></a>
+<p>原生态类型保留的原因：兼容性</p>
+<h2 id="List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论"><a href="#List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论" class="headerlink" title="List, List&lt;Object&gt;, List&lt;String&gt;, List&lt;?&gt;的讨论"></a>List, List&lt;Object&gt;, List&lt;String&gt;, List&lt;?&gt;的讨论</h2><ol>
+<li>形如List的是原生态类型，是类型不安全的，逃避了泛型检查</li>
+<li>List&lt;Object&gt;明确告诉编译器它可以持有Object类型的对象，List&lt;String&gt;明确告诉编译器它可以持有String类型的对象，但是List类型的引用可以接受List&lt;Object&gt;，List&lt;String&gt;的实例对象，但是List&lt;Object&gt;的引用不可以接受List&lt;String&gt;的实例对象。也就是所谓的泛型集合是不具有协变性（covariant）的.</li>
+<li>无限制通配符类型如List&lt;?&gt;说明该List持有某种特定类型的对象，但是不知道具体是哪一种类型，所以不能向这种List中添加任何对象，因为编译器并不能 判定这种添加是否是正确的，所以会在编译阶段报错。相比原生态类型，List则可以添加任何对象，因为编译阶段并没有做类型检查。</li>
+</ol>
+<h2 id="优先使用列表而不是数组"><a href="#优先使用列表而不是数组" class="headerlink" title="优先使用列表而不是数组"></a>优先使用列表而不是数组</h2><p>数组是协变的（covariant），所谓数组是协变的，是指如果Sub是Super的子类型，那么数组类型Sub[]也是Super[]的子类型。</p>
+<p>而泛型是通过擦除（erasure）来实现的，泛型是只在编译时强化它们的类型信息，并在运行时丢弃它们的元素类型信息。所以泛型不是协变的，上面第2条List&lt;Object&gt;并不是List&lt;String&gt;的父类。</p>
+<p>所以数组和泛型不能很好的混用，如创建泛型对象数组：new E[]，参数化类型或者类型参数的数组：new List&lt;E&gt;[], new List&lt;String&gt;[]是非法的。</p>
+<h2 id="类型擦除对泛型的限制"><a href="#类型擦除对泛型的限制" class="headerlink" title="类型擦除对泛型的限制"></a>类型擦除对泛型的限制</h2><p>由于泛型仅仅是在编译时有了较强的类型检查，而实际编译后所产生的是没有泛型信息的运行代码，所以这导致泛型有许多限制。</p>
+<ol>
+<li>泛型类中，static方法和static域均不可引用类的类型变量</li>
+<li>不能实例化泛型类型实例，也就是使用类似于new T()的形式</li>
+<li>不能实例化泛型数组</li>
+</ol>
+<h2 id="Comparable-lt-T-gt-接口"><a href="#Comparable-lt-T-gt-接口" class="headerlink" title="Comparable&lt;T&gt;接口"></a>Comparable&lt;T&gt;接口</h2><p>实现Comparable&lt;T&gt;接口，实现其中的compareTo方法可以使对象的对比更高效。</p>
 
       
     </div>
@@ -383,7 +413,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/test/" rel="tag"># test</a>
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
           
         </div>
       
@@ -396,15 +426,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/07/10/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/10/hello-world/" rel="prev" title="Hello World">
-                Hello World <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -474,8 +504,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/me.jpg"
@@ -488,7 +527,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -544,6 +583,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些术语"><span class="nav-number">1.</span> <span class="nav-text">一些术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论"><span class="nav-number">2.</span> <span class="nav-text">List, List<Object>, List<String>, List<?>的讨论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优先使用列表而不是数组"><span class="nav-number">3.</span> <span class="nav-text">优先使用列表而不是数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型擦除对泛型的限制"><span class="nav-number">4.</span> <span class="nav-text">类型擦除对泛型的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comparable-lt-T-gt-接口"><span class="nav-number">5.</span> <span class="nav-text">Comparable<T>接口</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
