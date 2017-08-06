@@ -348,126 +348,15 @@
 
       
         
-          
-            <h2 id="ArrayList和LinkedList的实现方式"><a href="#ArrayList和LinkedList的实现方式" class="headerlink" title="ArrayList和LinkedList的实现方式"></a>ArrayList和LinkedList的实现方式</h2><p>ArrayList的底层实现是可以增长的数组，LinkedList的底层是使用了双链表。从底层实现来看，我们可以知道，ArrayList <strong>获取</strong>元素的时间复杂度仅为常数，而 <strong>插入</strong>和 <strong>删除</strong>的时间复杂度都为线性时间复杂度O(n)。而LinkedList则刚好相反，因为底层是链表,所以 <strong>插入</strong>和 <strong>删除</strong>的时间复杂度为常数，而 <strong>获取</strong>元素的时间复杂度却是线性时间复杂度。</p>
+          <h2 id="ArrayList和LinkedList的实现方式"><a href="#ArrayList和LinkedList的实现方式" class="headerlink" title="ArrayList和LinkedList的实现方式"></a>ArrayList和LinkedList的实现方式</h2><p>ArrayList的底层实现是可以增长的数组，LinkedList的底层是使用了双链表。从底层实现来看，我们可以知道，ArrayList <strong>获取</strong>元素的时间复杂度仅为常数，而 <strong>插入</strong>和 <strong>删除</strong>的时间复杂度都为线性时间复杂度O(n)。而LinkedList则刚好相反，因为底层是链表,所以 <strong>插入</strong>和 <strong>删除</strong>的时间复杂度为常数，而 <strong>获取</strong>元素的时间复杂度却是线性时间复杂度。</p>
 <p>另外，ArrayList和LinkedList的contains和remove方法的时间复杂度都为线性时间复杂度O(n)，对于contains方法来说，ArrayList和linkedList都需要遍历操作来实现contains方法，所以时间复杂度都是线性的；对于remove操作，ArrayList删除后需要移动元素，所以时间复杂度是线性的，而LinkedList的remove操作虽然是常数时间的，但是查找到元素的时间复杂度是线性的，所以，对已LinkedList的remove操作来说也是线性时间复杂的。</p>
-<h2 id="栈的运用–计算表达式的值"><a href="#栈的运用–计算表达式的值" class="headerlink" title="栈的运用–计算表达式的值"></a>栈的运用–计算表达式的值</h2><p>本章用Java来是实现一个计算含有+，-，*，\和括号的表达式的值，包括的知识点有：</p>
-<ul>
-<li>Java语言中栈Stack和Queue的使用</li>
-<li>中缀表达式转后缀表达式的技巧</li>
-<li>计算后缀表达式的值</li>
-</ul>
-<p>Java提供了栈的实现Stack对象，它继承了Vector类，底层实现是数组。Queue是一个Java队列接口，其中提供了队列必要的方法，而LinkedList实现了Queue接口，可以使用LinkedList来实现队列操作。例如：入队操作为<em>add</em>或<em>insert</em>方法，出队操作为 <em>poll</em>方法，获取队头的元素为<em>peek</em>方法。</p>
-<p>中缀表达式是人们常用的算术表示方式，其标志是操作符处于操作数之间。而后缀表达式是操作符处于操作数之后，并且暗含的运算顺序，易于计算机进行计算。形象点的例子，例如1+2<em>3+(1+2)是中缀表达式，将其转换成后缀表达式为1, 2, 3, </em> , +, 1, 2, +, +。其转换过程如下：</p>
-<blockquote>
-<p>输入：1</p>
-</blockquote>
-<p>操作：将数字直接加入到结果队列</p>
-<p>postfix(结果队列, 从队头到队尾)：1</p>
-<p>opStack(操作符队列，从栈底到栈顶，)：空</p>
-<blockquote>
-<p>输入：+</p>
-</blockquote>
-<p>操作：因为opStack栈为空，所以将+号如操作符栈</p>
-<p>postfix: 1</p>
-<p>opStack: +</p>
-<blockquote>
-<p>输入：2</p>
-</blockquote>
-<p>操作：将数字直接加入结果队列</p>
-<p>postfix: 1, 2</p>
-<p>opStack: +</p>
-<blockquote>
-<p>输入*</p>
-</blockquote>
-<p>操作：因为*的计算优先级大于站定+号的优先级，所以入栈</p>
-<p>postfix: 1,2</p>
-<p>opStack: +,*</p>
-<blockquote>
-<p>输入3</p>
-</blockquote>
-<p>操作：数字直接入结果 队列</p>
-<p>postfix: 1,2,3</p>
-<p>opStack: +,*</p>
-<blockquote>
-<p>输入+</p>
-</blockquote>
-<p>操作：因为+号的优先级不大于栈顶的*，所以*弹栈并且放到结果队列中；此时栈顶的仍为+号，但是输入的+号的优先级不大于栈顶的+号，所以，栈顶的+号出栈；此时栈为空，所以当前的+号入栈</p>
-<p>postfix: 1,2,3,*,+</p>
-<p>opStack: +</p>
-<blockquote>
-<p>输入(</p>
-</blockquote>
-<p>操作：对于( 的输入来说，直接操作栈即可，也就是说( 在入栈前比任何操作符的优先级都大；而另一中特殊情况是如果栈顶元素是(, 那么只有）的输入才可以使其出栈，也就是或对于其他操作符来说，它们的优先级又比已经入栈的( 的优先级大。</p>
-<p>postfix: 1,2,3,*,+</p>
-<p>opStack: +,(</p>
-<blockquote>
-<p>输入1</p>
-</blockquote>
-<p>操作：直接加入结果队列</p>
-<p>postfix: 1,2,3,*,+,1</p>
-<p>opStack: +,(</p>
-<blockquote>
-<p>输入+</p>
-</blockquote>
-<p>操作：遇到栈顶为(, 所以直接+号入操作符栈</p>
-<p>postfix: 1,2,3,*,+</p>
-<p>opStack: +,(,+</p>
-<blockquote>
-<p>输入2</p>
-</blockquote>
-<p>操作：直接加入结果队列</p>
-<p>postfix: 1,2,3,*,+,1,2</p>
-<p>opStack: +,(,+</p>
-<blockquote>
-<p>输入)</p>
-</blockquote>
-<p>操作：对于)的输入，应该对操作符栈进行弹栈，直至遇到(, 弹栈才结束，这也就是说，)的在入栈前的优先级比其他操作的优先级都低。在假设表达式合法的前提下，不存在)处在栈顶的情况，)会和(一起出栈，但不会放入结果队列中。这一次，+号和(出栈，+号加入结果队列。</p>
-<p>postfix:1,2,3,*,+,1,2,+</p>
-<p>opStack:+</p>
-<blockquote>
-<p>如果操作符栈不为空，全部弹出加入结果队列</p>
-</blockquote>
-<p>postfix: 1,2,3,*,+,1,2,+,+</p>
-<p>opStack: 空</p>
-<h2 id="计算表达式的值–Java版实现"><a href="#计算表达式的值–Java版实现" class="headerlink" title="计算表达式的值–Java版实现"></a>计算表达式的值–Java版实现</h2><p>接下来，我将要介绍一下我的小型计算器的实现，表达式的特征是包含+，-，*，/和（），并且数字是整数，可以是多位的。整个实现分为3大部分：</p>
-<ol>
-<li>读取优先级列表</li>
-<li>中缀表达式转换成后缀表达式</li>
-<li>计算后缀表达式的值</li>
-</ol>
-<p>当然了，最难的部分是第二步，下面一一介绍。</p>
-<ul>
-<li>优先级列表</li>
-</ul>
-<p>我是用一个文件来存储操作符和对应的优先级，每行存储一个，采用操作符-空格-优先级的方式，如下：+ 1</p>
-<p>完整的优先级列表如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">+ 1</div><div class="line">- 1</div><div class="line">* 2</div><div class="line">/ 2</div></pre></td></tr></table></figure>
-<p>使用HashMap保存优先级列表，这里涉及了如何将一个char转化成一个int值的过程，我们使用了先将char转化成String，然后将String转化成Integer的方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//读入优先级文件</span></div><div class="line">Map&lt;Character,Integer&gt; priority=<span class="keyword">new</span> HashMap&lt;Character,Integer&gt;();</div><div class="line">BufferedReader breader=<span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(<span class="string">"priority.txt"</span>));</div><div class="line">String pline=breader.readLine();</div><div class="line"><span class="keyword">while</span>(pline!=<span class="keyword">null</span>) &#123;</div><div class="line">	<span class="keyword">char</span>[] plineChar=pline.toCharArray();</div><div class="line">	priority.put(plineChar[<span class="number">0</span>], Integer.parseInt(String.valueOf(plineChar[<span class="number">2</span>])));</div><div class="line">	pline=breader.readLine();</div><div class="line">&#125;</div><div class="line">System.out.println(<span class="string">"优先级："</span>+priority);</div><div class="line">breader.close();</div></pre></td></tr></table></figure>
-<ul>
-<li>中缀表达式转后缀表达式</li>
-</ul>
-<p>因为数字是多位的，所以用了一个栈来numStack来记录数，并且使用一个静态方法拼接成一个整数。opStack&lt; Character&gt;是用来存储操作符的，postfix是用来存储转换好的后缀表达式的。整个过程如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//numStack用于存储存储操作数</span></div><div class="line">Stack&lt;Integer&gt;numStack=<span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line"><span class="comment">//opStack用于存储操作符</span></div><div class="line">Stack&lt;Character&gt;opStack=<span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line"><span class="comment">//postfix存储后缀表达式的，</span></div><div class="line"><span class="comment">//其中有Integer和Character类型，所以用Object作为泛型参数</span></div><div class="line">Queue&lt;Object&gt;postfix=<span class="keyword">new</span> LinkedList&lt;&gt;();</div><div class="line">Scanner scanner=<span class="keyword">new</span> Scanner(System.in);</div><div class="line">String myExp=scanner.nextLine();</div><div class="line"><span class="keyword">while</span>(myExp!=<span class="keyword">null</span> &amp;&amp; !<span class="string">"end"</span>.equalsIgnoreCase(myExp)) &#123;</div><div class="line">	<span class="keyword">char</span>[] charExp=myExp.toCharArray();</div><div class="line">	<span class="comment">//System.out.println(charExp);</span></div><div class="line">	<span class="keyword">for</span>(<span class="keyword">char</span> charitem:charExp) &#123;</div><div class="line">		<span class="keyword">switch</span> (charitem) &#123;</div><div class="line">			<span class="keyword">case</span> <span class="string">'1'</span>: <span class="keyword">case</span> <span class="string">'2'</span>: <span class="keyword">case</span> <span class="string">'3'</span>: <span class="keyword">case</span> <span class="string">'4'</span>: <span class="keyword">case</span> <span class="string">'5'</span>:</div><div class="line">			<span class="keyword">case</span> <span class="string">'6'</span>: <span class="keyword">case</span> <span class="string">'7'</span>: <span class="keyword">case</span> <span class="string">'8'</span>: <span class="keyword">case</span> <span class="string">'9'</span>: <span class="keyword">case</span> <span class="string">'0'</span>:</div><div class="line">				numStack.push(Integer.parseInt(String.valueOf(charitem)));</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			<span class="keyword">case</span> <span class="string">'+'</span>: <span class="keyword">case</span> <span class="string">'-'</span>: <span class="keyword">case</span> <span class="string">'*'</span>:</div><div class="line">			<span class="keyword">case</span> <span class="string">'/'</span>: <span class="keyword">case</span> <span class="string">'('</span>:<span class="keyword">case</span> <span class="string">')'</span>:</div><div class="line">                  	<span class="comment">//在遇到操作符号之前弹出数字拼接</span></div><div class="line">				pushNumber2Result(numStack, postfix);</div><div class="line">				<span class="keyword">if</span>(opStack.isEmpty()) &#123;</div><div class="line">					opStack.push(charitem);</div><div class="line">				&#125;<span class="keyword">else</span> &#123;</div><div class="line">					<span class="comment">//对右括号特殊处理</span></div><div class="line">					<span class="keyword">if</span>(charitem==<span class="string">')'</span>&amp;&amp;!opStack.isEmpty()) &#123;</div><div class="line">						<span class="keyword">while</span>(opStack.peek()!=<span class="string">'('</span>) &#123;</div><div class="line">							postfix.add(opStack.pop());</div><div class="line">						&#125;</div><div class="line">						<span class="comment">//弹出左括号</span></div><div class="line">						opStack.pop();</div><div class="line">					&#125;<span class="keyword">else</span> <span class="keyword">if</span>(charitem==<span class="string">'('</span>) &#123;</div><div class="line">						opStack.push(charitem);</div><div class="line">					&#125;<span class="keyword">else</span> &#123;</div><div class="line">						<span class="comment">//对非括号的符号输入</span></div><div class="line">						<span class="comment">//如果碰到左括号操作符号入栈</span></div><div class="line">						<span class="keyword">if</span>(opStack.peek()==<span class="string">'('</span>) &#123;</div><div class="line">							opStack.push(charitem);</div><div class="line">						&#125;<span class="keyword">else</span> <span class="keyword">if</span>(priority.get(charitem)&gt;priority.get(opStack.peek())) &#123;</div><div class="line">							<span class="comment">//如果下一个操作符的优先级大于栈顶的优先级，</span></div><div class="line">                                  <span class="comment">//压栈,此时栈顶一定有操作符</span></div><div class="line">							opStack.push(charitem);</div><div class="line">						&#125;<span class="keyword">else</span> &#123;</div><div class="line">							<span class="comment">//否则，出栈直至当前操作符入栈</span></div><div class="line">							<span class="comment">//注意当栈不空的情况下比较</span></div><div class="line">							<span class="keyword">while</span>(!opStack.isEmpty() &amp;&amp; priority.get(charitem)											&lt;=priority.get(opStack.peek())) &#123;</div><div class="line">								postfix.add(opStack.pop());</div><div class="line">							&#125;</div><div class="line">							opStack.push(charitem);</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">				</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	pushNumber2Result(numStack, postfix);</div><div class="line">	<span class="comment">//注意剩余的操作符可能有多个</span></div><div class="line">	<span class="keyword">while</span>(!opStack.isEmpty()) &#123;</div><div class="line">		postfix.add(opStack.pop());</div><div class="line">	&#125;</div><div class="line">	System.out.println(postfix);</div></pre></td></tr></table></figure>
-<p>其中，pushNumber2Result函数的定义如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">pushNumber2Result</span><span class="params">(Stack&lt;Integer&gt;numStack, Queue&lt;Object&gt;result)</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span> num=<span class="number">0</span>;</div><div class="line">		<span class="keyword">int</span> base=<span class="number">1</span>;</div><div class="line">		<span class="keyword">while</span>(!numStack.isEmpty()) &#123;</div><div class="line">			num=num+numStack.pop()*base;</div><div class="line">			base=base*<span class="number">10</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">//注意如果num!=0才添加进去</span></div><div class="line">		<span class="keyword">if</span>(num!=<span class="number">0</span>)</div><div class="line">			result.add(num);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>几个值得注意的地方：</p>
-<ol>
-<li>栈的循环操作注意判空</li>
-<li>操作数的添加如果是0的话不应该添加</li>
-</ol>
-<ul>
-<li>利用后缀表达式 计算表达式的值</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">numStack.clear();</div><div class="line"><span class="keyword">while</span>(!postfix.isEmpty()) &#123;</div><div class="line">	Object head=postfix.poll();</div><div class="line">	<span class="keyword">if</span>(head <span class="keyword">instanceof</span> Integer) &#123;</div><div class="line">		numStack.push((Integer)head);</div><div class="line">	&#125;<span class="keyword">else</span> <span class="keyword">if</span>(head <span class="keyword">instanceof</span> Character)&#123;</div><div class="line">		Character op=(Character) head;</div><div class="line">		<span class="keyword">int</span> num2=numStack.pop();</div><div class="line">		<span class="keyword">int</span> num1=numStack.pop();</div><div class="line">		<span class="keyword">switch</span>(op) &#123;</div><div class="line">		<span class="keyword">case</span> <span class="string">'+'</span>:</div><div class="line">			numStack.push(num1+num2);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">case</span> <span class="string">'-'</span>:</div><div class="line">			numStack.push(num1-num2);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">case</span> <span class="string">'*'</span>:</div><div class="line">			numStack.push(num1*num2);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		<span class="keyword">case</span> <span class="string">'/'</span>:</div><div class="line">			numStack.push(num1/num2);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span>(numStack.size()==<span class="number">1</span>) &#123;</div><div class="line">	System.out.println(<span class="string">"result:"</span>+numStack.pop());</div><div class="line">&#125;<span class="keyword">else</span> &#123;</div><div class="line">	System.out.println(<span class="string">"计算出错！"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>测试结果</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">优先级：&#123;*=2, +=1, -=1, /=2&#125;</div><div class="line">1+2*3+(1*2)</div><div class="line">[1, 2, 3, *, +, 1, 2, *, +]</div><div class="line">result:9</div><div class="line">1+2*4-5/(1+1)</div><div class="line">[1, 2, 4, *, +, 5, 1, 1, +, /, -]</div><div class="line">result:7</div></pre></td></tr></table></figure>
-<p>大功告成！</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/04/栈和队列/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

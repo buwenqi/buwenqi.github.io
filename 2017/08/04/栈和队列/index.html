@@ -93,7 +93,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/08/04/栈和队列/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
 <meta property="og:description" content="ArrayList和LinkedList的实现方式ArrayList的底层实现是可以增长的数组，LinkedList的底层是使用了双链表。从底层实现来看，我们可以知道，ArrayList 获取元素的时间复杂度仅为常数，而 插入和 删除的时间复杂度都为线性时间复杂度O(n)。而LinkedList则刚好相反，因为底层是链表,所以 插入和 删除的时间复杂度为常数，而 获取元素的时间复杂度却是线性时间复">
-<meta property="og:updated_time" content="2017-08-06T09:01:18.072Z">
+<meta property="og:updated_time" content="2017-08-06T09:12:20.433Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="栈和队列">
 <meta name="twitter:description" content="ArrayList和LinkedList的实现方式ArrayList的底层实现是可以增长的数组，LinkedList的底层是使用了双链表。从底层实现来看，我们可以知道，ArrayList 获取元素的时间复杂度仅为常数，而 插入和 删除的时间复杂度都为线性时间复杂度O(n)。而LinkedList则刚好相反，因为底层是链表,所以 插入和 删除的时间复杂度为常数，而 获取元素的时间复杂度却是线性时间复">
@@ -345,6 +345,7 @@
       
         <h2 id="ArrayList和LinkedList的实现方式"><a href="#ArrayList和LinkedList的实现方式" class="headerlink" title="ArrayList和LinkedList的实现方式"></a>ArrayList和LinkedList的实现方式</h2><p>ArrayList的底层实现是可以增长的数组，LinkedList的底层是使用了双链表。从底层实现来看，我们可以知道，ArrayList <strong>获取</strong>元素的时间复杂度仅为常数，而 <strong>插入</strong>和 <strong>删除</strong>的时间复杂度都为线性时间复杂度O(n)。而LinkedList则刚好相反，因为底层是链表,所以 <strong>插入</strong>和 <strong>删除</strong>的时间复杂度为常数，而 <strong>获取</strong>元素的时间复杂度却是线性时间复杂度。</p>
 <p>另外，ArrayList和LinkedList的contains和remove方法的时间复杂度都为线性时间复杂度O(n)，对于contains方法来说，ArrayList和linkedList都需要遍历操作来实现contains方法，所以时间复杂度都是线性的；对于remove操作，ArrayList删除后需要移动元素，所以时间复杂度是线性的，而LinkedList的remove操作虽然是常数时间的，但是查找到元素的时间复杂度是线性的，所以，对已LinkedList的remove操作来说也是线性时间复杂的。</p>
+<a id="more"></a>
 <h2 id="栈的运用–计算表达式的值"><a href="#栈的运用–计算表达式的值" class="headerlink" title="栈的运用–计算表达式的值"></a>栈的运用–计算表达式的值</h2><p>本章用Java来是实现一个计算含有+，-，*，\和括号的表达式的值，包括的知识点有：</p>
 <ul>
 <li>Java语言中栈Stack和Queue的使用</li>
