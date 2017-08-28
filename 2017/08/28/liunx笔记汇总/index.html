@@ -87,7 +87,7 @@
 
 
 
-<meta name="description" content="##find命令find命令可以用来遍历文件目录基本形式 find pathname -option [-print -exec]pathname:要查找的文件目录，.代表当前目录查找完成后可以执行的action：
+<meta name="description" content="find命令find命令可以用来遍历文件目录基本形式 find pathname -option [-print -exec]pathname:要查找的文件目录，.代表当前目录查找完成后可以执行的action：
 
 -print打印到标准输出
 -exec：对有匹配的文件执行指定的参数命令，{}来代表查到的当前的文件名，一般格式为
@@ -96,15 +96,15 @@
 <meta property="og:title" content="liunx笔记汇总">
 <meta property="og:url" content="http://yoursite.com/2017/08/28/liunx笔记汇总/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
-<meta property="og:description" content="##find命令find命令可以用来遍历文件目录基本形式 find pathname -option [-print -exec]pathname:要查找的文件目录，.代表当前目录查找完成后可以执行的action：
+<meta property="og:description" content="find命令find命令可以用来遍历文件目录基本形式 find pathname -option [-print -exec]pathname:要查找的文件目录，.代表当前目录查找完成后可以执行的action：
 
 -print打印到标准输出
 -exec：对有匹配的文件执行指定的参数命令，{}来代表查到的当前的文件名，一般格式为
 -exec commod {} \;最后要加分号">
-<meta property="og:updated_time" content="2017-08-28T12:11:02.697Z">
+<meta property="og:updated_time" content="2017-08-28T12:25:38.011Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="liunx笔记汇总">
-<meta name="twitter:description" content="##find命令find命令可以用来遍历文件目录基本形式 find pathname -option [-print -exec]pathname:要查找的文件目录，.代表当前目录查找完成后可以执行的action：
+<meta name="twitter:description" content="find命令find命令可以用来遍历文件目录基本形式 find pathname -option [-print -exec]pathname:要查找的文件目录，.代表当前目录查找完成后可以执行的action：
 
 -print打印到标准输出
 -exec：对有匹配的文件执行指定的参数命令，{}来代表查到的当前的文件名，一般格式为
@@ -355,7 +355,7 @@
       
 
       
-        <p>##find命令<br>find命令可以用来遍历文件目录<br>基本形式 find pathname -option [-print -exec]<br>pathname:要查找的文件目录，.代表当前目录<br>查找完成后可以执行的action：</p>
+        <h2 id="find命令"><a href="#find命令" class="headerlink" title="find命令"></a>find命令</h2><p>find命令可以用来遍历文件目录<br>基本形式 find pathname -option [-print -exec]<br>pathname:要查找的文件目录，.代表当前目录<br>查找完成后可以执行的action：</p>
 <ul>
 <li>-print打印到标准输出</li>
 <li>-exec：对有匹配的文件执行指定的参数命令，{}来代表查到的当前的文件名，一般格式为</li>
@@ -367,8 +367,7 @@ option主要有：</li>
 <li>-type 按文件类型查找</li>
 </ul>
 <p>grep命令可以按行查找文件并匹配，其命令格式为 grep [option] patterns [files]<br>option常用：<br>-i 忽略大小写<br>-l 只显示文件名<br>组合起来就可以实现在一个目录下搜索含有某个特定字符串的文件<br>find .|grep -rl “pattern”</p>
-<p>##文本操作1</p>
-<ol>
+<h2 id="文本操作1"><a href="#文本操作1" class="headerlink" title="文本操作1"></a>文本操作1</h2><ol>
 <li>分隔一个字符串用cut命令：<br>cut -d 分隔符 -f 选取的编号<br>如cut -d . -f 1 filename ,.要转义，意思是以点为分隔符并取第一个显示</li>
 <li>grep -rE pattern file<br>当pattern需要指定多个条件时需要指定E选项，pattern可以使用正则表达式，其中.代表任意一个字符，<em>代表前面的任意重复，.</em>才代表任意字符，？代表前面的0或一个重复。（）需要转义，&lt;&gt;不需要</li>
 <li>find 可以指定-maxdepth来指定遍历的深度，0代表只遍历当前目录，-type可以指定遍历的类型<br>例如find pattern -maxdepth 0 -type d则查找当前目录下的符合pattern的子目录</li>
@@ -377,24 +376,23 @@ option主要有：</li>
 <li>scp username@ip:filepath loalpath(必须已存在，指定目录会默认原来的名字，也可以指定文件名)<br>一个用expect自动输入scp的例子<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">expect -c &quot;</div><div class="line"> spawn scp tong@192.168.70.193:$sapkpath sapkdir/</div><div class="line"> expect &#123;</div><div class="line">  \&quot;*assword\&quot; &#123; send \&quot;passw0rd\r\&quot;; &#125;</div><div class="line">  \&quot;yes/no\&quot; &#123; send \&quot;yes\r\&quot; &#125;</div><div class="line"> &#125;</div><div class="line"> expect eof&quot;</div></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>##关于expect命令的使用小结<br>shell脚本中的expect命令可谓是自动化作业的利器，最近深入学习了一下，在使用的过程中遇到一些问题，在解决问题的基础上阐述expect的使用。</p>
+<h2 id="关于expect命令的使用小结"><a href="#关于expect命令的使用小结" class="headerlink" title="关于expect命令的使用小结"></a>关于expect命令的使用小结</h2><p>shell脚本中的expect命令可谓是自动化作业的利器，最近深入学习了一下，在使用的过程中遇到一些问题，在解决问题的基础上阐述expect的使用。</p>
 <p>一般在脚本中使用expect -c “cmd”来使用expect来完成交互，这里在使用的过程中遇到了一个非常常见但很难想明白的问题，比如包括cmd的是单引号还是双引号，以前写过单引号和双引号的区别，单引号表示纯文本，而双引号中有些特殊的符号如：$ `` \代表特殊的含义，也就是说在双引号中$引用脚本外的变量，``执行命令，而且双引号在双引号中要转义。说和expect -c的联系，当<strong>expect -c ‘cmd’时推荐使用单引号（除非你想用到外面的变量）</strong>，因为如果使用了双引号，$引用的全部是外面的变量，不会用到里面的，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">expect -c &quot;</div><div class="line">set i 1        //将不会打印出1,即便外面没有i的定义，而如果使用了单引号则不会出现这种问题</div><div class="line">puts $i</div><div class="line">&quot;</div></pre></td></tr></table></figure></p>
 <p>上面的语法是一种叫tcl的语法<br>下面介绍一下：</p>
 <p>变量赋值： set variable value<br>if语句：<br>if { condition } { #必须放在这个后面，不然报错 注意空格<br>}<br>for { init} {conditon } {incre } {<br>dosomething<br>}<br>while {conditon}{<br>dosomething<br>}<br>[ expr $var+1]基本计算</p>
-<p>##sed命令总结<br>sed命令作为一个流式编辑器，处理文本是把好手。下面是个人总结<br>基本命令格式 sed option(-f,-n) script file</p>
+<h2 id="sed命令总结"><a href="#sed命令总结" class="headerlink" title="sed命令总结"></a>sed命令总结</h2><p>sed命令作为一个流式编辑器，处理文本是把好手。下面是个人总结<br>基本命令格式 sed option(-f,-n) script file</p>
 <ol>
 <li>选项：<br>-f代表后面跟script文件，所有的命令都放在script文件中，每一行代表一个命令，多行命名时可以            写成一个脚本文件<br>另多行命令可以通过分号隔开<br>-n代表不立即打印，而通过p命令打印</li>
 <li>script：脚本命令是sed命令的关键可以总结为两个个部分：定址（行址）+命令<br>定址有两种方法：行寻址和模式寻址，<br>1.行寻址，指定单行或范围，范围用逗号相隔如第二行到最后行：2,$<br>2.模式寻址：匹配寻址，可以用正则表达式，其中.代表任意字符，<em>代表前面的重复0或多次，？代表重复0或一次，.</em>代表匹配任意字符，使用方法/pattern/,例如：/dog.*/<br>注意这个定址是定行址，作用于同一行的组合命令用{}包裹，如2,${cmd1;cmd2}</li>
 <li>命令：<br>1.替换：<br>s/pattern/replacement/flag,<br>flag：数字，g,p,w.<br>数字代表列址，默认为1，g为全局替换，p打印，w file写入文件<br>pattern可以用正则表达式，默认替换每一行的第一个，指定替换行的第几个用flag指定<br>2.删除命令d<br>3.插入命令：在前插入i\content,在后附加a\content<br>4.修改命令：c\content<br>其他命令：<br>p打印，=打印行号<br>n当前匹配的下一行，N将下一行读入模式空间处理，将两行看成一行</li>
 </ol>
-<p>##文本操作2</p>
-<ul>
+<h2 id="文本操作2"><a href="#文本操作2" class="headerlink" title="文本操作2"></a>文本操作2</h2><ul>
 <li>grep:<br>文本过滤工具，可以用正则表达式搜索匹配的内容，注意？+{ | （）需要转义，其他不需要<br>基本格式grep option pattern file<br>常用option:<br>n打印行号，E扩展表达式，可以多个匹配规则，r递归搜索文件（常用于文件搜索）</li>
 <li>sed:多功能文本编辑,见上文</li>
 <li>cut：文件单行切边功能<br>cut -d delimiter -f field<br>field举例：cut -d “ “ -f 2以空格分隔的第二个<br>cut -d “ “ -f 2,5以空格分隔的第二个和第五个的组合<br>cut -d “ “ -f 2-5以空格分隔的从第二个到第五个<br>cut -d “ “ -f 2- 以空格分隔的第二个到最后</li>
 <li>wc:可以查看文件的相关信息，行数，单词数，字符数</li>
 </ul>
-<p>##内存管理相关命令<br>uptime命令查看系统运行情况<br>df查看磁盘使用情况<br>free查看内存使用情况<br>ps查看进程情况 </p>
+<h2 id="内存管理相关命令"><a href="#内存管理相关命令" class="headerlink" title="内存管理相关命令"></a>内存管理相关命令</h2><p>uptime命令查看系统运行情况<br>df查看磁盘使用情况<br>free查看内存使用情况<br>ps查看进程情况 </p>
 
       
     </div>
@@ -525,8 +523,17 @@ option主要有：</li>
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/me.jpg"
@@ -609,6 +616,22 @@ option主要有：</li>
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#find命令"><span class="nav-number">1.</span> <span class="nav-text">find命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本操作1"><span class="nav-number">2.</span> <span class="nav-text">文本操作1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于expect命令的使用小结"><span class="nav-number">3.</span> <span class="nav-text">关于expect命令的使用小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sed命令总结"><span class="nav-number">4.</span> <span class="nav-text">sed命令总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本操作2"><span class="nav-number">5.</span> <span class="nav-text">文本操作2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存管理相关命令"><span class="nav-number">6.</span> <span class="nav-text">内存管理相关命令</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
