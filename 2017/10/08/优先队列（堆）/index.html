@@ -87,25 +87,16 @@
 
 
 
-<meta name="description" content="一些术语
-参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
-原生态类型（raw type）:没有类型参数的类型，例如List
-无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
+<meta name="description" content="优先队列也就是我们常说的小根堆，它至少支持两种操作：插入，删除最小者，它的一种实现方式是二叉堆。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java 基础之泛型">
-<meta property="og:url" content="http://yoursite.com/2017/07/31/Java 基础之泛型/index.html">
+<meta property="og:title" content="优先队列（堆）">
+<meta property="og:url" content="http://yoursite.com/2017/10/08/优先队列（堆）/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
-<meta property="og:description" content="一些术语
-参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
-原生态类型（raw type）:没有类型参数的类型，例如List
-无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
-<meta property="og:updated_time" content="2017-08-01T14:26:39.585Z">
+<meta property="og:description" content="优先队列也就是我们常说的小根堆，它至少支持两种操作：插入，删除最小者，它的一种实现方式是二叉堆。">
+<meta property="og:updated_time" content="2017-10-08T03:51:28.235Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java 基础之泛型">
-<meta name="twitter:description" content="一些术语
-参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
-原生态类型（raw type）:没有类型参数的类型，例如List
-无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
+<meta name="twitter:title" content="优先队列（堆）">
+<meta name="twitter:description" content="优先队列也就是我们常说的小根堆，它至少支持两种操作：插入，删除最小者，它的一种实现方式是二叉堆。">
 
 
 
@@ -133,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/31/Java 基础之泛型/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/08/优先队列（堆）/"/>
 
 
 
 
 
-  <title> Java 基础之泛型 | Wenqi's Blog </title>
+  <title> 优先队列（堆） | Wenqi's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -266,7 +257,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/31/Java 基础之泛型/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/08/优先队列（堆）/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Wenqi">
@@ -290,7 +281,7 @@
             
             
               
-                Java 基础之泛型
+                优先队列（堆）
               
             
           </h1>
@@ -305,8 +296,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-31T21:48:51+08:00">
-                2017-07-31
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-08T10:20:08+08:00">
+                2017-10-08
               </time>
             
 
@@ -323,7 +314,7 @@
 
           
           
-             <span id="/2017/07/31/Java 基础之泛型/" class="leancloud_visitors" data-flag-title="Java 基础之泛型">
+             <span id="/2017/10/08/优先队列（堆）/" class="leancloud_visitors" data-flag-title="优先队列（堆）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -352,28 +343,21 @@
       
 
       
-        <h2 id="一些术语"><a href="#一些术语" class="headerlink" title="一些术语"></a>一些术语</h2><ol>
-<li>参数化类的类型（parameterized type）:含有类型参数的类型，例如List&lt;String&gt;</li>
-<li>原生态类型（raw type）:没有类型参数的类型，例如List</li>
-<li>无限制通配符类型（unbounded wildcard type）:例如List&lt;?&gt;</li>
-</ol>
-<a id="more"></a>
-<p>原生态类型保留的原因：兼容性</p>
-<h2 id="List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论"><a href="#List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论" class="headerlink" title="List, List&lt;Object&gt;, List&lt;String&gt;, List&lt;?&gt;的讨论"></a>List, List&lt;Object&gt;, List&lt;String&gt;, List&lt;?&gt;的讨论</h2><ol>
-<li>形如List的是原生态类型，是类型不安全的，逃避了泛型检查</li>
-<li>List&lt;Object&gt;明确告诉编译器它可以持有Object类型的对象，List&lt;String&gt;明确告诉编译器它可以持有String类型的对象，但是List类型的引用可以接受List&lt;Object&gt;，List&lt;String&gt;的实例对象，但是List&lt;Object&gt;的引用不可以接受List&lt;String&gt;的实例对象。也就是所谓的泛型集合是不具有协变性（covariant）的.</li>
-<li>无限制通配符类型如List&lt;?&gt;说明该List持有某种特定类型的对象，但是不知道具体是哪一种类型，所以不能向这种List中添加任何对象，因为编译器并不能 判定这种添加是否是正确的，所以会在编译阶段报错。相比原生态类型，List则可以添加任何对象，因为编译阶段并没有做类型检查。</li>
-</ol>
-<h2 id="优先使用列表而不是数组"><a href="#优先使用列表而不是数组" class="headerlink" title="优先使用列表而不是数组"></a>优先使用列表而不是数组</h2><p>数组是协变的（covariant），所谓数组是协变的，是指如果Sub是Super的子类型，那么数组类型Sub[]也是Super[]的子类型。</p>
-<p>而泛型是通过擦除（erasure）来实现的，泛型是只在编译时强化它们的类型信息，并在运行时丢弃它们的元素类型信息。所以泛型不是协变的，上面第2条List&lt;Object&gt;并不是List&lt;String&gt;的父类。</p>
-<p>所以数组和泛型不能很好的混用，如创建泛型对象数组：new E[]，参数化类型或者类型参数的数组：new List&lt;E&gt;[], new List&lt;String&gt;[]是非法的。</p>
-<h2 id="类型擦除对泛型的限制"><a href="#类型擦除对泛型的限制" class="headerlink" title="类型擦除对泛型的限制"></a>类型擦除对泛型的限制</h2><p>由于泛型仅仅是在编译时有了较强的类型检查，而实际编译后所产生的是没有泛型信息的运行代码，所以这导致泛型有许多限制。</p>
-<ol>
-<li>泛型类中，static方法和static域均不可引用类的类型变量</li>
-<li>不能实例化泛型类型实例，也就是使用类似于new T()的形式</li>
-<li>不能实例化泛型数组</li>
-</ol>
-<h2 id="Comparable-lt-T-gt-接口"><a href="#Comparable-lt-T-gt-接口" class="headerlink" title="Comparable&lt;T&gt;接口"></a>Comparable&lt;T&gt;接口</h2><p>实现Comparable&lt;T&gt;接口，实现其中的compareTo方法可以使对象的对比更高效。</p>
+        <p>优先队列也就是我们常说的小根堆，它至少支持两种操作：插入，删除最小者，它的一种实现方式是二叉堆。<br><a id="more"></a></p>
+<p>##二叉堆<br>二叉堆具有<strong>结构性</strong>和<strong>堆序性</strong>，所谓结构性，是指二叉堆是一颗完全二叉树，而堆序性是指根节点的值应该是最小的。其实堆有一个递归的定义方式：1）堆的根小于它的左右子孩子，2）它的左右子树也是堆。</p>
+<p>堆既然是一颗完全二叉树，那么我们就可以用数组的方式来存储堆，而下标的值则已经蕴含了父子关系的信息，如果从1开始存储的话，比如任意位置i上的元素，那么它的左孩子在2i位置上，右孩子在2i+1位置上。<br><strong>基本操作</strong></p>
+<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><p>将新的节点x插入到二叉堆的最后一个位置size+1处，那么需要对插入的元素进行<strong>上滤</strong>来确定其最终位置，上滤的过程是调整新插入的节点，使得整个二叉堆保持堆序性质。其实现方式如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">描述：二叉堆插入</div><div class="line">输入：二叉堆数组array[],含有的元素个数,待插入的值x</div><div class="line">输出：调整好的二叉堆数组</div><div class="line">array[0]=x,哨兵值</div><div class="line">hole=size+1，当前位置</div><div class="line">循环直至x&gt;array[hole/2]//当插入的节点大于父节点的值</div><div class="line">	array[hole]=array[hole/2]//将hole处的值复制成父节点的值</div><div class="line">	hole=hole/2</div><div class="line">array[hole]=x //找到的最终位置</div></pre></td></tr></table></figure></p>
+<p>java代码实现如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(T x)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span>(currentSize==array.length-<span class="number">1</span>) &#123;<span class="comment">//0位置空出，从1开始放</span></div><div class="line">		enlargeArray(array.length*<span class="number">2</span>+<span class="number">1</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">int</span> hole= ++currentSize;</div><div class="line">	array[<span class="number">0</span>]= x;<span class="comment">//作为哨兵值，在hole变成1时起作用</span></div><div class="line">	<span class="keyword">while</span>(x.compareTo(array[hole/<span class="number">2</span>])&lt;<span class="number">0</span>) &#123;<span class="comment">//若当前节点的小于父节点</span></div><div class="line">		array[hole]=array[hole/<span class="number">2</span>];</div><div class="line">		hole/=<span class="number">2</span>;</div><div class="line">	&#125;<span class="comment">//while循环实现上滤</span></div><div class="line">	array[hole]=x;<span class="comment">//放到最终位置上</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="下滤"><a href="#下滤" class="headerlink" title="下滤"></a>下滤</h3><p>插入过程是使用的上滤的过程，而像删除堆顶元素，从已有的数组初始建堆等操作都是通过下滤来实现的，下滤的过程和上滤的稍又不同，具体思路如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">描述：给定堆指定位置，实现向下调整的过程</div><div class="line">输入：堆数组array，当前位置size，要调整的位置position</div><div class="line">输出：调整好的堆</div><div class="line">tmp=array[position]//取出要调整的值</div><div class="line">循环当position的左孩子lchild存在时</div><div class="line">	当lchild+1存在并且array[lchild+1]&lt;array[lchild]时</div><div class="line">		选中较小的孩子和父节点比较，littleChild=lchild+1</div><div class="line">	如果array[littleChild]&lt;temp</div><div class="line">		array[position]=array[littleChild]</div><div class="line">	否则</div><div class="line">		结束循环</div><div class="line">	position=littleChild</div><div class="line">array[position]=tmp//找到最终位置，结束</div></pre></td></tr></table></figure></p>
+<p>其Java实现如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">percolateDown</span><span class="params">(<span class="keyword">int</span> hole)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> child;<span class="comment">//用于存储将要替换的位置</span></div><div class="line">	T tmp=array[hole];<span class="comment">//取出hole位置的值</span></div><div class="line">	<span class="keyword">while</span>(hole*<span class="number">2</span>&lt;=currentSize) &#123;</div><div class="line">		child=hole*<span class="number">2</span>;<span class="comment">//左孩子位置</span></div><div class="line">		<span class="keyword">if</span>(child!=currentSize&amp;&amp;array[child+<span class="number">1</span>].compareTo(array[child])&lt;<span class="number">0</span>)<span class="comment">//右孩子存在，且左孩子</span></div><div class="line">			child++;<span class="comment">//选择较小的左孩子</span></div><div class="line">		<span class="keyword">if</span>(tmp.compareTo(array[child])&gt;<span class="number">0</span>) &#123;</div><div class="line">			array[hole]=array[child];</div><div class="line">		&#125;<span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		hole=child;</div><div class="line">	&#125;</div><div class="line">	array[hole]=tmp;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>初始建堆实现Java,其实其过程是从第一个非叶子节点开始逐步往上进行下滤操作<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 初始建堆采用从底往上对已有的树结构进行下滤</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buildHeap</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=currentSize/<span class="number">2</span>;i&gt;<span class="number">0</span>;i--) &#123;<span class="comment">//从第一个非叶子节点的节点进行下滤</span></div><div class="line">		percolateDown(i);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>删除堆顶元素（最小值）,操作方法是将最后一个节点的值搬到堆顶，然后对堆顶元素进行下滤调整<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">	 * 删除堆顶元素</div><div class="line">	 */</div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">deleteMin</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span>(currentSize==<span class="number">0</span>)</div><div class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> EmptyStackException();</div><div class="line">		T minItem=array[<span class="number">1</span>];</div><div class="line">		array[<span class="number">1</span>]=array[currentSize--];</div><div class="line">		percolateDown(<span class="number">1</span>);</div><div class="line">		<span class="keyword">return</span> minItem;</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="全部源码"><a href="#全部源码" class="headerlink" title="全部源码"></a>全部源码</h3><p>请点击<a href="https://github.com/buwenqi/DataStructure/blob/master/src/heap/BinaryHeap.java" target="_blank" rel="external">这里</a></p>
+<h3 id="其他的一些思考"><a href="#其他的一些思考" class="headerlink" title="其他的一些思考"></a>其他的一些思考</h3><p>一个堆所蕴含的序信息很少，我们除了知道根的值小于左右子树的值以外没有任何其他信息，比如说左右孩子的序，这是堆的性质决定的，对比二叉排序树，堆更像是一个减弱版的二叉排序树，但是实现起来却比二叉排序树简单，没有那么多限制，这也决定了它们的应用场景不一样。</p>
+<h2 id="其他的堆"><a href="#其他的堆" class="headerlink" title="其他的堆"></a>其他的堆</h2><h3 id="d-堆"><a href="#d-堆" class="headerlink" title="d-堆"></a>d-堆</h3><p>每个根节点有d个孩子，d=2时就是二叉堆</p>
+<h3 id="左式堆"><a href="#左式堆" class="headerlink" title="左式堆"></a>左式堆</h3><p>为支持二叉堆进行<strong>合并</strong>操作应运而生。<br>任意节点x零路径长npl是x到一个不具有连个儿子节点的最短路径长，也就是到null节点的最短距离，没有两个儿子的节点的零路径长是0.<br>左式堆要保持的性质是：<strong>是对于堆中的任何一个节点x，它的左儿子的零路径长要大于等于右儿子的零路径长</strong>。这个性质使得它更偏向于加深左子树的高度。<br>其实现合并两个左式堆H1,H2的方法是：如果两个堆其中一个是空的，我们就返回另一个；否则合并两个堆，合并堆的方式是递归的将较大根值的堆与较小根治堆的右子堆进行合并，合并完成后作为较小堆的右子堆，如果合并完成后右子堆的零路径长大于左子堆的零路径长，则交换左右子堆，并更新根节点的零路径长。</p>
+<h3 id="斜堆"><a href="#斜堆" class="headerlink" title="斜堆"></a>斜堆</h3><p>是左式堆的一种自我调整形式</p>
+<h3 id="二项队列"><a href="#二项队列" class="headerlink" title="二项队列"></a>二项队列</h3><p>二项队列是堆序的树的集合，也就是森林。每颗堆序树都是右约束的形式，叫做二项式树，高度为k的树恰好有2^k个节点。例如，大小为13的堆可以用森林B3,B2,B0表示，可以将其表示成二进制树1101。</p>
 
       
     </div>
@@ -426,8 +410,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/10/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2017/10/07/散列/" rel="next" title="散列">
+                <i class="fa fa-chevron-left"></i> 散列
               </a>
             
           </div>
@@ -435,10 +419,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/04/栈和队列/" rel="prev" title="栈和队列">
-                栈和队列 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -611,7 +591,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些术语"><span class="nav-number">1.</span> <span class="nav-text">一些术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论"><span class="nav-number">2.</span> <span class="nav-text">List, List<Object>, List<String>, List<?>的讨论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优先使用列表而不是数组"><span class="nav-number">3.</span> <span class="nav-text">优先使用列表而不是数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型擦除对泛型的限制"><span class="nav-number">4.</span> <span class="nav-text">类型擦除对泛型的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comparable-lt-T-gt-接口"><span class="nav-number">5.</span> <span class="nav-text">Comparable<T>接口</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#插入"><span class="nav-number">1.</span> <span class="nav-text">插入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下滤"><span class="nav-number">2.</span> <span class="nav-text">下滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全部源码"><span class="nav-number">3.</span> <span class="nav-text">全部源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他的一些思考"><span class="nav-number">4.</span> <span class="nav-text">其他的一些思考</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他的堆"><span class="nav-number"></span> <span class="nav-text">其他的堆</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#d-堆"><span class="nav-number">1.</span> <span class="nav-text">d-堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#左式堆"><span class="nav-number">2.</span> <span class="nav-text">左式堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#斜堆"><span class="nav-number">3.</span> <span class="nav-text">斜堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二项队列"><span class="nav-number">4.</span> <span class="nav-text">二项队列</span></a></li></ol></div>
             
 
           </div>
