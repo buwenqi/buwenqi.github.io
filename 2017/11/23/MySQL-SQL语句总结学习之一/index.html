@@ -87,14 +87,12 @@
 
 
 
-<meta name="description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))
-常用的数据类型参见这里以下">
+<meta name="description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL-SQL语句总结学习之一">
 <meta property="og:url" content="http://yoursite.com/2017/11/23/MySQL-SQL语句总结学习之一/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
-<meta property="og:description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))
-常用的数据类型参见这里以下">
+<meta property="og:description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))">
 <meta property="og:image" content="https://i.imgur.com/HIKjSIj.png">
 <meta property="og:image" content="https://i.imgur.com/f9RMxlB.png">
 <meta property="og:image" content="https://i.imgur.com/593GONn.png">
@@ -103,11 +101,10 @@
 <meta property="og:image" content="https://i.imgur.com/dQVvgf0.png">
 <meta property="og:image" content="https://i.imgur.com/Up7SQna.png">
 <meta property="og:image" content="https://i.imgur.com/DVVqX4C.png">
-<meta property="og:updated_time" content="2017-11-23T12:30:34.540Z">
+<meta property="og:updated_time" content="2017-11-23T12:36:16.635Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL-SQL语句总结学习之一">
-<meta name="twitter:description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))
-常用的数据类型参见这里以下">
+<meta name="twitter:description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))">
 <meta name="twitter:image" content="https://i.imgur.com/HIKjSIj.png">
 
 
@@ -356,6 +353,7 @@
 
       
         <h2 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> tableName(</div><div class="line">列名 类型名 限定词&lt;<span class="keyword">not</span> <span class="literal">null</span>,<span class="keyword">default</span> <span class="keyword">value</span>, autoincrement&gt;</div><div class="line">primary <span class="keyword">key</span>(列名<span class="number">1</span>，列名<span class="number">2</span>……)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">1</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">2</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">)</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>常用的数据类型参见<a href="http://blog.csdn.net/applelg/article/details/54616130" target="_blank" rel="external">这里</a><br>以下为创建表的实例<br><img src="https://i.imgur.com/HIKjSIj.png" alt=""></p>
 <h2 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">add</span> <span class="keyword">column</span> 类型名 限定词</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">change</span> 原列名 改变后的列名 类型名 限定词</div><div class="line">alert <span class="keyword">table</span> 表名 <span class="keyword">drop</span></div></pre></td></tr></table></figure>
 <p>添加了一列并且加入了外键<br><img src="https://i.imgur.com/f9RMxlB.png" alt=""><br>修改一列的属性并且删除刚刚添加的属性(删除外键列之前要先删除对应的constraint)<br><img src="https://i.imgur.com/593GONn.png" alt=""><br><img src="https://i.imgur.com/EWrJz7Y.png" alt=""></p>

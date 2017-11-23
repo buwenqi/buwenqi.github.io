@@ -348,28 +348,14 @@
 
       
         
-          
-            <h2 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> tableName(</div><div class="line">列名 类型名 限定词&lt;<span class="keyword">not</span> <span class="literal">null</span>,<span class="keyword">default</span> <span class="keyword">value</span>, autoincrement&gt;</div><div class="line">primary <span class="keyword">key</span>(列名<span class="number">1</span>，列名<span class="number">2</span>……)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">1</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">2</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">)</div></pre></td></tr></table></figure>
-<p>常用的数据类型参见<a href="http://blog.csdn.net/applelg/article/details/54616130" target="_blank" rel="external">这里</a><br>以下为创建表的实例<br><img src="https://i.imgur.com/HIKjSIj.png" alt=""></p>
-<h2 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">add</span> <span class="keyword">column</span> 类型名 限定词</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">change</span> 原列名 改变后的列名 类型名 限定词</div><div class="line">alert <span class="keyword">table</span> 表名 <span class="keyword">drop</span></div></pre></td></tr></table></figure>
-<p>添加了一列并且加入了外键<br><img src="https://i.imgur.com/f9RMxlB.png" alt=""><br>修改一列的属性并且删除刚刚添加的属性(删除外键列之前要先删除对应的constraint)<br><img src="https://i.imgur.com/593GONn.png" alt=""><br><img src="https://i.imgur.com/EWrJz7Y.png" alt=""></p>
-<h2 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> 表名；</div></pre></td></tr></table></figure>
-<h2 id="关于外键"><a href="#关于外键" class="headerlink" title="关于外键"></a>关于外键</h2><p>如果一个表生成的外键，那么在声明外键之后可以加上<code>ON DELETE|UPDATE {RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT}</code>以声明在外键所参照的数据被删除或者更新的时候数据库应该采取什么样的策略，其中</p>
-<ul>
-<li>on delete|upadte是触发事件</li>
-<li>restrict为显示外键参照对象的修改</li>
-<li>cascade是当参照对象改变时候级联改变当前表的值</li>
-<li>set null是设置成nulll</li>
-<li>no action是不采取任何动作</li>
-<li>set default是设置为默认值</li>
-</ul>
-<h2 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> 表名(列名<span class="number">1</span>，列名<span class="number">2</span>……) <span class="keyword">values</span>(值<span class="number">1</span>，值<span class="number">2</span>……)</div></pre></td></tr></table></figure>
-<h2 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> 表名 <span class="keyword">set</span> 列名<span class="number">1</span>=值<span class="number">1</span>，列名<span class="number">2</span>=值<span class="number">2</span>，…… <span class="keyword">where</span> 条件</div></pre></td></tr></table></figure>
-<h2 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> 表名 <span class="keyword">where</span> 条件</div></pre></td></tr></table></figure>
-<h2 id="内连接，左连接，右连接"><a href="#内连接，左连接，右连接" class="headerlink" title="内连接，左连接，右连接"></a>内连接，左连接，右连接</h2><p>例如有如下两个表<br><img src="https://i.imgur.com/XdnLY1L.png" alt=""><br>内连接使用 table1 inner join table2 on 条件，等同于直接where语句，而且貌似后面一种执行的更快<br><img src="https://i.imgur.com/dQVvgf0.png" alt=""><br>左连接使用left join关键字<br><img src="https://i.imgur.com/Up7SQna.png" alt=""><br>右连接使用right join 关键字<br><img src="https://i.imgur.com/DVVqX4C.png" alt=""></p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>你同样可以在<a href="https://buwenqi.github.io/" target="_blank" rel="external">我的博客</a>看到这篇文章。</p>
-
-          
+          <h2 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> tableName(</div><div class="line">列名 类型名 限定词&lt;<span class="keyword">not</span> <span class="literal">null</span>,<span class="keyword">default</span> <span class="keyword">value</span>, autoincrement&gt;</div><div class="line">primary <span class="keyword">key</span>(列名<span class="number">1</span>，列名<span class="number">2</span>……)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">1</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">2</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">)</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/11/23/MySQL-SQL语句总结学习之一/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
