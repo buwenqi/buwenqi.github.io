@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="数据结构," />
+  <meta name="keywords" content="数据库," />
 
 
 
@@ -87,25 +87,28 @@
 
 
 
-<meta name="description" content="一些术语
-参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
-原生态类型（raw type）:没有类型参数的类型，例如List
-无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
+<meta name="description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))
+常用的数据类型参见这里以下">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java 基础之泛型">
-<meta property="og:url" content="http://yoursite.com/2017/07/31/Java 基础之泛型/index.html">
+<meta property="og:title" content="MySQL-SQL语句总结学习之一">
+<meta property="og:url" content="http://yoursite.com/2017/11/23/MySQL-SQL语句总结学习之一/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
-<meta property="og:description" content="一些术语
-参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
-原生态类型（raw type）:没有类型参数的类型，例如List
-无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
-<meta property="og:updated_time" content="2017-08-01T14:26:39.585Z">
+<meta property="og:description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))
+常用的数据类型参见这里以下">
+<meta property="og:image" content="https://i.imgur.com/HIKjSIj.png">
+<meta property="og:image" content="https://i.imgur.com/f9RMxlB.png">
+<meta property="og:image" content="https://i.imgur.com/593GONn.png">
+<meta property="og:image" content="https://i.imgur.com/EWrJz7Y.png">
+<meta property="og:image" content="https://i.imgur.com/XdnLY1L.png">
+<meta property="og:image" content="https://i.imgur.com/dQVvgf0.png">
+<meta property="og:image" content="https://i.imgur.com/Up7SQna.png">
+<meta property="og:image" content="https://i.imgur.com/DVVqX4C.png">
+<meta property="og:updated_time" content="2017-11-23T12:30:34.540Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java 基础之泛型">
-<meta name="twitter:description" content="一些术语
-参数化类的类型（parameterized type）:含有类型参数的类型，例如List&amp;lt;String&amp;gt;
-原生态类型（raw type）:没有类型参数的类型，例如List
-无限制通配符类型（unbounded wildcard type）:例如List&amp;lt;?&amp;gt;">
+<meta name="twitter:title" content="MySQL-SQL语句总结学习之一">
+<meta name="twitter:description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))
+常用的数据类型参见这里以下">
+<meta name="twitter:image" content="https://i.imgur.com/HIKjSIj.png">
 
 
 
@@ -133,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/31/Java 基础之泛型/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/23/MySQL-SQL语句总结学习之一/"/>
 
 
 
 
 
-  <title> Java 基础之泛型 | Wenqi's Blog </title>
+  <title> MySQL-SQL语句总结学习之一 | Wenqi's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -266,7 +269,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/31/Java 基础之泛型/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/23/MySQL-SQL语句总结学习之一/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Wenqi">
@@ -290,7 +293,7 @@
             
             
               
-                Java 基础之泛型
+                MySQL-SQL语句总结学习之一
               
             
           </h1>
@@ -305,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-31T21:48:51+08:00">
-                2017-07-31
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-23T15:43:21+08:00">
+                2017-11-23
               </time>
             
 
@@ -323,7 +326,7 @@
 
           
           
-             <span id="/2017/07/31/Java 基础之泛型/" class="leancloud_visitors" data-flag-title="Java 基础之泛型">
+             <span id="/2017/11/23/MySQL-SQL语句总结学习之一/" class="leancloud_visitors" data-flag-title="MySQL-SQL语句总结学习之一">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -352,28 +355,25 @@
       
 
       
-        <h2 id="一些术语"><a href="#一些术语" class="headerlink" title="一些术语"></a>一些术语</h2><ol>
-<li>参数化类的类型（parameterized type）:含有类型参数的类型，例如List&lt;String&gt;</li>
-<li>原生态类型（raw type）:没有类型参数的类型，例如List</li>
-<li>无限制通配符类型（unbounded wildcard type）:例如List&lt;?&gt;</li>
-</ol>
-<a id="more"></a>
-<p>原生态类型保留的原因：兼容性</p>
-<h2 id="List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论"><a href="#List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论" class="headerlink" title="List, List&lt;Object&gt;, List&lt;String&gt;, List&lt;?&gt;的讨论"></a>List, List&lt;Object&gt;, List&lt;String&gt;, List&lt;?&gt;的讨论</h2><ol>
-<li>形如List的是原生态类型，是类型不安全的，逃避了泛型检查</li>
-<li>List&lt;Object&gt;明确告诉编译器它可以持有Object类型的对象，List&lt;String&gt;明确告诉编译器它可以持有String类型的对象，但是List类型的引用可以接受List&lt;Object&gt;，List&lt;String&gt;的实例对象，但是List&lt;Object&gt;的引用不可以接受List&lt;String&gt;的实例对象。也就是所谓的泛型集合是不具有协变性（covariant）的.</li>
-<li>无限制通配符类型如List&lt;?&gt;说明该List持有某种特定类型的对象，但是不知道具体是哪一种类型，所以不能向这种List中添加任何对象，因为编译器并不能 判定这种添加是否是正确的，所以会在编译阶段报错。相比原生态类型，List则可以添加任何对象，因为编译阶段并没有做类型检查。</li>
-</ol>
-<h2 id="优先使用列表而不是数组"><a href="#优先使用列表而不是数组" class="headerlink" title="优先使用列表而不是数组"></a>优先使用列表而不是数组</h2><p>数组是协变的（covariant），所谓数组是协变的，是指如果Sub是Super的子类型，那么数组类型Sub[]也是Super[]的子类型。</p>
-<p>而泛型是通过擦除（erasure）来实现的，泛型是只在编译时强化它们的类型信息，并在运行时丢弃它们的元素类型信息。所以泛型不是协变的，上面第2条List&lt;Object&gt;并不是List&lt;String&gt;的父类。</p>
-<p>所以数组和泛型不能很好的混用，如创建泛型对象数组：new E[]，参数化类型或者类型参数的数组：new List&lt;E&gt;[], new List&lt;String&gt;[]是非法的。</p>
-<h2 id="类型擦除对泛型的限制"><a href="#类型擦除对泛型的限制" class="headerlink" title="类型擦除对泛型的限制"></a>类型擦除对泛型的限制</h2><p>由于泛型仅仅是在编译时有了较强的类型检查，而实际编译后所产生的是没有泛型信息的运行代码，所以这导致泛型有许多限制。</p>
-<ol>
-<li>泛型类中，static方法和static域均不可引用类的类型变量</li>
-<li>不能实例化泛型类型实例，也就是使用类似于new T()的形式</li>
-<li>不能实例化泛型数组</li>
-</ol>
-<h2 id="Comparable-lt-T-gt-接口"><a href="#Comparable-lt-T-gt-接口" class="headerlink" title="Comparable&lt;T&gt;接口"></a>Comparable&lt;T&gt;接口</h2><p>实现Comparable&lt;T&gt;接口，实现其中的compareTo方法可以使对象的对比更高效。</p>
+        <h2 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> tableName(</div><div class="line">列名 类型名 限定词&lt;<span class="keyword">not</span> <span class="literal">null</span>,<span class="keyword">default</span> <span class="keyword">value</span>, autoincrement&gt;</div><div class="line">primary <span class="keyword">key</span>(列名<span class="number">1</span>，列名<span class="number">2</span>……)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">1</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">2</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>常用的数据类型参见<a href="http://blog.csdn.net/applelg/article/details/54616130" target="_blank" rel="external">这里</a><br>以下为创建表的实例<br><img src="https://i.imgur.com/HIKjSIj.png" alt=""></p>
+<h2 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">add</span> <span class="keyword">column</span> 类型名 限定词</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">change</span> 原列名 改变后的列名 类型名 限定词</div><div class="line">alert <span class="keyword">table</span> 表名 <span class="keyword">drop</span></div></pre></td></tr></table></figure>
+<p>添加了一列并且加入了外键<br><img src="https://i.imgur.com/f9RMxlB.png" alt=""><br>修改一列的属性并且删除刚刚添加的属性(删除外键列之前要先删除对应的constraint)<br><img src="https://i.imgur.com/593GONn.png" alt=""><br><img src="https://i.imgur.com/EWrJz7Y.png" alt=""></p>
+<h2 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> 表名；</div></pre></td></tr></table></figure>
+<h2 id="关于外键"><a href="#关于外键" class="headerlink" title="关于外键"></a>关于外键</h2><p>如果一个表生成的外键，那么在声明外键之后可以加上<code>ON DELETE|UPDATE {RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT}</code>以声明在外键所参照的数据被删除或者更新的时候数据库应该采取什么样的策略，其中</p>
+<ul>
+<li>on delete|upadte是触发事件</li>
+<li>restrict为显示外键参照对象的修改</li>
+<li>cascade是当参照对象改变时候级联改变当前表的值</li>
+<li>set null是设置成nulll</li>
+<li>no action是不采取任何动作</li>
+<li>set default是设置为默认值</li>
+</ul>
+<h2 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> 表名(列名<span class="number">1</span>，列名<span class="number">2</span>……) <span class="keyword">values</span>(值<span class="number">1</span>，值<span class="number">2</span>……)</div></pre></td></tr></table></figure>
+<h2 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> 表名 <span class="keyword">set</span> 列名<span class="number">1</span>=值<span class="number">1</span>，列名<span class="number">2</span>=值<span class="number">2</span>，…… <span class="keyword">where</span> 条件</div></pre></td></tr></table></figure>
+<h2 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> 表名 <span class="keyword">where</span> 条件</div></pre></td></tr></table></figure>
+<h2 id="内连接，左连接，右连接"><a href="#内连接，左连接，右连接" class="headerlink" title="内连接，左连接，右连接"></a>内连接，左连接，右连接</h2><p>例如有如下两个表<br><img src="https://i.imgur.com/XdnLY1L.png" alt=""><br>内连接使用 table1 inner join table2 on 条件，等同于直接where语句，而且貌似后面一种执行的更快<br><img src="https://i.imgur.com/dQVvgf0.png" alt=""><br>左连接使用left join关键字<br><img src="https://i.imgur.com/Up7SQna.png" alt=""><br>右连接使用right join 关键字<br><img src="https://i.imgur.com/DVVqX4C.png" alt=""></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>你同样可以在<a href="https://buwenqi.github.io/" target="_blank" rel="external">我的博客</a>看到这篇文章。</p>
 
       
     </div>
@@ -413,7 +413,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
           
         </div>
       
@@ -426,8 +426,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/10/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2017/11/07/Java动态代理解析/" rel="next" title="Java动态代理解析">
+                <i class="fa fa-chevron-left"></i> Java动态代理解析
               </a>
             
           </div>
@@ -435,10 +435,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/04/栈和队列/" rel="prev" title="栈和队列">
-                栈和队列 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -611,7 +607,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些术语"><span class="nav-number">1.</span> <span class="nav-text">一些术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-List-lt-Object-gt-List-lt-String-gt-List-lt-gt-的讨论"><span class="nav-number">2.</span> <span class="nav-text">List, List<Object>, List<String>, List<?>的讨论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优先使用列表而不是数组"><span class="nav-number">3.</span> <span class="nav-text">优先使用列表而不是数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型擦除对泛型的限制"><span class="nav-number">4.</span> <span class="nav-text">类型擦除对泛型的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comparable-lt-T-gt-接口"><span class="nav-number">5.</span> <span class="nav-text">Comparable<T>接口</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建表"><span class="nav-number">1.</span> <span class="nav-text">创建表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改表"><span class="nav-number">2.</span> <span class="nav-text">修改表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除表"><span class="nav-number">3.</span> <span class="nav-text">删除表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于外键"><span class="nav-number">4.</span> <span class="nav-text">关于外键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入数据"><span class="nav-number">5.</span> <span class="nav-text">插入数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更新数据"><span class="nav-number">6.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除数据"><span class="nav-number">7.</span> <span class="nav-text">删除数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内连接，左连接，右连接"><span class="nav-number">8.</span> <span class="nav-text">内连接，左连接，右连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">9.</span> <span class="nav-text">其他</span></a></li></ol></div>
             
 
           </div>
