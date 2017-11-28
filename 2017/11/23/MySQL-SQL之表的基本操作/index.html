@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="数据结构," />
+  <meta name="keywords" content="数据库," />
 
 
 
@@ -87,16 +87,25 @@
 
 
 
-<meta name="description" content="散列表的基本思想是将关键字（key）通过散列函数映射到表中的一个位置，在查找的时候只要通过关键字就可以直接获取对应位置的值。那么主要的问题就是如何设计散列函数和如何在不同的关键字映射到同一位置的时候处理冲突。注意我们现在讨论的存放的仅仅是关键字，实际情况存放的是关键字+值。">
+<meta name="description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))">
 <meta property="og:type" content="article">
-<meta property="og:title" content="散列">
-<meta property="og:url" content="http://yoursite.com/2017/10/07/散列/index.html">
+<meta property="og:title" content="MySQL-SQL之表的基本操作">
+<meta property="og:url" content="http://yoursite.com/2017/11/23/MySQL-SQL之表的基本操作/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
-<meta property="og:description" content="散列表的基本思想是将关键字（key）通过散列函数映射到表中的一个位置，在查找的时候只要通过关键字就可以直接获取对应位置的值。那么主要的问题就是如何设计散列函数和如何在不同的关键字映射到同一位置的时候处理冲突。注意我们现在讨论的存放的仅仅是关键字，实际情况存放的是关键字+值。">
-<meta property="og:updated_time" content="2017-10-07T08:36:01.474Z">
+<meta property="og:description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))">
+<meta property="og:image" content="https://i.imgur.com/HIKjSIj.png">
+<meta property="og:image" content="https://i.imgur.com/f9RMxlB.png">
+<meta property="og:image" content="https://i.imgur.com/593GONn.png">
+<meta property="og:image" content="https://i.imgur.com/EWrJz7Y.png">
+<meta property="og:image" content="https://i.imgur.com/XdnLY1L.png">
+<meta property="og:image" content="https://i.imgur.com/dQVvgf0.png">
+<meta property="og:image" content="https://i.imgur.com/Up7SQna.png">
+<meta property="og:image" content="https://i.imgur.com/DVVqX4C.png">
+<meta property="og:updated_time" content="2017-11-28T05:26:51.524Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="散列">
-<meta name="twitter:description" content="散列表的基本思想是将关键字（key）通过散列函数映射到表中的一个位置，在查找的时候只要通过关键字就可以直接获取对应位置的值。那么主要的问题就是如何设计散列函数和如何在不同的关键字映射到同一位置的时候处理冲突。注意我们现在讨论的存放的仅仅是关键字，实际情况存放的是关键字+值。">
+<meta name="twitter:title" content="MySQL-SQL之表的基本操作">
+<meta name="twitter:description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))">
+<meta name="twitter:image" content="https://i.imgur.com/HIKjSIj.png">
 
 
 
@@ -124,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/10/07/散列/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/23/MySQL-SQL之表的基本操作/"/>
 
 
 
 
 
-  <title> 散列 | Wenqi's Blog </title>
+  <title> MySQL-SQL之表的基本操作 | Wenqi's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -257,7 +266,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/07/散列/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/23/MySQL-SQL之表的基本操作/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Wenqi">
@@ -281,7 +290,7 @@
             
             
               
-                散列
+                MySQL-SQL之表的基本操作
               
             
           </h1>
@@ -296,8 +305,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-07T13:50:39+08:00">
-                2017-10-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-23T15:43:21+08:00">
+                2017-11-23
               </time>
             
 
@@ -314,7 +323,7 @@
 
           
           
-             <span id="/2017/10/07/散列/" class="leancloud_visitors" data-flag-title="散列">
+             <span id="/2017/11/23/MySQL-SQL之表的基本操作/" class="leancloud_visitors" data-flag-title="MySQL-SQL之表的基本操作">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -343,19 +352,26 @@
       
 
       
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
-<p>散列表的基本思想是将<strong>关键字</strong>（key）通过<strong>散列函数</strong>映射到表中的一个<strong>位置</strong>，在查找的时候只要通过关键字就可以直接获取对应位置的值。那么主要的问题就是<strong>如何设计散列函数</strong>和如何在不同的关键字映射到同一位置的时候<strong>处理冲突</strong>。注意我们现在讨论的存放的仅仅是关键字，实际情况存放的是关键字+值。<br><a id="more"></a></p>
-<h2 id="处理冲突的方法"><a href="#处理冲突的方法" class="headerlink" title="处理冲突的方法"></a>处理冲突的方法</h2><h3 id="分离链表法"><a href="#分离链表法" class="headerlink" title="分离链表法"></a>分离链表法</h3><p>也称为拉链法，其基本思想是在冲突发生后使用链表来存储关键字散列值相同的值，查询的过程包括一次散列函数映射和链表的查询过程。</p>
-<h3 id="开放定址法"><a href="#开放定址法" class="headerlink" title="开放定址法"></a>开放定址法</h3><p>是不用链表处理冲突的散列表，其基本思想是当冲突发生后去找其他的空着的位置作为该关键字的位置。用公式来表示\(h_i(x)=(hash(x)+f(i)) mod TableSize\),f(i)为冲突解决函数。 不同的开放定址法如下：</p>
-<ol>
-<li>线性探测法，即\(f(i)=i\)。也就是如果当前发生冲突，就查找下一个位置是否为空，如果为空，则放入，否则继续查找</li>
-<li>平法探测法，即\(f(i)=i^2\)。</li>
-<li>双散列，即\(f(i)=i*hash_2(x)\),也就是说用第二个散列函数作为处理冲突函数</li>
-</ol>
-<p>##再散列<br>再散列是在散列表已经填的<strong>太满</strong>后，不论插入还是查找操作性能都大幅度降低，将原来散列表的<strong>所有值</strong>重新散列到一个<strong>更大</strong>的散列表的过程。</p>
-<h2 id="其他散列方法"><a href="#其他散列方法" class="headerlink" title="其他散列方法"></a>其他散列方法</h2><h3 id="布谷鸟散列"><a href="#布谷鸟散列" class="headerlink" title="布谷鸟散列"></a>布谷鸟散列</h3><p>布谷鸟散列每个散列值对应两个盒子，它维护两个表，并且用两个独立的散列函数，布谷鸟散列保持不变的是一个项总是会被存储在两个位置之一。</p>
-<h3 id="跳房子散列"><a href="#跳房子散列" class="headerlink" title="跳房子散列"></a>跳房子散列</h3><p>它尝试改进经典的线性探测算法，它的做法是给探测序列的最大长度加上一个上界，即令MAX_DIST为最大探测序列的上界，即项x必须在列出的hash(x),hash(x)+1,……,hash(x)+(MAX_DIST-1)的位置中找到，实现的方式使用一个信息，这在hash(x)后MAX_DIST个位置哪个被占了。</p>
+        <h2 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> tableName(</div><div class="line">列名 类型名 限定词&lt;<span class="keyword">not</span> <span class="literal">null</span>,<span class="keyword">default</span> <span class="keyword">value</span>, autoincrement&gt;</div><div class="line">primary <span class="keyword">key</span>(列名<span class="number">1</span>，列名<span class="number">2</span>……)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">1</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">2</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">)</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>常用的数据类型参见<a href="http://blog.csdn.net/applelg/article/details/54616130" target="_blank" rel="external">这里</a><br>以下为创建表的实例<br><img src="https://i.imgur.com/HIKjSIj.png" alt=""></p>
+<h2 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">add</span> <span class="keyword">column</span> 类型名 限定词</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">change</span> 原列名 改变后的列名 类型名 限定词</div><div class="line">alert <span class="keyword">table</span> 表名 <span class="keyword">drop</span></div></pre></td></tr></table></figure>
+<p>添加了一列并且加入了外键<br><img src="https://i.imgur.com/f9RMxlB.png" alt=""><br>修改一列的属性并且删除刚刚添加的属性(删除外键列之前要先删除对应的constraint)<br><img src="https://i.imgur.com/593GONn.png" alt=""><br><img src="https://i.imgur.com/EWrJz7Y.png" alt=""></p>
+<h2 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> 表名；</div></pre></td></tr></table></figure>
+<h2 id="关于外键"><a href="#关于外键" class="headerlink" title="关于外键"></a>关于外键</h2><p>如果一个表生成的外键，那么在声明外键之后可以加上<code>ON DELETE|UPDATE {RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT}</code>以声明在外键所参照的数据被删除或者更新的时候数据库应该采取什么样的策略，其中</p>
+<ul>
+<li>on delete|upadte是触发事件</li>
+<li>restrict为显示外键参照对象的修改</li>
+<li>cascade是当参照对象改变时候级联改变当前表的值</li>
+<li>set null是设置成nulll</li>
+<li>no action是不采取任何动作</li>
+<li>set default是设置为默认值</li>
+</ul>
+<h2 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> 表名(列名<span class="number">1</span>，列名<span class="number">2</span>……) <span class="keyword">values</span>(值<span class="number">1</span>，值<span class="number">2</span>……)</div></pre></td></tr></table></figure>
+<h2 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> 表名 <span class="keyword">set</span> 列名<span class="number">1</span>=值<span class="number">1</span>，列名<span class="number">2</span>=值<span class="number">2</span>，…… <span class="keyword">where</span> 条件</div></pre></td></tr></table></figure>
+<h2 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> 表名 <span class="keyword">where</span> 条件</div></pre></td></tr></table></figure>
+<h2 id="内连接，左连接，右连接"><a href="#内连接，左连接，右连接" class="headerlink" title="内连接，左连接，右连接"></a>内连接，左连接，右连接</h2><p>例如有如下两个表<br><img src="https://i.imgur.com/XdnLY1L.png" alt=""><br>内连接使用 table1 inner join table2 on 条件，等同于直接where语句，而且貌似后面一种执行的更快<br><img src="https://i.imgur.com/dQVvgf0.png" alt=""><br>左连接使用left join关键字<br><img src="https://i.imgur.com/Up7SQna.png" alt=""><br>右连接使用right join 关键字<br><img src="https://i.imgur.com/DVVqX4C.png" alt=""></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>你同样可以在<a href="https://buwenqi.github.io/" target="_blank" rel="external">我的博客</a>看到这篇文章。</p>
 
       
     </div>
@@ -395,7 +411,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
           
         </div>
       
@@ -408,8 +424,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/28/liunx笔记汇总/" rel="next" title="liunx笔记汇总">
-                <i class="fa fa-chevron-left"></i> liunx笔记汇总
+              <a href="/2017/11/07/Java动态代理解析/" rel="next" title="Java动态代理解析">
+                <i class="fa fa-chevron-left"></i> Java动态代理解析
               </a>
             
           </div>
@@ -418,8 +434,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/10/08/优先队列（堆）/" rel="prev" title="优先队列（堆）">
-                优先队列（堆） <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/23/MySQL-SQL之视图、存储过程/" rel="prev" title="MySQL-SQL之视图、存储过程">
+                MySQL-SQL之视图、存储过程 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -593,7 +609,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#处理冲突的方法"><span class="nav-number">1.</span> <span class="nav-text">处理冲突的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分离链表法"><span class="nav-number">1.1.</span> <span class="nav-text">分离链表法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开放定址法"><span class="nav-number">1.2.</span> <span class="nav-text">开放定址法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他散列方法"><span class="nav-number">2.</span> <span class="nav-text">其他散列方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#布谷鸟散列"><span class="nav-number">2.1.</span> <span class="nav-text">布谷鸟散列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跳房子散列"><span class="nav-number">2.2.</span> <span class="nav-text">跳房子散列</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建表"><span class="nav-number">1.</span> <span class="nav-text">创建表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改表"><span class="nav-number">2.</span> <span class="nav-text">修改表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除表"><span class="nav-number">3.</span> <span class="nav-text">删除表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于外键"><span class="nav-number">4.</span> <span class="nav-text">关于外键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入数据"><span class="nav-number">5.</span> <span class="nav-text">插入数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更新数据"><span class="nav-number">6.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除数据"><span class="nav-number">7.</span> <span class="nav-text">删除数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内连接，左连接，右连接"><span class="nav-number">8.</span> <span class="nav-text">内连接，左连接，右连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">9.</span> <span class="nav-text">其他</span></a></li></ol></div>
             
 
           </div>
