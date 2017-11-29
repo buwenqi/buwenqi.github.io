@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="数据结构," />
+  <meta name="keywords" content="数据库," />
 
 
 
@@ -87,16 +87,38 @@
 
 
 
-<meta name="description" content="优先队列也就是我们常说的小根堆，它至少支持两种操作：插入，删除最小者，它的一种实现方式是二叉堆。">
+<meta name="description" content="游标的出现使得对一个查询结果集的每一行结果能够更细粒度的操作，现在MySQL只支持在存储过程中定义存储过程。一个游标的使用过程是这样的：
+
+使用 &amp;lt;declare 游标名 cursor for 查询语句&amp;gt; 定义一个游标
+使用 &amp;lt;open 游标名&amp;gt; 打开游标准备使用
+使用fetch语句获取结果中的一行结果到变量 &amp;lt;fetch 游标名 into 变量名&amp;gt;
+使用 &amp;l">
 <meta property="og:type" content="article">
-<meta property="og:title" content="优先队列（堆）">
-<meta property="og:url" content="http://yoursite.com/2017/10/08/优先队列（堆）/index.html">
+<meta property="og:title" content="MySQL-SQL之游标，触发器和事务">
+<meta property="og:url" content="http://yoursite.com/2017/11/28/MySQL-SQL之游标，触发器和事务/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
-<meta property="og:description" content="优先队列也就是我们常说的小根堆，它至少支持两种操作：插入，删除最小者，它的一种实现方式是二叉堆。">
-<meta property="og:updated_time" content="2017-10-08T03:51:28.235Z">
+<meta property="og:description" content="游标的出现使得对一个查询结果集的每一行结果能够更细粒度的操作，现在MySQL只支持在存储过程中定义存储过程。一个游标的使用过程是这样的：
+
+使用 &amp;lt;declare 游标名 cursor for 查询语句&amp;gt; 定义一个游标
+使用 &amp;lt;open 游标名&amp;gt; 打开游标准备使用
+使用fetch语句获取结果中的一行结果到变量 &amp;lt;fetch 游标名 into 变量名&amp;gt;
+使用 &amp;l">
+<meta property="og:image" content="https://i.imgur.com/9pSzVGt.png">
+<meta property="og:image" content="https://i.imgur.com/ZhRVuE3.png">
+<meta property="og:image" content="https://i.imgur.com/kZ4Fwdb.png">
+<meta property="og:image" content="https://i.imgur.com/1d25HSq.png">
+<meta property="og:image" content="https://i.imgur.com/KFmkg3n.png">
+<meta property="og:image" content="https://i.imgur.com/ZWzIS2f.png">
+<meta property="og:updated_time" content="2017-11-29T11:21:38.875Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="优先队列（堆）">
-<meta name="twitter:description" content="优先队列也就是我们常说的小根堆，它至少支持两种操作：插入，删除最小者，它的一种实现方式是二叉堆。">
+<meta name="twitter:title" content="MySQL-SQL之游标，触发器和事务">
+<meta name="twitter:description" content="游标的出现使得对一个查询结果集的每一行结果能够更细粒度的操作，现在MySQL只支持在存储过程中定义存储过程。一个游标的使用过程是这样的：
+
+使用 &amp;lt;declare 游标名 cursor for 查询语句&amp;gt; 定义一个游标
+使用 &amp;lt;open 游标名&amp;gt; 打开游标准备使用
+使用fetch语句获取结果中的一行结果到变量 &amp;lt;fetch 游标名 into 变量名&amp;gt;
+使用 &amp;l">
+<meta name="twitter:image" content="https://i.imgur.com/9pSzVGt.png">
 
 
 
@@ -124,13 +146,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/10/08/优先队列（堆）/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/28/MySQL-SQL之游标，触发器和事务/"/>
 
 
 
 
 
-  <title> 优先队列（堆） | Wenqi's Blog </title>
+  <title> MySQL-SQL之游标，触发器和事务 | Wenqi's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -257,7 +279,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/08/优先队列（堆）/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/28/MySQL-SQL之游标，触发器和事务/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Wenqi">
@@ -281,7 +303,7 @@
             
             
               
-                优先队列（堆）
+                MySQL-SQL之游标，触发器和事务
               
             
           </h1>
@@ -296,8 +318,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-08T10:20:08+08:00">
-                2017-10-08
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-28T13:50:56+08:00">
+                2017-11-28
               </time>
             
 
@@ -314,7 +336,7 @@
 
           
           
-             <span id="/2017/10/08/优先队列（堆）/" class="leancloud_visitors" data-flag-title="优先队列（堆）">
+             <span id="/2017/11/28/MySQL-SQL之游标，触发器和事务/" class="leancloud_visitors" data-flag-title="MySQL-SQL之游标，触发器和事务">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -343,21 +365,20 @@
       
 
       
-        <p>优先队列也就是我们常说的小根堆，它至少支持两种操作：插入，删除最小者，它的一种实现方式是二叉堆。<br><a id="more"></a></p>
-<p>##二叉堆<br>二叉堆具有<strong>结构性</strong>和<strong>堆序性</strong>，所谓结构性，是指二叉堆是一颗完全二叉树，而堆序性是指根节点的值应该是最小的。其实堆有一个递归的定义方式：1）堆的根小于它的左右子孩子，2）它的左右子树也是堆。</p>
-<p>堆既然是一颗完全二叉树，那么我们就可以用数组的方式来存储堆，而下标的值则已经蕴含了父子关系的信息，如果从1开始存储的话，比如任意位置i上的元素，那么它的左孩子在2i位置上，右孩子在2i+1位置上。<br><strong>基本操作</strong></p>
-<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><p>将新的节点x插入到二叉堆的最后一个位置size+1处，那么需要对插入的元素进行<strong>上滤</strong>来确定其最终位置，上滤的过程是调整新插入的节点，使得整个二叉堆保持堆序性质。其实现方式如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">描述：二叉堆插入</div><div class="line">输入：二叉堆数组array[],含有的元素个数,待插入的值x</div><div class="line">输出：调整好的二叉堆数组</div><div class="line">array[0]=x,哨兵值</div><div class="line">hole=size+1，当前位置</div><div class="line">循环直至x&gt;array[hole/2]//当插入的节点大于父节点的值</div><div class="line">	array[hole]=array[hole/2]//将hole处的值复制成父节点的值</div><div class="line">	hole=hole/2</div><div class="line">array[hole]=x //找到的最终位置</div></pre></td></tr></table></figure></p>
-<p>java代码实现如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(T x)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span>(currentSize==array.length-<span class="number">1</span>) &#123;<span class="comment">//0位置空出，从1开始放</span></div><div class="line">		enlargeArray(array.length*<span class="number">2</span>+<span class="number">1</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">int</span> hole= ++currentSize;</div><div class="line">	array[<span class="number">0</span>]= x;<span class="comment">//作为哨兵值，在hole变成1时起作用</span></div><div class="line">	<span class="keyword">while</span>(x.compareTo(array[hole/<span class="number">2</span>])&lt;<span class="number">0</span>) &#123;<span class="comment">//若当前节点的小于父节点</span></div><div class="line">		array[hole]=array[hole/<span class="number">2</span>];</div><div class="line">		hole/=<span class="number">2</span>;</div><div class="line">	&#125;<span class="comment">//while循环实现上滤</span></div><div class="line">	array[hole]=x;<span class="comment">//放到最终位置上</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="下滤"><a href="#下滤" class="headerlink" title="下滤"></a>下滤</h3><p>插入过程是使用的上滤的过程，而像删除堆顶元素，从已有的数组初始建堆等操作都是通过下滤来实现的，下滤的过程和上滤的稍又不同，具体思路如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">描述：给定堆指定位置，实现向下调整的过程</div><div class="line">输入：堆数组array，当前位置size，要调整的位置position</div><div class="line">输出：调整好的堆</div><div class="line">tmp=array[position]//取出要调整的值</div><div class="line">循环当position的左孩子lchild存在时</div><div class="line">	当lchild+1存在并且array[lchild+1]&lt;array[lchild]时</div><div class="line">		选中较小的孩子和父节点比较，littleChild=lchild+1</div><div class="line">	如果array[littleChild]&lt;temp</div><div class="line">		array[position]=array[littleChild]</div><div class="line">	否则</div><div class="line">		结束循环</div><div class="line">	position=littleChild</div><div class="line">array[position]=tmp//找到最终位置，结束</div></pre></td></tr></table></figure></p>
-<p>其Java实现如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">percolateDown</span><span class="params">(<span class="keyword">int</span> hole)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> child;<span class="comment">//用于存储将要替换的位置</span></div><div class="line">	T tmp=array[hole];<span class="comment">//取出hole位置的值</span></div><div class="line">	<span class="keyword">while</span>(hole*<span class="number">2</span>&lt;=currentSize) &#123;</div><div class="line">		child=hole*<span class="number">2</span>;<span class="comment">//左孩子位置</span></div><div class="line">		<span class="keyword">if</span>(child!=currentSize&amp;&amp;array[child+<span class="number">1</span>].compareTo(array[child])&lt;<span class="number">0</span>)<span class="comment">//右孩子存在，且左孩子</span></div><div class="line">			child++;<span class="comment">//选择较小的左孩子</span></div><div class="line">		<span class="keyword">if</span>(tmp.compareTo(array[child])&gt;<span class="number">0</span>) &#123;</div><div class="line">			array[hole]=array[child];</div><div class="line">		&#125;<span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		hole=child;</div><div class="line">	&#125;</div><div class="line">	array[hole]=tmp;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>初始建堆实现Java,其实其过程是从第一个非叶子节点开始逐步往上进行下滤操作<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 初始建堆采用从底往上对已有的树结构进行下滤</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buildHeap</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=currentSize/<span class="number">2</span>;i&gt;<span class="number">0</span>;i--) &#123;<span class="comment">//从第一个非叶子节点的节点进行下滤</span></div><div class="line">		percolateDown(i);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>删除堆顶元素（最小值）,操作方法是将最后一个节点的值搬到堆顶，然后对堆顶元素进行下滤调整<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">	 * 删除堆顶元素</div><div class="line">	 */</div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">deleteMin</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span>(currentSize==<span class="number">0</span>)</div><div class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> EmptyStackException();</div><div class="line">		T minItem=array[<span class="number">1</span>];</div><div class="line">		array[<span class="number">1</span>]=array[currentSize--];</div><div class="line">		percolateDown(<span class="number">1</span>);</div><div class="line">		<span class="keyword">return</span> minItem;</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="全部源码"><a href="#全部源码" class="headerlink" title="全部源码"></a>全部源码</h3><p>请点击<a href="https://github.com/buwenqi/DataStructure/blob/master/src/heap/BinaryHeap.java" target="_blank" rel="external">这里</a></p>
-<h3 id="其他的一些思考"><a href="#其他的一些思考" class="headerlink" title="其他的一些思考"></a>其他的一些思考</h3><p>一个堆所蕴含的序信息很少，我们除了知道根的值小于左右子树的值以外没有任何其他信息，比如说左右孩子的序，这是堆的性质决定的，对比二叉排序树，堆更像是一个减弱版的二叉排序树，但是实现起来却比二叉排序树简单，没有那么多限制，这也决定了它们的应用场景不一样。</p>
-<h2 id="其他的堆"><a href="#其他的堆" class="headerlink" title="其他的堆"></a>其他的堆</h2><h3 id="d-堆"><a href="#d-堆" class="headerlink" title="d-堆"></a>d-堆</h3><p>每个根节点有d个孩子，d=2时就是二叉堆</p>
-<h3 id="左式堆"><a href="#左式堆" class="headerlink" title="左式堆"></a>左式堆</h3><p>为支持二叉堆进行<strong>合并</strong>操作应运而生。<br>任意节点x零路径长npl是x到一个不具有连个儿子节点的最短路径长，也就是到null节点的最短距离，没有两个儿子的节点的零路径长是0.<br>左式堆要保持的性质是：<strong>是对于堆中的任何一个节点x，它的左儿子的零路径长要大于等于右儿子的零路径长</strong>。这个性质使得它更偏向于加深左子树的高度。<br>其实现合并两个左式堆H1,H2的方法是：如果两个堆其中一个是空的，我们就返回另一个；否则合并两个堆，合并堆的方式是递归的将较大根值的堆与较小根治堆的右子堆进行合并，合并完成后作为较小堆的右子堆，如果合并完成后右子堆的零路径长大于左子堆的零路径长，则交换左右子堆，并更新根节点的零路径长。</p>
-<h3 id="斜堆"><a href="#斜堆" class="headerlink" title="斜堆"></a>斜堆</h3><p>是左式堆的一种自我调整形式</p>
-<h3 id="二项队列"><a href="#二项队列" class="headerlink" title="二项队列"></a>二项队列</h3><p>二项队列是堆序的树的集合，也就是森林。每颗堆序树都是右约束的形式，叫做二项式树，高度为k的树恰好有2^k个节点。例如，大小为13的堆可以用森林B3,B2,B0表示，可以将其表示成二进制树1101。</p>
+        <p>游标的出现使得对一个查询结果集的每一行结果能够更细粒度的操作，现在MySQL只支持在存储过程中定义存储过程。一个游标的使用过程是这样的：</p>
+<ul>
+<li>使用 <code>&lt;declare 游标名 cursor for 查询语句&gt;</code> 定义一个游标</li>
+<li>使用 <code>&lt;open 游标名&gt;</code> 打开游标准备使用</li>
+<li>使用fetch语句获取结果中的一行结果到变量 <code>&lt;fetch 游标名 into 变量名&gt;</code></li>
+<li>使用 <code>&lt;close 游标名&gt;</code>关闭游标</li>
+</ul>
+<a id="more"></a>
+<h2 id="创建并使用游标"><a href="#创建并使用游标" class="headerlink" title="创建并使用游标"></a>创建并使用游标</h2><p>下面是一个通过游标遍历每一行并输出的过程<br><img src="https://i.imgur.com/9pSzVGt.png" alt=""><br>效果如下，每行都会打印一个结果<br><img src="https://i.imgur.com/ZhRVuE3.png" alt=""></p>
+<h2 id="创建触发器"><a href="#创建触发器" class="headerlink" title="创建触发器"></a>创建触发器</h2><p>创建触发器要指明四点：1）触发器的名字，2）触发器响应的活动（delete,insert,update），3）触发器响应活动的时间（before after）,4)触发器关联的表名称<br>所以触发器的创建格式是：<code>create trigger  触发器名称 触发器时间 触发器响应活动 on 关联表名 for each row begin 处理逻辑 end;</code><br>一个实例，比如我在修改一个customer的信息的时候记录下对应的cust_id，cust_name和对方的ip，已经修改的时间到customer_audit表<br><img src="https://i.imgur.com/kZ4Fwdb.png" alt=""><br><img src="https://i.imgur.com/1d25HSq.png" alt=""><br>执行一条update语句修改customers中的值得到<br><img src="https://i.imgur.com/KFmkg3n.png" alt=""></p>
+<h2 id="使用事务"><a href="#使用事务" class="headerlink" title="使用事务"></a>使用事务</h2><p>使用<code>start transaction;</code>开启事务，根据业务处理判断后选择提交事务<code>commit;</code>或者回滚<code>rollback;</code>,注意默认的mysql是开启自动提交事务的，需要手动设置<code>set autocommit=0</code>关闭事务，可以通过<code>row_count()&gt;0</code>函数获取执行结果是否执行成功,最好在执行完命令后就获取对应的结果值。我们同样可以通过<code>last_insert_id()</code>获取自增的id值。<br>注意declare声明的局部变量仅使用于存储过程的begin，end块中，并且要在begin开始后就声明所需要的局部变量，不然会报出执行错误，如果想要在存储过程之外使用变量，可以使用以@开头的用户变量，下面是一个使用事务处理的例子。<br><img src="https://i.imgur.com/ZWzIS2f.png" alt=""></p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a href="http://www.yiibai.com/mysql/create-the-first-trigger-in-mysql.html" target="_blank" rel="external">MySQL触发器创建</a></li>
+</ul>
 
       
     </div>
@@ -397,7 +418,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
           
         </div>
       
@@ -410,8 +431,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/07/散列/" rel="next" title="散列">
-                <i class="fa fa-chevron-left"></i> 散列
+              <a href="/2017/11/23/MySQL-SQL之视图、存储过程/" rel="next" title="MySQL-SQL之视图、存储过程">
+                <i class="fa fa-chevron-left"></i> MySQL-SQL之视图、存储过程
               </a>
             
           </div>
@@ -419,10 +440,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/19/深入理解排序算法java版/" rel="prev" title="深入理解排序算法java版">
-                深入理解排序算法java版 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -595,7 +612,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#插入"><span class="nav-number">1.</span> <span class="nav-text">插入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下滤"><span class="nav-number">2.</span> <span class="nav-text">下滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全部源码"><span class="nav-number">3.</span> <span class="nav-text">全部源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他的一些思考"><span class="nav-number">4.</span> <span class="nav-text">其他的一些思考</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他的堆"><span class="nav-number"></span> <span class="nav-text">其他的堆</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#d-堆"><span class="nav-number">1.</span> <span class="nav-text">d-堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#左式堆"><span class="nav-number">2.</span> <span class="nav-text">左式堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#斜堆"><span class="nav-number">3.</span> <span class="nav-text">斜堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二项队列"><span class="nav-number">4.</span> <span class="nav-text">二项队列</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建并使用游标"><span class="nav-number">1.</span> <span class="nav-text">创建并使用游标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建触发器"><span class="nav-number">2.</span> <span class="nav-text">创建触发器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用事务"><span class="nav-number">3.</span> <span class="nav-text">使用事务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">4.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
             
 
           </div>
