@@ -1,0 +1,886 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据结构," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="什么是伸展树？首先，伸展树(splay tree)是一颗二叉搜索树，它的定义是建立在二叉搜索树之上，并且它是基于类似程序局部性原理的假设：一个节点在一次被访问后，这个节点很可能不久再次被访问。那么伸展树的做法就是在每次一个节点被访问后，我们就把它推到树根的位置。正像程序局部性原理的实际效率被广泛证明一样，伸展树在实际的搜索效率上也是非常高效的。尽管存在最坏情况下单次操作会花费O(N)的时间，但是这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="伸展树（splay tree）">
+<meta property="og:url" content="http://yoursite.com/2017/08/17/伸展树（splay tree）/index.html">
+<meta property="og:site_name" content="Wenqi's Blog">
+<meta property="og:description" content="什么是伸展树？首先，伸展树(splay tree)是一颗二叉搜索树，它的定义是建立在二叉搜索树之上，并且它是基于类似程序局部性原理的假设：一个节点在一次被访问后，这个节点很可能不久再次被访问。那么伸展树的做法就是在每次一个节点被访问后，我们就把它推到树根的位置。正像程序局部性原理的实际效率被广泛证明一样，伸展树在实际的搜索效率上也是非常高效的。尽管存在最坏情况下单次操作会花费O(N)的时间，但是这">
+<meta property="og:image" content="http://i.imgur.com/ri2N4rq.png">
+<meta property="og:image" content="http://i.imgur.com/Vkkc5s0.png">
+<meta property="og:image" content="http://i.imgur.com/ZfGPTbT.png">
+<meta property="og:image" content="http://i.imgur.com/CYYOT5Y.png">
+<meta property="og:image" content="http://i.imgur.com/OZFdbGQ.png">
+<meta property="og:image" content="http://i.imgur.com/VXNqeeW.png">
+<meta property="og:image" content="http://i.imgur.com/tcBKotl.png">
+<meta property="og:image" content="http://i.imgur.com/n0dBadp.png">
+<meta property="og:image" content="http://i.imgur.com/0qaEPTY.png">
+<meta property="og:updated_time" content="2018-01-04T12:59:39.801Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="伸展树（splay tree）">
+<meta name="twitter:description" content="什么是伸展树？首先，伸展树(splay tree)是一颗二叉搜索树，它的定义是建立在二叉搜索树之上，并且它是基于类似程序局部性原理的假设：一个节点在一次被访问后，这个节点很可能不久再次被访问。那么伸展树的做法就是在每次一个节点被访问后，我们就把它推到树根的位置。正像程序局部性原理的实际效率被广泛证明一样，伸展树在实际的搜索效率上也是非常高效的。尽管存在最坏情况下单次操作会花费O(N)的时间，但是这">
+<meta name="twitter:image" content="http://i.imgur.com/ri2N4rq.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/17/伸展树（splay tree）/"/>
+
+
+
+
+
+  <title> 伸展树（splay tree） | Wenqi's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Wenqi's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            勾搭
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/17/伸展树（splay tree）/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Wenqi">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/me.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Wenqi's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Wenqi's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                伸展树（splay tree）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-17T21:19:29+08:00">
+                2017-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/08/17/伸展树（splay tree）/" class="leancloud_visitors" data-flag-title="伸展树（splay tree）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="什么是伸展树？"><a href="#什么是伸展树？" class="headerlink" title="什么是伸展树？"></a>什么是伸展树？</h2><p>首先，伸展树(splay tree)是一颗二叉搜索树，它的定义是建立在二叉搜索树之上，并且它是基于类似程序局部性原理的假设：一个节点在一次被访问后，这个节点很可能不久再次被访问。那么伸展树的做法就是在每次一个节点被访问后，我们就把它推到树根的位置。正像程序局部性原理的实际效率被广泛证明一样，伸展树在实际的搜索效率上也是非常高效的。尽管存在最坏情况下单次操作会花费O(N)的时间，但是这种情况并不是经常发生，而实际证明伸展树能够保证M次连续操作最多花费O(MlogN)的时间。</p>
+<p>相比于平衡二叉树，伸展树有差不多的平均性能，其他的优势在于：不需要存储平衡信息。另外如果采用自顶向下的调整方式，还能简略额外的栈开销。<br><a id="more"></a></p>
+<h2 id="如何在查找的一个节点时调整树？"><a href="#如何在查找的一个节点时调整树？" class="headerlink" title="如何在查找的一个节点时调整树？"></a>如何在查找的一个节点时调整树？</h2><p>大多数博客上来就说单旋转，一字型，之字形的情况以及如何调整，我觉得这没有说清楚为什么要用这样的调整策略，并不利于我们深入理解这种策略背后的考量。要理解这个问题，我们需要自底向上的调整方式说起。</p>
+<p>如果让我们自己设计伸展树查找后的伸展策略，目标是将查找到的节点调整到根节点的位置，我们的第一想法很简单，直接单旋转就好了，也就两种情况，一直循环到被查到的节点到根节点便是，但是这种做法会把不是被查找节点推到和原来被查询节点差不多的位置。一个简单的例子就是查询只有左子树的有序二叉查找树1,2……，9，</p>
+<ol>
+<li>如果我们查询1，则1需要9次比较，查询结束后，将1逐步单旋转到树根位置，此时的树形是1为树根只有右孩子9,9节点只有左子树。</li>
+<li>如果继续查询2，则也需要9次比较，查询结束后使用单旋转将2转到树根位置</li>
+<li>如果继续查询节点3，则需要8次比较</li>
+</ol>
+<p>也就是说以此类推，如果节点数是N的话，我们需要$N+\sum_{i=2}^{N} i=\Omega(N^2)$次查询时间。这种简单的旋转虽然把查询的节点推到的根节点，单也把其他节点推到了和它相似的深度，我们想以何种方法即可以即可以把根节点推到树根的位置，又可以进可能减少其他节点被推的深度，于是我们有了<strong>伸展</strong>的旋转方式。</p>
+<h3 id="伸展（splaying）"><a href="#伸展（splaying）" class="headerlink" title="伸展（splaying）"></a>伸展（splaying）</h3><p>伸展是一种特殊的旋转方式，它采用了类似于平衡二叉树的策略，如果查询节点可以通过两步旋转更快的到达根节点，则采用两步旋转法。所谓的单旋转，一字型，之字形，是根据父节点是否是根节点来划分的，并且是自底向上的思路。<br>如果查询节点的父节点是根节点，那么直接旋转该节点到根节点的位置。<br>如果查询节点的父节点不是根节点，那么该节点一定有祖父节点，那么就分为两种情况1）之字形，查询节点是祖父节点的左儿子的右儿子或者右儿子的左儿子，这种情况按照平衡二叉树的左右或右左不平衡情况的旋转方式即可将查询节点旋转到祖父节点位置，2）一字型，如果查询节点是祖父节点的右儿子的右儿子，那么这种情况需要先将父节点换到祖父节点的位置，然后在将查询节点旋转到父节点位置。具体如下图所示。</p>
+<center><br><img src="http://i.imgur.com/ri2N4rq.png" alt=""><br>图1：之字形旋转结果<br></center><br><center><br><img src="http://i.imgur.com/Vkkc5s0.png" alt=""><br>图2：一字型旋转结果<br></center><br>图中Z节点为查询节点，如果仅从旋转的动作来看，之字形旋转的过程和简单旋转的的结果是相同的，而一字型则不同，从其过程来看，它是先旋转其父节点到祖父节点，然后再旋转查询节点到父节点，而简单旋转总是先旋转查询节点。<br><br>那么这种旋转的改变会带来哪些不一样的结果？<br>我们用原来的例子来解释，如1-7的树对1进行查询后按伸展方式进行旋转，其结果如图3所示，在将1推到根的情况下，这个树的高度在降低，其他的节点并没有因为1成为树根而被推到更深的位置，而我们看图4，仅使用单次旋转的简单旋转的结果，其深度并没有发生改变，而所有节点的深度都因为1成为根加了1.<br><center><br><img src="http://i.imgur.com/ZfGPTbT.png" alt=""><br>图3：伸展方式旋转结果<br></center><br><center><br><img src="http://i.imgur.com/CYYOT5Y.png" alt=""><br>图3：简单旋转方式的结果<br></center>
+
+<h2 id="自顶向下的伸展树"><a href="#自顶向下的伸展树" class="headerlink" title="自顶向下的伸展树"></a>自顶向下的伸展树</h2><p>自底向上的伸展方式很容易理解，但是在实现的过程中需要使用栈来保存访问路径进行回溯，但是自顶向下的实现方式能够只用O(1)的存储方式，实现同样的实现效果。自自顶向下的伸展树实现首先将树划分成三个树，左树右树和中树，开始时左树和右树都是空树，待伸展的树为中树。<br>单旋转的的实现很简单，如图4所示，只需要将待查找节点Y的的父节点X作为右树（R）最左节点的左儿子即可。</p>
+<center><br><img src="http://i.imgur.com/OZFdbGQ.png" alt=""><br>图4：自顶向下的伸展树单旋转<br></center><br>一字型则只需要待查找节点Z的父节点Y和其祖父节点X进行一次旋转即可，然后做但选择将Y节点作为R树的最左节点的左儿子。如图5所示<br><center><br><img src="http://i.imgur.com/VXNqeeW.png" alt=""><br>图5：自顶向下的伸展树一字型旋转<br></center><br>之字形则不要像一字型一样，只要进行两次不同方向的单旋转即可，如图6所示，Z为查找节点，我们只需将Z的父节点及其右子树作为L树最右节点的右孩子即可，而其祖父节点X及其右子树作为R树最左节点的左孩子即可。<br><center><br><img src="http://i.imgur.com/tcBKotl.png" alt=""><br>图6：自顶向下的伸展树之字形旋转<br></center><br>在最终查询节点在中树达到了树根的位置，我们既可以做最终的合并，合并的规则如图7所示，将最终查询节点的左子树作为L树最左节点的右树，并把左树作为根节点的左树，而把根节点的右树作为R树最右节点的左树 ，并把R树作为根节点的右树。<br><center><br><img src="http://i.imgur.com/n0dBadp.png" alt=""><br>图7：最终合并<br></center>
+
+<h2 id="伸展的实现"><a href="#伸展的实现" class="headerlink" title="伸展的实现"></a>伸展的实现</h2><p>从上面的分析来看，我们在实现的时候仅需要在一字型的时候进行像平衡二叉树的单旋操作，而单旋转和之字形只需要简单的链改变。我们的实现思路如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">描述：在查询一个节点后进行伸展旋转，将其推到根节点位置</div><div class="line">输入：查找的节点的值x，伸展树树根root</div><div class="line">输出：新的树根</div><div class="line">初始化leftHeader=headerNode，rightHeader=headerNode</div><div class="line">初始化leftMax=leftHeader,rightMin=rightHeader</div><div class="line">循环</div><div class="line">	if x&lt;root节点的值，说明在左子树</div><div class="line">		if root.left为null，说明左子树为空，查找失败</div><div class="line">			调整结束，跳出循环</div><div class="line">		if x小于root.left的值，一字型情况</div><div class="line">			root=rotateWithLeftChild(root)，将root的左孩子调整到root的位置</div><div class="line">		//不论是x小于还是大于root.left的值，下一步都是将root作为R的最左孩子的左儿子</div><div class="line">		rightMin.left=root</div><div class="line">		rightMin=root//调整最左孩子</div><div class="line">		root=root.left</div><div class="line">	if x&gt;root节点的值，说明在右子树</div><div class="line">		如果root.right等于null,说明右子树为空，查找失败</div><div class="line">			调整结束，跳出循环</div><div class="line">		如果x大于root.right的值，右一字型情况</div><div class="line">			root=rotateWithRightChilde(root)</div><div class="line">		leftMax.right=root</div><div class="line">		leftMax=root</div><div class="line">		root=root.right</div><div class="line">	else 等于的情况</div><div class="line">		中树根已经为x，直接跳出循环</div><div class="line">开始合并</div><div class="line">leftMax.right=root.left</div><div class="line">rightMin.left=root.right</div><div class="line">root.left=leftHeader.right</div><div class="line">root.right=rightHeader.left</div><div class="line">return root</div></pre></td></tr></table></figure></p>
+<p>在这里有个小细节，就是我们在rightMin=root，root=root.left的时候，rightMin保持的root的left依然存在 ，我这里之所以没有把它置null是因为在最后合并的时候会同一经rightMin.left置成root.right，而且没一轮如果符合条件，都会发生置换。我们的Java实现如下。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">public</span> BinaryNode&lt;T&gt; <span class="title">splay</span><span class="params">(T x, BinaryNode&lt;T&gt; root)</span></span>&#123;</div><div class="line">		BinaryNode&lt; T&gt; headerNode=<span class="keyword">new</span> BinaryNode&lt;&gt;(<span class="keyword">null</span>);<span class="comment">//头节点，随便定义其值</span></div><div class="line">		BinaryNode&lt;T&gt;rightHeader=headerNode;</div><div class="line">		BinaryNode&lt;T&gt;leftHeader=headerNode;</div><div class="line">		BinaryNode&lt;T&gt;leftMax=leftHeader;</div><div class="line">		BinaryNode&lt;T&gt;rightMin=rightHeader;</div><div class="line">		<span class="keyword">if</span>(root==<span class="keyword">null</span>)</div><div class="line">			<span class="keyword">return</span> root;</div><div class="line">		</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">			<span class="keyword">if</span>(x.compareTo(root.element)&lt;<span class="number">0</span>) &#123;</div><div class="line">				<span class="keyword">if</span>(root.left==<span class="keyword">null</span>)</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				<span class="keyword">if</span>(x.compareTo(root.left.element)&lt;<span class="number">0</span>)</div><div class="line">					root=rotateWithLeftChild(root);</div><div class="line">				rightMin.left=root;</div><div class="line">				rightMin=root;</div><div class="line">				root=root.left;</div><div class="line">			&#125;<span class="keyword">else</span> <span class="keyword">if</span>(x.compareTo(root.element)&gt;<span class="number">0</span>) &#123;</div><div class="line">				<span class="keyword">if</span>(root.right==<span class="keyword">null</span>)</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				<span class="keyword">if</span>(x.compareTo(root.right.element)&gt;<span class="number">0</span>)</div><div class="line">					root=rotateWithRightChild(root);</div><div class="line">				leftMax.right=root;</div><div class="line">				leftMax=root;</div><div class="line">				root=root.right;</div><div class="line">			&#125;<span class="keyword">else</span> <span class="comment">//等于的情况，结束循环</span></div><div class="line">				<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">//开始合并</span></div><div class="line">		leftMax.right=root.left;</div><div class="line">		rightMin.left=root.right;</div><div class="line">		root.left=leftHeader.right;</div><div class="line">		root.right=rightHeader.left;</div><div class="line">		<span class="keyword">return</span> root;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="伸展树的插入实现"><a href="#伸展树的插入实现" class="headerlink" title="伸展树的插入实现"></a>伸展树的插入实现</h2><p>插入的实现基本思路是，如果根节点为空，直接返回新生成的节点，如果不为空，则对查找元素x在树上进行伸展操作，如果新的树根为x，那么原来树中有x，不再进行插入；如果新根的节点的值小于x，那么直接将新根节点作为x的左儿子，新根的右儿子作为x的右儿子，返回x节点；如果新根的节点的值大于x，思路类似。其伪代码标书如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">描述：插入一个节点到伸展树中</div><div class="line">输入：待插入节点的值x，伸展树的树根root</div><div class="line">输出：插入后的新根newRoot</div><div class="line">if root==null</div><div class="line">	返回newNode(x)</div><div class="line">root=spaly(x,root)//伸展</div><div class="line">if x&gt;root的值</div><div class="line">	newRoot=newNode(x)</div><div class="line">	newRoot.left=root</div><div class="line">	newRoot.right=root.right</div><div class="line">	root.right=null//因为root的right变到newRoot的right去了</div><div class="line">else if x&lt;root的值,应该插在左树上</div><div class="line">	newRoot=newNode(x)</div><div class="line">	newRoot.right=root</div><div class="line">	newRoot.left=root.left</div><div class="line">	root.left=null</div><div class="line">else //等于的情况</div><div class="line">	newRoot=root</div><div class="line">返回newRoot</div></pre></td></tr></table></figure></p>
+<p>其Java实现如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> BinaryNode&lt;T&gt; <span class="title">insert</span><span class="params">(T x, BinaryNode&lt;T&gt; root)</span></span>&#123;</div><div class="line">	<span class="keyword">if</span>(root==<span class="keyword">null</span>)</div><div class="line">		<span class="keyword">return</span> <span class="keyword">new</span> BinaryNode&lt;T&gt;(x);</div><div class="line">	root=splay(x, root);</div><div class="line">	BinaryNode&lt;T&gt;newRoot;</div><div class="line">	<span class="keyword">if</span>(x.compareTo(root.element)&gt;<span class="number">0</span>) &#123;</div><div class="line">		newRoot=<span class="keyword">new</span> BinaryNode&lt;T&gt;(x);</div><div class="line">		newRoot.left=root;</div><div class="line">		newRoot.right=root.right;</div><div class="line">		root.right=<span class="keyword">null</span>;</div><div class="line">	&#125;<span class="keyword">else</span> <span class="keyword">if</span>(x.compareTo(root.element)&lt;<span class="number">0</span>)&#123;</div><div class="line">		newRoot=<span class="keyword">new</span> BinaryNode&lt;T&gt;(x);</div><div class="line">		newRoot.right=root;</div><div class="line">		newRoot.left=root.left;</div><div class="line">		root.left=<span class="keyword">null</span>;</div><div class="line">	&#125;<span class="keyword">else</span> &#123;</div><div class="line">		newRoot=root;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> newRoot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们来测试一下，插入从1到7的插入并且再次插入1，层序遍历后结果是如下</p>
+<center><br><img src="http://i.imgur.com/0qaEPTY.png" alt=""><br>图8：测试添加<br></center>
+
+<h2 id="伸展树的删除实现"><a href="#伸展树的删除实现" class="headerlink" title="伸展树的删除实现"></a>伸展树的删除实现</h2><p>删除的过程很简单思路也很简单，如果树中不包含x,那么直接返回，如果找到了，进行伸展操作。接着如果左子树为空，则右儿子直接作为根返回，如果左子树不为空，则找到左儿子的最右节点，将根节点的右子树左为左儿子最右节点的右子树，从而完成删除，整个代码实现如下。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(T x)</span> </span>&#123;</div><div class="line">	BinaryNode&lt;T&gt; newRoot=splay(x,root);</div><div class="line">	<span class="keyword">if</span>(x.compareTo(newRoot.element)!=<span class="number">0</span>) &#123;</div><div class="line">		root= newRoot;</div><div class="line">	&#125;<span class="keyword">else</span> &#123;<span class="comment">//不等于的情况</span></div><div class="line">		<span class="keyword">if</span>(newRoot.left==<span class="keyword">null</span>) &#123;<span class="comment">//左子树等于null</span></div><div class="line">			newRoot=newRoot.right;</div><div class="line">		&#125;<span class="keyword">else</span> &#123;</div><div class="line">			BinaryNode&lt;T&gt; leftMax=newRoot.left;</div><div class="line">			<span class="keyword">while</span>(leftMax.right!=<span class="keyword">null</span>) &#123;</div><div class="line">				leftMax=leftMax.right;</div><div class="line">			&#125;</div><div class="line">			leftMax.right=newRoot.right;</div><div class="line">			newRoot=newRoot.left;</div><div class="line">		&#125;</div><div class="line">		root=newRoot;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="伸展树的应用场景"><a href="#伸展树的应用场景" class="headerlink" title="伸展树的应用场景"></a>伸展树的应用场景</h2><p>除了常用的伸展，插入，删除操作外，伸展树常用的功能还有合并两个树（join），以x分界分裂一个树(split)，其算法思想和前面类似。<br>一个有趣应用是用伸展树找到区间中的所有节点，具体的应用及其解决办法可以参见这几个好的博文<br><a href="http://blog.csdn.net/niuox/article/details/8018280" target="_blank" rel="external">伸展树的应用1</a><br><a href="https://wenku.baidu.com/view/db0f77661ed9ad51f01df23f.html" target="_blank" rel="external">伸展树的应用2</a><br><a href="https://wenku.baidu.com/view/7f0ff024ccbff121dd3683ac.html" target="_blank" rel="external">伸展树的应用3</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.png" alt="Wenqi WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/13/AVL树/" rel="next" title="AVL树">
+                <i class="fa fa-chevron-left"></i> AVL树
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/28/一个liunx命令题目引发的对shell的回顾/" rel="prev" title="一个liunx命令题目引发的对shell的回顾">
+                一个liunx命令题目引发的对shell的回顾 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/me.jpg"
+               alt="Wenqi" />
+          <p class="site-author-name" itemprop="name">Wenqi</p>
+          <p class="site-description motion-element" itemprop="description">To do one thing well.</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/buwenqi" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://cn.linkedin.com/in/buwenqi" target="_blank" title="Linkin">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Linkin
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://mijack.github.io/" title="Mi&Jack" target="_blank">Mi&Jack</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是伸展树？"><span class="nav-number">1.</span> <span class="nav-text">什么是伸展树？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何在查找的一个节点时调整树？"><span class="nav-number">2.</span> <span class="nav-text">如何在查找的一个节点时调整树？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#伸展（splaying）"><span class="nav-number">2.1.</span> <span class="nav-text">伸展（splaying）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自顶向下的伸展树"><span class="nav-number">3.</span> <span class="nav-text">自顶向下的伸展树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#伸展的实现"><span class="nav-number">4.</span> <span class="nav-text">伸展的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#伸展树的插入实现"><span class="nav-number">5.</span> <span class="nav-text">伸展树的插入实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#伸展树的删除实现"><span class="nav-number">6.</span> <span class="nav-text">伸展树的删除实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#伸展树的应用场景"><span class="nav-number">7.</span> <span class="nav-text">伸展树的应用场景</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wenqi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("RPU1pwQvesuCO2LV5JkRjQwQ-gzGzoHsz", "gMI3tTWeJP6JoKoS55sW8Ob8");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
