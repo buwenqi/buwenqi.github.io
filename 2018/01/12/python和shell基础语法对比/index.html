@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="数据库," />
+  <meta name="keywords" content="脚本语言," />
 
 
 
@@ -87,25 +87,18 @@
 
 
 
-<meta name="description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))">
+<meta name="description" content="python和shell都是我们经常使用的脚本语言，平时python主要用来写一些小型的任务，shell则在使用liunx系统部署任务的时候用的比较多，由于两者有一些相似之处，时间长了容易混掉，所以这里作文对一些基础的语法需求总结、比较、归纳，以为后用。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL-SQL之表的基本操作">
-<meta property="og:url" content="http://yoursite.com/2017/11/23/MySQL-SQL之表的基本操作/index.html">
+<meta property="og:title" content="python和shell基础语法对比">
+<meta property="og:url" content="http://yoursite.com/2018/01/12/python和shell基础语法对比/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
-<meta property="og:description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))">
-<meta property="og:image" content="https://i.imgur.com/HIKjSIj.png">
-<meta property="og:image" content="https://i.imgur.com/f9RMxlB.png">
-<meta property="og:image" content="https://i.imgur.com/593GONn.png">
-<meta property="og:image" content="https://i.imgur.com/EWrJz7Y.png">
-<meta property="og:image" content="https://i.imgur.com/XdnLY1L.png">
-<meta property="og:image" content="https://i.imgur.com/dQVvgf0.png">
-<meta property="og:image" content="https://i.imgur.com/Up7SQna.png">
-<meta property="og:image" content="https://i.imgur.com/DVVqX4C.png">
-<meta property="og:updated_time" content="2017-11-28T05:26:51.524Z">
+<meta property="og:description" content="python和shell都是我们经常使用的脚本语言，平时python主要用来写一些小型的任务，shell则在使用liunx系统部署任务的时候用的比较多，由于两者有一些相似之处，时间长了容易混掉，所以这里作文对一些基础的语法需求总结、比较、归纳，以为后用。">
+<meta property="og:image" content="https://i.imgur.com/oIbXM8v.png">
+<meta property="og:updated_time" content="2018-01-13T07:32:03.015Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL-SQL之表的基本操作">
-<meta name="twitter:description" content="创建表123456create table tableName(列名 类型名 限定词&amp;lt;not null,default value, autoincrement&amp;gt;primary key(列名1，列名2……)foreign key(列名1) references 参照表名(参照列名)foreign key(列名2) references 参照表名(参照列名))">
-<meta name="twitter:image" content="https://i.imgur.com/HIKjSIj.png">
+<meta name="twitter:title" content="python和shell基础语法对比">
+<meta name="twitter:description" content="python和shell都是我们经常使用的脚本语言，平时python主要用来写一些小型的任务，shell则在使用liunx系统部署任务的时候用的比较多，由于两者有一些相似之处，时间长了容易混掉，所以这里作文对一些基础的语法需求总结、比较、归纳，以为后用。">
+<meta name="twitter:image" content="https://i.imgur.com/oIbXM8v.png">
 
 
 
@@ -133,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/23/MySQL-SQL之表的基本操作/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/12/python和shell基础语法对比/"/>
 
 
 
 
 
-  <title> MySQL-SQL之表的基本操作 | Wenqi's Blog </title>
+  <title> python和shell基础语法对比 | Wenqi's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -276,7 +269,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/23/MySQL-SQL之表的基本操作/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/python和shell基础语法对比/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Wenqi">
@@ -300,7 +293,7 @@
             
             
               
-                MySQL-SQL之表的基本操作
+                python和shell基础语法对比
               
             
           </h1>
@@ -315,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-23T15:43:21+08:00">
-                2017-11-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-12T15:56:48+08:00">
+                2018-01-12
               </time>
             
 
@@ -333,7 +326,7 @@
 
           
           
-             <span id="/2017/11/23/MySQL-SQL之表的基本操作/" class="leancloud_visitors" data-flag-title="MySQL-SQL之表的基本操作">
+             <span id="/2018/01/12/python和shell基础语法对比/" class="leancloud_visitors" data-flag-title="python和shell基础语法对比">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -362,26 +355,50 @@
       
 
       
-        <h2 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> tableName(</div><div class="line">列名 类型名 限定词&lt;<span class="keyword">not</span> <span class="literal">null</span>,<span class="keyword">default</span> <span class="keyword">value</span>, autoincrement&gt;</div><div class="line">primary <span class="keyword">key</span>(列名<span class="number">1</span>，列名<span class="number">2</span>……)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">1</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">foreign <span class="keyword">key</span>(列名<span class="number">2</span>) <span class="keyword">references</span> 参照表名(参照列名)</div><div class="line">)</div></pre></td></tr></table></figure>
-<a id="more"></a>
-<p>常用的数据类型参见<a href="http://blog.csdn.net/applelg/article/details/54616130" target="_blank" rel="external">这里</a><br>以下为创建表的实例<br><img src="https://i.imgur.com/HIKjSIj.png" alt=""></p>
-<h2 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">add</span> <span class="keyword">column</span> 类型名 限定词</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">change</span> 原列名 改变后的列名 类型名 限定词</div><div class="line">alert <span class="keyword">table</span> 表名 <span class="keyword">drop</span></div></pre></td></tr></table></figure>
-<p>添加了一列并且加入了外键<br><img src="https://i.imgur.com/f9RMxlB.png" alt=""><br>修改一列的属性并且删除刚刚添加的属性(删除外键列之前要先删除对应的constraint)<br><img src="https://i.imgur.com/593GONn.png" alt=""><br><img src="https://i.imgur.com/EWrJz7Y.png" alt=""></p>
-<h2 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> 表名；</div></pre></td></tr></table></figure>
-<h2 id="关于外键"><a href="#关于外键" class="headerlink" title="关于外键"></a>关于外键</h2><p>如果一个表生成的外键，那么在声明外键之后可以加上<code>ON DELETE|UPDATE {RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT}</code>以声明在外键所参照的数据被删除或者更新的时候数据库应该采取什么样的策略，其中</p>
+        <p>python和shell都是我们经常使用的脚本语言，平时python主要用来写一些小型的任务，shell则在使用liunx系统部署任务的时候用的比较多，由于两者有一些相似之处，时间长了容易混掉，所以这里作文对一些基础的语法需求总结、比较、归纳，以为后用。<br><a id="more"></a></p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>python定义和使用只需要使用变量名，例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var=“hello”</div><div class="line">print var</div><div class="line"># hello</div></pre></td></tr></table></figure></p>
+<p>shell定义变量只需要变量名，而使用变量的值则需要加$符号，例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var=&quot;hello&quot;</div><div class="line">echo $var</div><div class="line"># hello</div></pre></td></tr></table></figure></p>
+<h2 id="数组的定义"><a href="#数组的定义" class="headerlink" title="数组的定义"></a>数组的定义</h2><p>python中没有数组的概念，但是有list，tuple，dict等可以代替其功能，声明一个list并使用其中的一个元素如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">numbers=[1,2,3,4,5]</div><div class="line">print numbers[0]</div><div class="line"># 1</div></pre></td></tr></table></figure></p>
+<p>shell中只有一维数组，其声明和使用方法如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">numbers=(1 2 3 4 5)</div><div class="line">print $&#123;numbers[0]&#125;</div><div class="line"># 1</div><div class="line">#返回所有的值用</div><div class="line">print $&#123;numbers[*]&#125;</div><div class="line"># 1 2 3 4 5</div></pre></td></tr></table></figure></p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>python和shell都可以是用#号添加单行注释，python可以使用’’’注释’’’添加多行注释</p>
+<h2 id="逻辑判断"><a href="#逻辑判断" class="headerlink" title="逻辑判断"></a>逻辑判断</h2><h3 id="条件的定义"><a href="#条件的定义" class="headerlink" title="条件的定义"></a>条件的定义</h3><p>在python中，除了所有的空值被认为False外所有的值都被解释为真True，这里的空值包括：None,0,””,(),{},[]和False,下面是例子<br><img src="https://i.imgur.com/oIbXM8v.png" alt=""><br>其他的由比较运算符进行比较支持，其中比较特殊的操作符有</p>
 <ul>
-<li>on delete|upadte是触发事件</li>
-<li>restrict为显示外键参照对象的修改</li>
-<li>cascade是当参照对象改变时候级联改变当前表的值</li>
-<li>set null是设置成nulll</li>
-<li>no action是不采取任何动作</li>
-<li>set default是设置为默认值</li>
+<li>x is y    x和y是同一个对象</li>
+<li>x is not y</li>
+<li>x in y    x在y集合中</li>
+<li>x not in y</li>
 </ul>
-<h2 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> 表名(列名<span class="number">1</span>，列名<span class="number">2</span>……) <span class="keyword">values</span>(值<span class="number">1</span>，值<span class="number">2</span>……)</div></pre></td></tr></table></figure>
-<h2 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> 表名 <span class="keyword">set</span> 列名<span class="number">1</span>=值<span class="number">1</span>，列名<span class="number">2</span>=值<span class="number">2</span>，…… <span class="keyword">where</span> 条件</div></pre></td></tr></table></figure>
-<h2 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> 表名 <span class="keyword">where</span> 条件</div></pre></td></tr></table></figure>
-<h2 id="内连接，左连接，右连接"><a href="#内连接，左连接，右连接" class="headerlink" title="内连接，左连接，右连接"></a>内连接，左连接，右连接</h2><p>例如有如下两个表<br><img src="https://i.imgur.com/XdnLY1L.png" alt=""><br>内连接使用 table1 inner join table2 on 条件，等同于直接where语句，而且貌似后面一种执行的更快<br><img src="https://i.imgur.com/dQVvgf0.png" alt=""><br>左连接使用left join关键字<br><img src="https://i.imgur.com/Up7SQna.png" alt=""><br>右连接使用right join 关键字<br><img src="https://i.imgur.com/DVVqX4C.png" alt=""></p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>你同样可以在<a href="https://buwenqi.github.io/" target="_blank" rel="external">我的博客</a>看到这篇文章。</p>
+<p>逻辑预算法用and,or,not.</p>
+<p>而shell的理念大不相同，它使用test命令来进行条件测试，它通常写成[ condition ]的形式，注意方括号两边都要有空格，它支持三类测试：</p>
+<ul>
+<li>数值比较，需要用-eq,-gt来代替==，&gt;</li>
+<li>字符串比较，可以用=，需要用-n之类的短命令，比如-n str来判定str长度是否非零</li>
+<li>文件比较，需要用短命令,例如-e file判断文件是否存在</li>
+</ul>
+<p>逻辑运算符&amp;&amp;，||来连接不同的[ condition ]</p>
+<p>另外，高级的数学表达式推荐使用(( expression ))逻辑判定，可以使用自增++，位移运算符&lt;&lt;,位运算符&amp;，逻辑与&amp;&amp;等等<br>高级的字符串判定使用[[ expression ]]逻辑判定，可以用类似于正则表达式如[[ $teststr== r* ]]判定以r开头的字符串<br>shell的数值运算推荐使用$[expression]的方式计算，浮点数的计算使用echo “expression”| bc的方式获取计算值</p>
+<h3 id="if-else"><a href="#if-else" class="headerlink" title="if else"></a>if else</h3><p>python中的if else使用方式如下，条件语句后加冒号，并且以缩进划分语句块<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">if condition:</div><div class="line">	statement</div><div class="line">elif condition:</div><div class="line">	statement</div><div class="line">else:</div><div class="line">	statement</div></pre></td></tr></table></figure></p>
+<p>shell中则不同，其if else使用方式如下,它使用then和elseif或fi来界定语句块，理论上不需要缩进<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">if [ condtion ]</div><div class="line">then</div><div class="line"> statement</div><div class="line">elif [condtion]</div><div class="line">then</div><div class="line"> statement</div><div class="line">else</div><div class="line"> statement</div><div class="line">fi</div></pre></td></tr></table></figure></p>
+<h3 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h3><p>python的for循环使用如下,仍然用缩进划分语句块<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for item in sequence:</div><div class="line">	statement</div></pre></td></tr></table></figure></p>
+<p>shell中for的使用方式类似<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">for item in list</div><div class="line">do</div><div class="line">statement</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>其中shell取item的分隔符全局变量为IFS（internal field separator），其默认值为空格，制表符，换行符，所以如果需要按行处理而忽略空格的话需要改变IFS的值<br>另外shell还支持c语言形式的for循环，它使用双小括号来完成，形式如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">for (( i=1; i&lt;=10;i++))</div><div class="line">do</div><div class="line"> statement</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<h3 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h3><p>python的while写法如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">while condition:</div><div class="line">	statement</div></pre></td></tr></table></figure></p>
+<p>shell的while写法如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">while [ conditon ]</div><div class="line">do</div><div class="line"> statement</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>python的异常处理方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">try:</div><div class="line">	statement</div><div class="line">except:</div><div class="line">	statement</div><div class="line">finally:</div><div class="line">	finalStatement</div></pre></td></tr></table></figure></p>
+<p>shell中没有相应的异常处理机制，只有每条命名的错误输出描述符2，可以通过2&gt;&amp;1将错误输出重定向到标准输出</p>
+<h2 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h2><p>python使用open函数，其有读写模式有只读r,只写w,添加a<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">myfile=open(&quot;filename&quot;,&quot;r&quot;)</div><div class="line">myfile.readlines()</div><div class="line">myfile.close()</div><div class="line">with open(&quot;finename&quot;,&quot;w&quot;) as myfile:</div><div class="line">	myfile.write(&quot;line\n&quot;)</div></pre></td></tr></table></figure></p>
+<p>shell读取文件的内容使用命令来读取，然后使用管道或者重定向进行输入处理，常用的命令有</p>
+<ol>
+<li>cat filename 读取文件的全部内容</li>
+<li>tail -n 2 filename读取尾两行</li>
+<li>head -n 2 filename读取前两行</li>
+</ol>
+<p>一个经典的问题，读取一个文件中的每一行做处理，使用python很简单<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">with open(&quot;filename&quot;,&quot;r&quot;) as myfile:</div><div class="line">	for line in myfile.readlines():</div><div class="line">		print line</div></pre></td></tr></table></figure></p>
+<p>使用shell<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">cat filename|while read line</div><div class="line">do</div><div class="line">echo $line</div><div class="line">done</div><div class="line">#或者</div><div class="line">IFS=&apos;\n&apos;</div><div class="line">for line in `cat  filename`</div><div class="line">do</div><div class="line">echo $line</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>python的函数如下形式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def functionname(params):</div><div class="line">	&apos;函数文档&apos;</div><div class="line">	statement</div><div class="line">	return value</div></pre></td></tr></table></figure></p>
+<p>其中函数文档可以通过functionname.<strong>doc</strong>获得<br>shell中函数形式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">function functionname &#123;</div><div class="line">	commands</div><div class="line">	return value</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用变量获取返回值，参数通过函数<code>functionname param1 param2</code>的方式传递，通过$1,$2的方式取出第一第二个参数，$#为参数数量，$*为所有参数。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>本文首发表于<a href="https://buwenqi.github.io" target="_blank" rel="external">我的博客</a>,欢迎关注！转载须注明文章出处，作者保留文章所有权。</p>
 
       
     </div>
@@ -421,7 +438,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+            <a href="/tags/脚本语言/" rel="tag"># 脚本语言</a>
           
         </div>
       
@@ -434,8 +451,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/07/Java动态代理解析/" rel="next" title="Java动态代理解析">
-                <i class="fa fa-chevron-left"></i> Java动态代理解析
+              <a href="/2018/01/02/深入理解红黑树原理与实现/" rel="next" title="深入理解红黑树原理与实现">
+                <i class="fa fa-chevron-left"></i> 深入理解红黑树原理与实现
               </a>
             
           </div>
@@ -443,10 +460,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/23/MySQL-SQL之视图、存储过程/" rel="prev" title="MySQL-SQL之视图、存储过程">
-                MySQL-SQL之视图、存储过程 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -619,7 +632,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建表"><span class="nav-number">1.</span> <span class="nav-text">创建表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改表"><span class="nav-number">2.</span> <span class="nav-text">修改表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除表"><span class="nav-number">3.</span> <span class="nav-text">删除表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于外键"><span class="nav-number">4.</span> <span class="nav-text">关于外键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入数据"><span class="nav-number">5.</span> <span class="nav-text">插入数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更新数据"><span class="nav-number">6.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除数据"><span class="nav-number">7.</span> <span class="nav-text">删除数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内连接，左连接，右连接"><span class="nav-number">8.</span> <span class="nav-text">内连接，左连接，右连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">9.</span> <span class="nav-text">其他</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#变量"><span class="nav-number">1.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组的定义"><span class="nav-number">2.</span> <span class="nav-text">数组的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注释"><span class="nav-number">3.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑判断"><span class="nav-number">4.</span> <span class="nav-text">逻辑判断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#条件的定义"><span class="nav-number">4.1.</span> <span class="nav-text">条件的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#if-else"><span class="nav-number">4.2.</span> <span class="nav-text">if else</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#for循环"><span class="nav-number">4.3.</span> <span class="nav-text">for循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#while循环"><span class="nav-number">4.4.</span> <span class="nav-text">while循环</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常处理"><span class="nav-number">5.</span> <span class="nav-text">异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件操作"><span class="nav-number">6.</span> <span class="nav-text">文件操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">7.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">8.</span> <span class="nav-text">其他</span></a></li></ol></div>
             
 
           </div>
