@@ -93,7 +93,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/02/19/机器学习总结系列之Introduction/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
 <meta property="og:description" content="人工智能在如今无疑是如日中天，它的各个子领域也因此得到了极大的发展，机器学习作为人工智能的一个子领域以赋予机器以人类特有的学习能力也得以大放异彩，它被应用在各个领域，典型的例子如个性化推荐，数据挖掘，垃圾邮件识别等等，机器学习算法和传统算法的不同之处在于传统算法研究的是如何解决一个有特定结果的问题，而机器学习算法则是挖掘数据中潜在的规律，然后对输入做出预测。按1959年Arthur Samue">
-<meta property="og:updated_time" content="2018-02-22T03:05:34.047Z">
+<meta property="og:updated_time" content="2018-02-25T04:56:37.849Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习总结系列之Introduction">
 <meta name="twitter:description" content="人工智能在如今无疑是如日中天，它的各个子领域也因此得到了极大的发展，机器学习作为人工智能的一个子领域以赋予机器以人类特有的学习能力也得以大放异彩，它被应用在各个领域，典型的例子如个性化推荐，数据挖掘，垃圾邮件识别等等，机器学习算法和传统算法的不同之处在于传统算法研究的是如何解决一个有特定结果的问题，而机器学习算法则是挖掘数据中潜在的规律，然后对输入做出预测。按1959年Arthur Samue">
@@ -353,7 +353,7 @@
       
 
       
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 <p>人工智能在如今无疑是如日中天，它的各个子领域也因此得到了极大的发展，<strong>机器学习</strong>作为人工智能的一个子领域以赋予机器以人类特有的学习能力也得以大放异彩，它被应用在各个领域，典型的例子如个性化推荐，数据挖掘，垃圾邮件识别等等，机器学习算法和传统算法的不同之处在于传统算法研究的是如何解决一个有特定结果的问题，而机器学习算法则是挖掘数据中潜在的规律，然后对输入做出预测。按1959年Arthur Samuel的说法来说，机器学习领域研究的是如何赋予计算机解决不能被明确编程解决的问题的学习能力。<br><a id="more"></a></p>
 <blockquote>
@@ -371,7 +371,7 @@
 <p>这里提出一个概念<strong>损失函数</strong>（Cost Function）,所谓损失函数是指我们的\(h_\theta(x)\)计算出来的值和已知的值之间的差的均值，表示处理便是如下公式：</p>
 <p>\(J(\theta_0,\theta_1)=&#123;&#123;1\over 2m&#125;(h_\theta(x^&#123;(i)&#125;)-y^&#123;(i)&#125;)^2&#125; \)</p>
 <p>当然，我们希望这个值越小越好，因为这个值越小，说明我们拟合的\(h_\theta(x)\)跟训练集中数据的相差很小，那么我们用\(h_\theta(x)\)推断新的x的对应的y值就越精确，那么，如何获得对应的的\(\theta_0,\theta_1\)使得\(J(\theta_0,\theta_1)\)最小呢？</p>
-<p>一提到最小化问题，我们立即会想到导数，最优化算法中一个经典的迭代算法叫做<strong>梯度下降</strong>（Gradient Descent）,我们可以用这个算法来获取\(J(\theta_0,\theta_1)\)取最小值时的\(\theta_0,\theta_1\)。梯度下降的基本原理是朝着梯度的反方向走，那么如果函数是凹函数的话经过多次迭代后就会区域收敛，取得最小值。而梯度的值是对应变量在目标函数上的偏导数组成的向量，如果我们想要朝着梯度的反方向走，只要减去沿着梯度方向的向量值即可。根据这个思想，我们可以归结出使用梯度下降来更新\(\theta\)值的方法，也就是：</p>
+<p>一提到最小化问题，我们立即会想到导数，最优化算法中一个经典的迭代算法叫做<strong>梯度下降</strong>（Gradient Descent）,我们可以用这个算法来获取\(J(\theta_0,\theta_1)\)取最小值时的\(\theta_0,\theta_1\)。梯度下降的基本原理是朝着梯度的反方向走，那么如果函数是凸函数的话经过多次迭代后就会区域收敛，取得最小值。而梯度的值是对应变量在目标函数上的偏导数组成的向量，如果我们想要朝着梯度的反方向走，只要减去沿着梯度方向的向量值即可。根据这个思想，我们可以归结出使用梯度下降来更新\(\theta\)值的方法，也就是：</p>
 <p>\( \theta_j=\theta_j-&#123;\alpha&#125;&#123;\frac&#123;\partial&#125;&#123;\partial \theta_j&#125;J(\theta_0,\theta_1)&#125;\)<br>\( \frac&#123;\partial&#125;&#123;\partial \theta_j&#125;J(\theta_0,\theta_1)=&#123;\frac&#123;1&#125;&#123;m&#125;&#123;\sum_&#123;i=1&#125;^&#123;m&#125;(h_\theta(x^&#123;(i)&#125;)-y^&#123;(i)&#125;)x^i&#125;&#125;\)<br>\(\Rightarrow\)<br>\( \theta_j=\theta_j-&#123;\alpha&#125;&#123;\frac&#123;1&#125;&#123;m&#125;&#123;\sum_&#123;i=1&#125;^&#123;m&#125;(h_\theta(x^&#123;(i)&#125;)-y^&#123;(i)&#125;)x^i&#125;&#125;\)</p>
 <p>其中\(\alpha\)为下降速率，不可太小或太大，太小会导致下降速度过慢，太大会导致不收敛。并且所有的\(\theta\)要同步更新。</p>
 <h2 id="多变量的线性回归（Linear-regression-with-multiple-variables）"><a href="#多变量的线性回归（Linear-regression-with-multiple-variables）" class="headerlink" title="多变量的线性回归（Linear regression with multiple variables）"></a>多变量的线性回归（Linear regression with multiple variables）</h2><p>单一变量的线性回归仅仅有一维输入数据x，这里扩展到更为常见的具有多维的输入数据，相应的，我们的多变量的线性回归的假设函数变成：</p>
@@ -453,6 +453,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/23/机器学习总结系列之Octave常用操作/" rel="prev" title="机器学习总结系列之Octave常用操作">
+                机器学习总结系列之Octave常用操作 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -545,7 +549,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
