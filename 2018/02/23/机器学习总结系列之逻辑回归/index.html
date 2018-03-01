@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="数据结构," />
+  <meta name="keywords" content="机器学习," />
 
 
 
@@ -87,16 +87,21 @@
 
 
 
-<meta name="description" content="散列表的基本思想是将关键字（key）通过散列函数映射到表中的一个位置，在查找的时候只要通过关键字就可以直接获取对应位置的值。那么主要的问题就是如何设计散列函数和如何在不同的关键字映射到同一位置的时候处理冲突。注意我们现在讨论的存放的仅仅是关键字，实际情况存放的是关键字+值。">
+<meta name="description" content="线性回归适合连续型的函数拟合任务（也就是回归任务），即对于不同的输入x，输出y所属于的域是一个连续的空间，而对于y是确定的离散的空间的分类任务，比如y只取0，1的二分类问题，仍然使用线性回归的直线拟合无法适应大量输入x而y只限制在0-1的情况，我们需要一种值域在0-1的函数来作为我们的假设函数。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="散列">
-<meta property="og:url" content="http://yoursite.com/2017/10/07/散列/index.html">
+<meta property="og:title" content="机器学习总结系列之逻辑回归">
+<meta property="og:url" content="http://yoursite.com/2018/02/23/机器学习总结系列之逻辑回归/index.html">
 <meta property="og:site_name" content="Wenqi's Blog">
-<meta property="og:description" content="散列表的基本思想是将关键字（key）通过散列函数映射到表中的一个位置，在查找的时候只要通过关键字就可以直接获取对应位置的值。那么主要的问题就是如何设计散列函数和如何在不同的关键字映射到同一位置的时候处理冲突。注意我们现在讨论的存放的仅仅是关键字，实际情况存放的是关键字+值。">
-<meta property="og:updated_time" content="2018-02-25T05:26:02.871Z">
+<meta property="og:description" content="线性回归适合连续型的函数拟合任务（也就是回归任务），即对于不同的输入x，输出y所属于的域是一个连续的空间，而对于y是确定的离散的空间的分类任务，比如y只取0，1的二分类问题，仍然使用线性回归的直线拟合无法适应大量输入x而y只限制在0-1的情况，我们需要一种值域在0-1的函数来作为我们的假设函数。">
+<meta property="og:image" content="https://i.imgur.com/cp47Nbg.png">
+<meta property="og:image" content="https://i.imgur.com/TaMu6Jf.png">
+<meta property="og:image" content="https://i.imgur.com/a2G8oGL.png">
+<meta property="og:image" content="https://i.imgur.com/4y1aKIb.jpg">
+<meta property="og:updated_time" content="2018-03-01T12:45:47.693Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="散列">
-<meta name="twitter:description" content="散列表的基本思想是将关键字（key）通过散列函数映射到表中的一个位置，在查找的时候只要通过关键字就可以直接获取对应位置的值。那么主要的问题就是如何设计散列函数和如何在不同的关键字映射到同一位置的时候处理冲突。注意我们现在讨论的存放的仅仅是关键字，实际情况存放的是关键字+值。">
+<meta name="twitter:title" content="机器学习总结系列之逻辑回归">
+<meta name="twitter:description" content="线性回归适合连续型的函数拟合任务（也就是回归任务），即对于不同的输入x，输出y所属于的域是一个连续的空间，而对于y是确定的离散的空间的分类任务，比如y只取0，1的二分类问题，仍然使用线性回归的直线拟合无法适应大量输入x而y只限制在0-1的情况，我们需要一种值域在0-1的函数来作为我们的假设函数。">
+<meta name="twitter:image" content="https://i.imgur.com/cp47Nbg.png">
 
 
 
@@ -124,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/10/07/散列/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/02/23/机器学习总结系列之逻辑回归/"/>
 
 
 
 
 
-  <title> 散列 | Wenqi's Blog </title>
+  <title> 机器学习总结系列之逻辑回归 | Wenqi's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -267,7 +272,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/07/散列/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/机器学习总结系列之逻辑回归/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Wenqi">
@@ -291,7 +296,7 @@
             
             
               
-                散列
+                机器学习总结系列之逻辑回归
               
             
           </h1>
@@ -306,8 +311,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-07T13:50:39+08:00">
-                2017-10-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-23T21:54:29+08:00">
+                2018-02-23
               </time>
             
 
@@ -324,7 +329,7 @@
 
           
           
-             <span id="/2017/10/07/散列/" class="leancloud_visitors" data-flag-title="散列">
+             <span id="/2018/02/23/机器学习总结系列之逻辑回归/" class="leancloud_visitors" data-flag-title="机器学习总结系列之逻辑回归">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -355,17 +360,40 @@
       
         <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
-<p>散列表的基本思想是将<strong>关键字</strong>（key）通过<strong>散列函数</strong>映射到表中的一个<strong>位置</strong>，在查找的时候只要通过关键字就可以直接获取对应位置的值。那么主要的问题就是<strong>如何设计散列函数</strong>和如何在不同的关键字映射到同一位置的时候<strong>处理冲突</strong>。注意我们现在讨论的存放的仅仅是关键字，实际情况存放的是关键字+值。<br><a id="more"></a></p>
-<h2 id="处理冲突的方法"><a href="#处理冲突的方法" class="headerlink" title="处理冲突的方法"></a>处理冲突的方法</h2><h3 id="分离链表法"><a href="#分离链表法" class="headerlink" title="分离链表法"></a>分离链表法</h3><p>也称为拉链法，其基本思想是在冲突发生后使用链表来存储关键字散列值相同的值，查询的过程包括一次散列函数映射和链表的查询过程。</p>
-<h3 id="开放定址法"><a href="#开放定址法" class="headerlink" title="开放定址法"></a>开放定址法</h3><p>是不用链表处理冲突的散列表，其基本思想是当冲突发生后去找其他的空着的位置作为该关键字的位置。用公式来表示\(h_i(x)=(hash(x)+f(i)) mod TableSize\),f(i)为冲突解决函数。 不同的开放定址法如下：</p>
+<p>线性回归适合连续型的函数拟合任务（也就是回归任务），即对于不同的输入x，输出y所属于的域是一个连续的空间，而对于y是确定的离散的空间的分类任务，比如y只取0，1的二分类问题，仍然使用线性回归的直线拟合无法适应大量输入x而y只限制在0-1的情况，我们需要一种值域在0-1的函数来作为我们的假设函数。</p>
+<a id="more"></a>
+<p>这个函数就是被称为逻辑函数（Logistic Function）或者Sigmoid函数。它的函数表达式如下</p>
+<p>\(g(z)=\frac&#123;1&#125;&#123;1+e^&#123;-z&#125;&#125;\)</p>
+<p>它的函数图像如下图所示，整个值域在0-1，以z=0时函g(z)=0.5,<br><img src="https://i.imgur.com/cp47Nbg.png" alt=""></p>
+<h2 id="假设函数"><a href="#假设函数" class="headerlink" title="假设函数"></a>假设函数</h2><p>基于以上，逻辑回归的假设函数是基于Sigmoid函数定义的，参数z是通过\(\theta^Tx\)来定义的，综合起来，其假设函数是</p>
+<p>\(h_\theta(x)=g(\theta^Tx)=\frac&#123;1&#125;&#123;1+e^&#123;-\theta^Tx&#125;&#125;\)</p>
+<p>并且和线性回归不同的是其假设函数不是最终y的值，而是使用x和\(\theta\)计算出的y=1情况的概率</p>
+<p>\(h_\theta(x)=P(y=1|x;\theta)\)<br>\(h_\theta(x)&gt;=0.5,y=1\)<br>\(h_\theta(x)&lt;0.5,y=0\)</p>
+<p>相比之下，线性回归计算的结果直接是y的值，而逻辑回归计算出来的是y=1的概率，如果这个概率大于0.5，我们就认为结果是1，反之则y=0。根据Sigmoid函数的定义，我们知道当\(\theta^T&gt;=0\)的时候\(h_\theta(x)&gt;=0.5\),我们把这条\(\theta^T&gt;=0\)称为<strong>决策边界（decision boundary）</strong></p>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>如果我们想要想线性回归那样使用梯度下降来计算最优的参数\(\theta\),我们需要构造逻辑回归的损失函数。线性回归的损失函数是假设函数值和真实值平方差的平均值，像下面这样</p>
+<p>\(J(\theta_0,\theta_1,\cdots,\theta_n)=&#123;&#123;1\over 2m&#125;(h_\theta(x^&#123;(i)&#125;)-y^&#123;(i)&#125;)^2&#125; \)</p>
+<p>这样的一个原因是，如果假设函数的结果和真实结果相差的太大，那么损失函数的值也会增大，而梯度下降就是不断削减这个损失函数的过程。而逻辑回归的真实值y是离散的0和1，而假设函数\( h_\theta(x)\)是y等于1的概率，所以逻辑应该是这样的，当y=1而\( h_\theta(x)\)的概率越小时，损失函数应该变大，对应的，如果y=0而\( h_\theta(x)\)越大时，损失函数应该变大。所以逻辑回归用一个分段函数来表示其损失函数，其中log代表自然对数</p>
+<p>\(Cost(h_\theta(x),y)=-log(h_\theta(x)),if(y=1)\)<br>\(Cost(h_\theta(x),y)=-log(1-h_\theta(x)),if(y=0)\)</p>
+<p>这函数的函数图像如下<br><img src="https://i.imgur.com/TaMu6Jf.png" alt=""></p>
+<p><img src="https://i.imgur.com/a2G8oGL.png" alt=""></p>
+<p>那么其损失函数等于所有训练集的Cost函数和的平均值</p>
+<p>\(J(\theta)=\frac&#123;1&#125;&#123;m&#125;\sum_&#123;i=1&#125;^m Cost(h_\theta(x),y)\)</p>
+<p>我们可以将Cost分段函数写成一个函数</p>
+<p>\(Cost(h_\theta(x),y)=-ylog(h_\theta(x))-(1-y)log(1-h_\theta(x))\)</p>
+<p>\(J(\theta)=-\frac&#123;1&#125;&#123;m&#125;\sum_&#123;i=1&#125;^&#123;m&#125;[y^&#123;(i)&#125;log(h_\theta(x^&#123;(i)&#125;))+(1-y^&#123;(i)&#125;)log(1-h_\theta(x^&#123;(i)&#125;))]\)</p>
+<p>有了损失函数\(J(\theta)\),我们的目标就是利用训练数据最小化\(J(\theta)\),使用梯度下降法取最优值，对\(J(\theta)\)求导过程如下<br><img src="https://i.imgur.com/4y1aKIb.jpg" alt=""><br>推到后其值为</p>
+<p>\(\frac&#123;\partial&#125;&#123;\partial\theta_j&#125;=\frac&#123;1&#125;&#123;m&#125;\sum_&#123;i=1&#125;^&#123;m&#125;(h_\theta(x^&#123;i&#125;)-y^&#123;(i)&#125;)x_j^&#123;(i)&#125;\)</p>
+<p>虽然这里的求导后和线性回归的形式一样，但是这里的\(h_\theta(x)=\frac&#123;1&#125;&#123;1+e^&#123;-\theta^Tx&#125;&#125;\),和线性回归是不同的</p>
+<p>其优化过程就是迭代的更新\(\theta\),也就是</p>
+<p>\(\theta_j=\theta_j-\alpha \frac&#123;\partial&#125;&#123;\partial\theta_j&#125;\)<br>\(\theta_j=\theta_j-\alpha \frac&#123;1&#125;&#123;m&#125;\sum_&#123;i=1&#125;^&#123;m&#125;(h_\theta(x^&#123;i&#125;)-y^&#123;(i)&#125;)x_j^&#123;(i)&#125;\)</p>
+<p>我们可以自己实现梯度下降，也可以使用内置的优化函数fminunc来进行优化，其使用有三步</p>
 <ol>
-<li>线性探测法，即\(f(i)=i\)。也就是如果当前发生冲突，就查找下一个位置是否为空，如果为空，则放入，否则继续查找</li>
-<li>平法探测法，即\(f(i)=i^2\)。</li>
-<li>双散列，即\(f(i)=i*hash_2(x)\),也就是说用第二个散列函数作为处理冲突函数</li>
+<li>给出迭代每一步的计算函数function [jval,gradient]=costFunction(theta)</li>
+<li>给出迭代的选项设置对象options=optimset(‘GradObj’,’on’,’MaxIter’,100)和初始的initialTheta</li>
+<li>使用fminunc获取结果，[optTheta,functionVal,exitFlag]=fminunc(@costFunction,initialTheta,options)</li>
 </ol>
-<p>##再散列<br>再散列是在散列表已经填的<strong>太满</strong>后，不论插入还是查找操作性能都大幅度降低，将原来散列表的<strong>所有值</strong>重新散列到一个<strong>更大</strong>的散列表的过程。</p>
-<h2 id="其他散列方法"><a href="#其他散列方法" class="headerlink" title="其他散列方法"></a>其他散列方法</h2><h3 id="布谷鸟散列"><a href="#布谷鸟散列" class="headerlink" title="布谷鸟散列"></a>布谷鸟散列</h3><p>布谷鸟散列每个散列值对应两个盒子，它维护两个表，并且用两个独立的散列函数，布谷鸟散列保持不变的是一个项总是会被存储在两个位置之一。</p>
-<h3 id="跳房子散列"><a href="#跳房子散列" class="headerlink" title="跳房子散列"></a>跳房子散列</h3><p>它尝试改进经典的线性探测算法，它的做法是给探测序列的最大长度加上一个上界，即令MAX_DIST为最大探测序列的上界，即项x必须在列出的hash(x),hash(x)+1,……,hash(x)+(MAX_DIST-1)的位置中找到，实现的方式使用一个信息，这在hash(x)后MAX_DIST个位置哪个被占了。</p>
+<h2 id="多分类问题"><a href="#多分类问题" class="headerlink" title="多分类问题"></a>多分类问题</h2><p>多分类问题可以通过二分类问题推广而来，假设有n种分类，那么我们可以对每一个种类训练一个逻辑回归函数，然后取其中的最大值作为分类结果<br>Class 1:\(h_\theta^&#123;(1)&#125;(x)=P(y=1|x;\theta)\)<br>Class 2:\(h_\theta^&#123;(2)&#125;(x)=P(y=2|x;\theta)\)<br>Class 3:\(h_\theta^&#123;(3)&#125;(x)=P(y=3|x;\theta)\)<br>取\(max(h_\theta^&#123;(i)&#125;)\)为最终结果</p>
+<h2 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h2><p>本文首发表于<a href="https://buwenqi.github.io" target="_blank" rel="external">Wenqi’s Blog</a>，更多技术分享欢迎关注！转载须注明文章出处，已委托维权骑士为本站的文章进行维权，作者保留文章所有权。</p>
 
       
     </div>
@@ -405,7 +433,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
           
         </div>
       
@@ -418,8 +446,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/28/liunx笔记汇总/" rel="next" title="liunx笔记汇总">
-                <i class="fa fa-chevron-left"></i> liunx笔记汇总
+              <a href="/2018/02/23/机器学习总结系列之Octave常用操作/" rel="next" title="机器学习总结系列之Octave常用操作">
+                <i class="fa fa-chevron-left"></i> 机器学习总结系列之Octave常用操作
               </a>
             
           </div>
@@ -427,10 +455,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/08/优先队列（堆）/" rel="prev" title="优先队列（堆）">
-                优先队列（堆） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -607,7 +631,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#处理冲突的方法"><span class="nav-number">1.</span> <span class="nav-text">处理冲突的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分离链表法"><span class="nav-number">1.1.</span> <span class="nav-text">分离链表法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开放定址法"><span class="nav-number">1.2.</span> <span class="nav-text">开放定址法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他散列方法"><span class="nav-number">2.</span> <span class="nav-text">其他散列方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#布谷鸟散列"><span class="nav-number">2.1.</span> <span class="nav-text">布谷鸟散列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跳房子散列"><span class="nav-number">2.2.</span> <span class="nav-text">跳房子散列</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#假设函数"><span class="nav-number">1.</span> <span class="nav-text">假设函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#损失函数"><span class="nav-number">2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多分类问题"><span class="nav-number">3.</span> <span class="nav-text">多分类问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明"><span class="nav-number">4.</span> <span class="nav-text">声明</span></a></li></ol></div>
             
 
           </div>
