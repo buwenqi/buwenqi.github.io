@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java进阶," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近碰到的异步处理的操作比较多，异步就是不等想要的结果返回执行接下来的其他操作，等异步结果返回后直接调用已经注册好的处理方法完成后续操作。异步的思想是非常棒的，相比轮询的方式而言，异步的实现方式无疑是高效并且优雅的。本文介绍了包括Future，AIO和有点类似于单机版的Map-Reduce的fork/join框架。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中的异步执行Future小结">
+<meta property="og:url" content="http://yoursite.com/2018/03/27/Java中的异步执行Future小结/index.html">
+<meta property="og:site_name" content="Wenqi's Blog">
+<meta property="og:description" content="最近碰到的异步处理的操作比较多，异步就是不等想要的结果返回执行接下来的其他操作，等异步结果返回后直接调用已经注册好的处理方法完成后续操作。异步的思想是非常棒的，相比轮询的方式而言，异步的实现方式无疑是高效并且优雅的。本文介绍了包括Future，AIO和有点类似于单机版的Map-Reduce的fork/join框架。">
+<meta property="og:updated_time" content="2018-03-31T01:55:03.116Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java中的异步执行Future小结">
+<meta name="twitter:description" content="最近碰到的异步处理的操作比较多，异步就是不等想要的结果返回执行接下来的其他操作，等异步结果返回后直接调用已经注册好的处理方法完成后续操作。异步的思想是非常棒的，相比轮询的方式而言，异步的实现方式无疑是高效并且优雅的。本文介绍了包括Future，AIO和有点类似于单机版的Map-Reduce的fork/join框架。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/27/Java中的异步执行Future小结/"/>
+
+
+
+
+
+  <title>Java中的异步执行Future小结 | Wenqi's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Wenqi's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书记
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            勾搭
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/27/Java中的异步执行Future小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wenqi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wenqi's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java中的异步执行Future小结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-27T09:39:00+08:00">
+                2018-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/27/Java中的异步执行Future小结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/03/27/Java中的异步执行Future小结/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/03/27/Java中的异步执行Future小结/" class="leancloud_visitors" data-flag-title="Java中的异步执行Future小结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近碰到的异步处理的操作比较多，异步就是不等想要的结果返回执行接下来的其他操作，等异步结果返回后直接调用已经注册好的处理方法完成后续操作。异步的思想是非常棒的，相比轮询的方式而言，异步的实现方式无疑是高效并且优雅的。本文介绍了包括Future，AIO和有点类似于单机版的Map-Reduce的fork/join框架。<br><a id="more"></a></p>
+<h2 id="Guava-ListenableFuture"><a href="#Guava-ListenableFuture" class="headerlink" title="Guava ListenableFuture"></a>Guava ListenableFuture</h2><p>使用JDK提供的线程池ExcuteService的execute(Runable runable)方法来执行不需要返回结果的线程任务，而使用submit(Callable<t> callable)方法需要线程任务返回T类型的执行结果，方法返回Future<t>对象，使用Future的get方法可以获取执行结果，而在执行get方法在线程返回结果之前是阻塞的，jdk这对于想要异步的处理结果没有提供相应的接口，guava的ListenableFuture接口就是为实现异步的获取Future中的结果而出现的。<br>顾名思义，ListenableFuture是可监听的Future,可以在结果返回的时候以方法回调的方式实现异步的后续操作。那么如何获取ListenableFuture呢，方法有两种：</t></t></p>
+<ol>
+<li>将jdk提供的Futhure转换成ListenableFuture</li>
+<li>将ExcutorService线程池转换成ListeningExcutorService,继而获取ListenableFuture</li>
+</ol>
+<p>第一种方式我们使用如下适配器获得Future对应的ListenableFuture<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ListenableFuture&lt;String&gt; listenableFuture=JdkFutureAdapters.listenInPoolThread(future);</div></pre></td></tr></table></figure></p>
+<p>第二种方式我们使用一个线程池的修饰类获得<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ListeningExecutorService listeningThreadPool=MoreExecutors.listeningDecorator(threadPool);</div><div class="line">ListenableFuture&lt;String&gt; listenableFuture=listeningThreadPool.submit(<span class="keyword">new</span> Callable&lt;String&gt;() &#123;....&#125;</div></pre></td></tr></table></figure></p>
+<p>在获取了ListenableFuture之后，我们同样有两种方式异步获取线程执行结果</p>
+<ol>
+<li>添加FutureCallback执行回调方法</li>
+<li>为ListenableFuture添加监听线程</li>
+</ol>
+<p>第一种方法使用Futures的addCallback方法实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Futures.addCallback(listenableFuture,<span class="keyword">new</span> FutureCallback&lt;String&gt;()&#123;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSuccess</span><span class="params">(String result)</span> </span>&#123;</div><div class="line">                System.out.println(result);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Throwable t)</span> </span>&#123;</div><div class="line">                t.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure></p>
+<p>第二种方法不太推荐，使用listenableFuture.addListener的方法实现。</p>
+<h3 id="源码解读"><a href="#源码解读" class="headerlink" title="源码解读"></a>源码解读</h3><p>我们看到guava的实现方式非常优雅，那么它是怎么实现这种异步回调的呢，以JdkFutureAdapters.listenInPoolThread为例，其实他是返回了一个ListenableFutureAdapter的内部类，它实现了ListenableFuture并且继承了ForwardingFuture类，然后调用callback的时候会新建一个Runable线程任务，其主要逻辑是使用Future的get方法阻塞获取执行结果，在结果完成的时候回到callback类的onSuccess方法，如果出现异常则调用onFailure方法。<br>整个方法的设计使用了适配器模式，ListenableFuture是最终用户需要的接口，ListenableFutureAdapter是适配器，ForwordingFuture实现了Future接口，是被适配者。</p>
+<h3 id="关于FutureTask"><a href="#关于FutureTask" class="headerlink" title="关于FutureTask"></a>关于FutureTask</h3><p>FutureTask是Future的一个实现类，它同时实现了Runable接口，直接使用线程池运行FutureTask,并且获取阻塞获取结果，其在异步方面并没有做出改变。</p>
+<h3 id="本节代码"><a href="#本节代码" class="headerlink" title="本节代码"></a>本节代码</h3><p>所有测试代码获取可以点击<a href="https://github.com/buwenqi/JavaBasis/tree/master/src/main/java/guavafuture" target="_blank" rel="external">这里</a><br>参考文献：<a href="https://chen310.gitbooks.io/guava/content/bing_fa.html" target="_blank" rel="external">guava并发</a>，<a href="http://www.importnew.com/25286.html" target="_blank" rel="external">深入学习 FutureTask</a></p>
+<h2 id="Java-AIO中的Future和CompleteHandler"><a href="#Java-AIO中的Future和CompleteHandler" class="headerlink" title="Java AIO中的Future和CompleteHandler"></a>Java AIO中的Future和CompleteHandler</h2><p>Socket通信是Java网络通信的一种方式，在基础的阻塞BIO后出现了NIO，NIO采用了多路复用思想，使得一个线程可以监听多个socket文件描述符，使得在在一次轮训的过程中可以查看多个阻塞IO的状态，相比BIO每次只能监听一个IO状态，如果这个IO长期处于阻塞状态，那么其他IO操作如果准备好也无法执行。<br>BIO的另一个问题是在于对于每个准备好的IO操作必须分配一个线程进行实际的阻塞IO操作，这使得系统的线程数和已准备好的IO操作成线性关系。NIO的优势在于它可以对多个已准备好的IO阻塞操作做打包操作，做线程数的缩减。<br>NIO对数据的操作是面向缓冲区的，而BIO是面向数据流的，NIO中面向缓冲区的IO操作是讲所有的数据一次读入到缓冲区内，进而做操作，这相比BIO的面向数据流的IO每次只能读入一个或多个字节的方式，这种方式更加快捷。<br>NIO本质其实还是采用轮询的方式去获取已准备好的IO操作，实际的读写IO操作仍然是阻塞的，Java AIO是对NIO的又一次改进，其真正实现了异步的IO操作，包括获取准备好的操作，读写操作都是异步的，其执行都会直接返回一个Future对象，我们可以使用其get方法阻塞接下来的执行。<br>Java AIO主要用到的类有：</p>
+<ol>
+<li>AsynchronousSocketChannel</li>
+<li>AsynchronousServerSocketChannel</li>
+</ol>
+<p>AsynchronousSocketChannel的connet方法为其准备io操作，write和read方法为其实际的IO操作，同样的AsynchronousServerSocketChannel的accept方法为其准备io操作，读写操作是和AsynchronousSocketChannel一样的。<br>以上方法都是异步的，也就是说方法会立即返回，获取异步执行结果的方法有两种：</p>
+<ol>
+<li>获取Future结果，使用Future的get方法获取执行结果</li>
+<li>使用CompletionHandler的回调方法在结果返回的时候获取结果</li>
+</ol>
+<p>以AsynchronousServerSocketChannel为例，其connet方法有两个重载方式：</p>
+<ol>
+<li>accept()无参方式返回一个Future<asynchronoussocketchannel>,可以使用get方法获取连接的client。</asynchronoussocketchannel></li>
+<li>accept(A attach,CompletionHandler<asynchronoussocketchannel,a>)，无返回值，在接收到client连接的时候执行CompletionHandler中的completed回调方法。</asynchronoussocketchannel,a></li>
+</ol>
+<p>具体的，我们使用一个Echo的server/client的程序来测试Java AIO，其Server端实现如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AioEchoServer</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> PORT = <span class="number">9955</span>;</div><div class="line">    <span class="keyword">private</span> String IP = <span class="string">"127.0.0.1"</span>;</div><div class="line">    <span class="keyword">private</span> AsynchronousServerSocketChannel server;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AioEchoServer</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            server = AsynchronousServerSocketChannel.open().bind(<span class="keyword">new</span> InetSocketAddress(IP, PORT));</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startServer</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//attachment参数可以被CompletionHandler接收</span></div><div class="line"></div><div class="line">        server.accept(<span class="string">"attachment"</span>, <span class="keyword">new</span> CompletionHandler&lt;AsynchronousSocketChannel, String&gt;() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">completed</span><span class="params">(AsynchronousSocketChannel client, String attachment)</span> </span>&#123;</div><div class="line">                <span class="comment">//获取了对应的客户端socket</span></div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    System.out.println(<span class="string">"attachment: "</span> + attachment);</div><div class="line">                    ByteBuffer byteBuffer = ByteBuffer.allocate(<span class="number">1024</span>);</div><div class="line">                    <span class="comment">//这里是非阻塞读取，需要使用get等待客户端返回结果</span></div><div class="line">                    <span class="keyword">int</span> readResult = client.read(byteBuffer).get();</div><div class="line">                    System.out.println(<span class="string">"读入数据量："</span> + readResult);</div><div class="line">                    byteBuffer.flip();</div><div class="line">                    System.out.println(<span class="string">"Get from client:"</span> + (<span class="keyword">new</span> String(byteBuffer.array())));</div><div class="line">                    <span class="keyword">int</span> writeResult = client.write(byteBuffer).get();</div><div class="line">                    <span class="keyword">if</span> (writeResult &gt; <span class="number">0</span>) &#123;</div><div class="line">                        System.out.println(client.getRemoteAddress() + <span class="string">": "</span> + <span class="string">"response success! write length: "</span> + writeResult);</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        System.out.println(<span class="string">"write length &lt;0"</span>);</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                    server.accept(<span class="keyword">null</span>,<span class="keyword">this</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">failed</span><span class="params">(Throwable exc, String attachment)</span> </span>&#123;</div><div class="line">                exc.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        AioEchoServer aioEchoServer = <span class="keyword">new</span> AioEchoServer();</div><div class="line">        aioEchoServer.startServer();</div><div class="line">        Scanner scanner = <span class="keyword">new</span> Scanner(System.in);</div><div class="line">        scanner.nextLine();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>客户端的实现方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">public class AioClient &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        String IP = &quot;127.0.0.1&quot;;</div><div class="line">        int PORT = 9955;</div><div class="line">        final AsynchronousSocketChannel client;</div><div class="line">        try &#123;</div><div class="line">            client = AsynchronousSocketChannel.open();</div><div class="line">            SocketAddress serverSocketAddress = new InetSocketAddress(IP, PORT);</div><div class="line">            client.connect(serverSocketAddress, &quot;clientAttachment&quot;, new CompletionHandler&lt;Void, String&gt;() &#123;</div><div class="line">                @Override</div><div class="line">                public void completed(Void result, String attachment) &#123;</div><div class="line">                    System.out.println(attachment);</div><div class="line">                    try &#123;</div><div class="line">                        ByteBuffer byteBuffer = ByteBuffer.wrap(&quot;hello&quot;.getBytes());</div><div class="line">                        //wrap后不用byteBuffer.flip()，此时position=0，limit是之前position的位置</div><div class="line">                        //read后的postion是写入的界限，limit=capbility,flip做的事情:limit=poition,position=0.</div><div class="line">                        //须阻塞写入</div><div class="line">                        int writeResult = client.write(byteBuffer).get();</div><div class="line">                        System.out.println(&quot;写入Byte数：&quot; + writeResult);</div><div class="line">                        //须阻塞读取</div><div class="line">                        byteBuffer.clear();</div><div class="line">                        int readResult = client.read(byteBuffer).get();</div><div class="line">                        byteBuffer.flip();</div><div class="line">                        System.out.println(&quot;server response: &quot; + (new String(byteBuffer.array())));</div><div class="line">                    &#125; catch (Exception e) &#123;</div><div class="line">                        e.printStackTrace();</div><div class="line">                    &#125; finally &#123;</div><div class="line">                        try &#123;</div><div class="line">                            client.close();</div><div class="line">                        &#125; catch (IOException e) &#123;</div><div class="line">                            e.printStackTrace();</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                @Override</div><div class="line">                public void failed(Throwable exc, String attachment) &#123;</div><div class="line">                    exc.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line">        &#125; catch (IOException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        Scanner scanner=new Scanner(System.in);</div><div class="line">        scanner.nextLine();</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>需要注意的有两点，不论是client还是server,其write和read都是非阻塞的，模拟的情况下我们需要阻塞等待其结果返回；二是ByteBuffer.wrap方法之后不用flip操作，其返回的结果已经是flip过的，作者在这里踩了坑。</p>
+<h2 id="单机版Map-Reduce-fork-join框架"><a href="#单机版Map-Reduce-fork-join框架" class="headerlink" title="单机版Map-Reduce fork/join框架"></a>单机版Map-Reduce fork/join框架</h2><p>fork/join框架类似于单机版的Map-Reduce，如果一个计算任务数据量比较大，就将任务分解交给不同的线程去处理，然后最后汇总结果，这种计算模型对于多核处理器来说具有极大的优势。使用fork/join框架的基本过程如下。</p>
+<ol>
+<li><p>实现一个类继承自RecursiveTask(或者无返回值的RecursiveAction)</p>
+<ol>
+<li>实现compute方法，将任务拆分成多个自实现的RecursiveTask</li>
+<li>invokeAll(所有自实现的RecursiveTask);</li>
+<li>使用自实现的RecursiveTask的join方法获取执行结果</li>
+<li>汇总返回结果并返回</li>
+</ol>
+</li>
+<li><p>使用ForkJoinPool的invoke方法调用上一步自定义的计算任务</p>
+</li>
+</ol>
+<p>下例实现了一个计算数组中所有数和的任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CountTask</span> <span class="keyword">extends</span> <span class="title">RecursiveTask</span>&lt;<span class="title">Integer</span>&gt;</span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> THRESHOLD=<span class="number">3</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span>[] integers;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> start;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> end;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CountTask</span><span class="params">(<span class="keyword">int</span>[] integers,<span class="keyword">int</span> start,<span class="keyword">int</span> end)</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>.integers=integers;</div><div class="line">        <span class="keyword">this</span>.start=start;</div><div class="line">        <span class="keyword">this</span>.end=end;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Integer <span class="title">compute</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> len=end-start+<span class="number">1</span>;</div><div class="line">        <span class="keyword">boolean</span> isOverThreshold=len&gt;THRESHOLD;</div><div class="line">        <span class="keyword">int</span> sum=<span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(!isOverThreshold)&#123;</div><div class="line">           <span class="keyword">for</span>(<span class="keyword">int</span> i=start;i&lt;=end;i++)&#123;</div><div class="line">               sum+=integers[i];</div><div class="line">           &#125;</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            <span class="keyword">int</span> mid=(start+end)/<span class="number">2</span>;</div><div class="line">            CountTask leftTask=<span class="keyword">new</span> CountTask(<span class="keyword">this</span>.integers,start,mid);</div><div class="line">            CountTask rightTask=<span class="keyword">new</span> CountTask(<span class="keyword">this</span>.integers,mid+<span class="number">1</span>,end);</div><div class="line">            invokeAll(leftTask,rightTask);</div><div class="line">            <span class="comment">//fork的作用是将当前任务放到workerThread里面去做</span></div><div class="line">            <span class="comment">//invokeAll是将其中一个放在本线程做，其他的调用fork</span></div><div class="line">            <span class="keyword">int</span> leftResult=leftTask.join();</div><div class="line">            <span class="keyword">int</span> rightResult=rightTask.join();</div><div class="line">            sum=leftResult+rightResult;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> sum;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForkjoinTest</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        <span class="keyword">int</span>[] integers=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>&#125;;</div><div class="line">        ForkJoinPool forkJoinPool=<span class="keyword">new</span> ForkJoinPool(<span class="number">4</span>);</div><div class="line">        ForkJoinTask&lt;Integer&gt; task=<span class="keyword">new</span> CountTask(integers,<span class="number">0</span>,<span class="number">9</span>);</div><div class="line">        <span class="keyword">int</span> sum=forkJoinPool.invoke(task);</div><div class="line">        System.out.println(sum);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>值得一提的是fork/join框架是jdk8的stream实现的计算模型，如果想要深入了解stream的实现原理，可以参考这篇文章<a href="https://www.cnblogs.com/Dorae/p/7779246.html" target="_blank" rel="external">Java8 Stream原理深度解析</a>。</p>
+<h2 id="关于源码"><a href="#关于源码" class="headerlink" title="关于源码"></a>关于源码</h2><p>本文所有源码可以从<a href="https://github.com/buwenqi/JavaBasis/tree/master/src/main/java" target="_blank" rel="external">这里</a>获得，本文首发表于<a href="https://buwenqi.github.io" target="_blank" rel="external">我的博客</a>,欢迎关注！转载须注明文章出处，作者保留文章所有权。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="Wenqi 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java进阶/" rel="tag"># Java进阶</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/15/关于常用设计模式的一些思考/" rel="next" title="关于常用设计模式的一些思考">
+                <i class="fa fa-chevron-left"></i> 关于常用设计模式的一些思考
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/me.jpg"
+                alt="Wenqi" />
+            
+              <p class="site-author-name" itemprop="name">Wenqi</p>
+              <p class="site-description motion-element" itemprop="description">To do one thing well.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/buwenqi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://cn.linkedin.com/in/buwenqi" target="_blank" title="Linkin">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Linkin</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mijack.github.io/" title="Mi&Jack" target="_blank">Mi&Jack</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://wintercolor.tech/" title="MengNan" target="_blank">MengNan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mengqi92.github.io/" title="MengQi" target="_blank">MengQi</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Guava-ListenableFuture"><span class="nav-number">1.</span> <span class="nav-text">Guava ListenableFuture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#源码解读"><span class="nav-number">1.1.</span> <span class="nav-text">源码解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于FutureTask"><span class="nav-number">1.2.</span> <span class="nav-text">关于FutureTask</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本节代码"><span class="nav-number">1.3.</span> <span class="nav-text">本节代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-AIO中的Future和CompleteHandler"><span class="nav-number">2.</span> <span class="nav-text">Java AIO中的Future和CompleteHandler</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单机版Map-Reduce-fork-join框架"><span class="nav-number">3.</span> <span class="nav-text">单机版Map-Reduce fork/join框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于源码"><span class="nav-number">4.</span> <span class="nav-text">关于源码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wenqi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'RPU1pwQvesuCO2LV5JkRjQwQ-gzGzoHsz',
+        appKey: 'gMI3tTWeJP6JoKoS55sW8Ob8',
+        placeholder: '欢迎吐槽！^_^',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("RPU1pwQvesuCO2LV5JkRjQwQ-gzGzoHsz", "gMI3tTWeJP6JoKoS55sW8Ob8");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
