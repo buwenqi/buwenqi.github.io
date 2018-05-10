@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java并发系列," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="锁是多线程下进行同步互斥的重要实现依托，Java语言中除了提供了使用synchronized关键字提供的隐式锁，也提供了以Lock接口定义的显示锁。一般Lock的子类实现依赖于一个抽象队列同步器（AbstractQueuedSynchronizer, AQS）的子类实现。AQS的目的是提供对同步状态的获取和释放的基础同步功能给依赖者使用，而屏蔽了同步状态获取和释放的具体实现。AQS是一个抽象类，它">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发系列笔记之Java中的锁">
+<meta property="og:url" content="http://yoursite.com/2018/05/02/Java并发系列笔记之Java中的锁/index.html">
+<meta property="og:site_name" content="Wenqi's Blog">
+<meta property="og:description" content="锁是多线程下进行同步互斥的重要实现依托，Java语言中除了提供了使用synchronized关键字提供的隐式锁，也提供了以Lock接口定义的显示锁。一般Lock的子类实现依赖于一个抽象队列同步器（AbstractQueuedSynchronizer, AQS）的子类实现。AQS的目的是提供对同步状态的获取和释放的基础同步功能给依赖者使用，而屏蔽了同步状态获取和释放的具体实现。AQS是一个抽象类，它">
+<meta property="og:image" content="https://i.imgur.com/pNi7ZBp.png">
+<meta property="og:image" content="https://i.imgur.com/KlMgwG8.png">
+<meta property="og:image" content="https://i.imgur.com/G5In2rj.png">
+<meta property="og:image" content="https://i.imgur.com/Yxp3OBt.png">
+<meta property="og:image" content="https://i.imgur.com/r0Qf58S.png">
+<meta property="og:updated_time" content="2018-05-04T09:34:25.341Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发系列笔记之Java中的锁">
+<meta name="twitter:description" content="锁是多线程下进行同步互斥的重要实现依托，Java语言中除了提供了使用synchronized关键字提供的隐式锁，也提供了以Lock接口定义的显示锁。一般Lock的子类实现依赖于一个抽象队列同步器（AbstractQueuedSynchronizer, AQS）的子类实现。AQS的目的是提供对同步状态的获取和释放的基础同步功能给依赖者使用，而屏蔽了同步状态获取和释放的具体实现。AQS是一个抽象类，它">
+<meta name="twitter:image" content="https://i.imgur.com/pNi7ZBp.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/02/Java并发系列笔记之Java中的锁/"/>
+
+
+
+
+
+  <title>Java并发系列笔记之Java中的锁 | Wenqi's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Wenqi's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书记
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            勾搭
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/02/Java并发系列笔记之Java中的锁/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wenqi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wenqi's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发系列笔记之Java中的锁</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-02T09:39:00+08:00">
+                2018-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/02/Java并发系列笔记之Java中的锁/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/05/02/Java并发系列笔记之Java中的锁/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/05/02/Java并发系列笔记之Java中的锁/" class="leancloud_visitors" data-flag-title="Java并发系列笔记之Java中的锁">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>锁是多线程下进行同步互斥的重要实现依托，Java语言中除了提供了使用synchronized关键字提供的隐式锁，也提供了以Lock接口定义的显示锁。一般Lock的子类实现依赖于一个抽象队列同步器（AbstractQueuedSynchronizer, AQS）的子类实现。AQS的目的是提供对同步状态的获取和释放的基础同步功能给依赖者使用，而屏蔽了同步状态获取和释放的具体实现。AQS是一个抽象类，它使用模板模式定义获取和释放同步状态的模板方法，而将模板方法所依赖的获取同步，阻塞管理等其他方法交给需要不同并发策略的子类去实现。本文从AQS的具体实现讲起，接着分析不同锁机制的实现原理。<br><a id="more"></a></p>
+<h2 id="AbstractQueuedSynchronizer"><a href="#AbstractQueuedSynchronizer" class="headerlink" title="AbstractQueuedSynchronizer"></a>AbstractQueuedSynchronizer</h2><h3 id="同步状态status的获取和更新"><a href="#同步状态status的获取和更新" class="headerlink" title="同步状态status的获取和更新"></a>同步状态status的获取和更新</h3><p>开头说到“AQS的目的是提供对同步状态的获取和释放的基础同步功能给依赖者使用”，AQS用一个volatile的整型变量status表示同步状态，当status&gt;0是表示被占用的数量，status=0表示未被占用。并且提供了getState(),setState(int)以及compareAndSetState(int expect,int update),最后一个方法用CAS的方法来更新status的值，如果更新成功，则返回true,失败则返回false。<br>CAS是一种乐观锁技术，其具体实现有三个参数value,expect,update,value是内存地址中当前的值，expect是value预期的值，如果value和expect相同，则将value地址的值改为update，更新成功；否则，什么也不做，更新失败。操作系统保证读-对比-更新的原子性，这个逻辑是在native代码中实现的。具体实现如下图所示，CAS是一种乐观锁技术，所以需要使用轮询来查看是否更新成功，相比重量级的加锁，在锁竞争不是特别激烈的情况下，可以获取很好的性能提升。值得一提的是，CAS在1.8 JDK的锁优化中被大量使用。<br><img src="https://i.imgur.com/pNi7ZBp.png" alt=""></p>
+<h3 id="可重写尝试获取和释放同步状态的方法"><a href="#可重写尝试获取和释放同步状态的方法" class="headerlink" title="可重写尝试获取和释放同步状态的方法"></a>可重写尝试获取和释放同步状态的方法</h3><p>可以重写的方法是实现自定义同步策略的关键，主要分为两大类独占式和共享式，动作上分为尝试获取同步状态和尝试释放共享状态。具体包括如下方法:</p>
+<ul>
+<li>protected boolean tryAcquire(int arg)//独占式的尝试获取arg个同步状态</li>
+<li>protected boolean tryRelease(int arg)//独占式的尝试释放arg个同步状态</li>
+<li>protected int tryAcquireShared(int arg)//共享式的获取arg个同步状态，如果返回大于等于0，则成功，否则失败</li>
+<li>protected boolean tryReleaseShared(int arg)//共享式的尝试释放arg个同步状态</li>
+<li>protected boolean isHeldExclusively()//独占状态下用于判定是否被占用状态</li>
+</ul>
+<p>所谓独占式和共享式是指是不是只允许单独的一个线程获取共享状态而阻塞其他的线程的获取，如果是的，则是独占式，否则则是共享式。我们可以根据不同的同步需求，继承AQS，实现不同的获取同步状态的策略。</p>
+<h3 id="同步控制的模板方法"><a href="#同步控制的模板方法" class="headerlink" title="同步控制的模板方法"></a>同步控制的模板方法</h3><p>一般获取同步状态有两种结果：成功获取同步状态，这种情况下线程可以愉快的继续执行；获取同步状态失败，这种情况下需要AQS来维护获取同步状态失败的线程状态。从方法上来看，AQS支持多个种模板方法的实现，主要分为两大类，独占式的获取和释放同步状态和共享式的获取和释放同步状态。其中获取同步状态有非响应中断式的(默认)和响应中断式的，等待固定时间的获取。<br>独占式:</p>
+<ol>
+<li>public final void acquire(int arg)</li>
+<li>public final void acquireInterruptibly(int arg)</li>
+<li>public final boolean tryAcquireNanos(int arg, long nanosTimeout)</li>
+<li>public final boolean release(int arg)</li>
+</ol>
+<p>共享式：</p>
+<ol>
+<li>public final void acquireShared(int arg)</li>
+<li>public final void acquireSharedInterruptibly(int arg)</li>
+<li>public final boolean tryAcquireSharedNanos(int arg, long nanosTimeout)</li>
+<li>public final boolean releaseShared(int arg) </li>
+</ol>
+<p>那么AQS是如何处理获取同步状态的呢？以独占式的acquire(int)实现为例<br><img src="https://i.imgur.com/KlMgwG8.png" alt=""><br>模板方法首先尝试获取arg个同步状态（tryAcquire），如果成功了，直接方法返回，代表成功获取同步状态；如果失败了，AQS使用一个称为同步队列的双向队列来维护获取失败的线程信息，队列中的存储单元是封装了线程，线程状态和前驱后继的节点信息，AQS持有双向对了的头部（head）和尾部(tail)节点引用。<br>addWaiter就是将当前未获取同步状态的线程封装成Node添加在双向队列的尾部，当然插入的过程使用了CAS并且再失败的时候进行自旋。<br>接着acquireQueue尝试自旋获取同步状态，当然只有前驱节点为头结点的Node等待线程才可以获取同步状态，如果不是头结点或获取同步状态失败，则判断是否应该阻塞当前线程，判断的依据是当前Node前驱节点的waitStaus。如果是应该阻塞，则使用LockSupport的park(Thread)方法阻塞当前线程，否则，继续自旋。如果前驱是头节点并且尝试获取同步状态成功，则设置当前节点为头结点(也就是说头结点是获取同步状态的)，并且返回。<br>总结起来，独占式获取同步状态的状态图如下：<br><img src="https://i.imgur.com/G5In2rj.png" alt=""></p>
+<h4 id="独占式释放同步状态基本思路"><a href="#独占式释放同步状态基本思路" class="headerlink" title="独占式释放同步状态基本思路"></a>独占式释放同步状态基本思路</h4><p>基本的流程是尝试使用tryRelease(int)释放同步状态，如果释放成功，则当前线程会唤醒同步队列中后继节点的线程，并且返回true,否则返回false。release做的工作相对较少。</p>
+<h4 id="共享式获取同步状态基本思路"><a href="#共享式获取同步状态基本思路" class="headerlink" title="共享式获取同步状态基本思路"></a>共享式获取同步状态基本思路</h4><p>acquireShared(int)首先使用tryAcquireShared尝试获取同步状态，如果返回小于0则获取失败，将失败的线程放入同步队列中，并且自旋式尝试获取同步状态，只有前驱节点是头结点才可以尝试获取同步状态，如果成功了则设置当前节点为头结点，如果失败了则判断是否应该阻塞当前线程。整个过程和独占式acquire类似，不同的是tryAcquiredShared方法在获取锁的时候不用判断当前线程是不是独占式线程，任何线程在开始的时候都可以尝试获取同步状态。而tryAquired的实现应该排斥非独占线程获取锁。</p>
+<h4 id="共享式释放同步状态基本思路"><a href="#共享式释放同步状态基本思路" class="headerlink" title="共享式释放同步状态基本思路"></a>共享式释放同步状态基本思路</h4><p>releaseShared(int)首先尝试释放同步状态，并且使用doReleaseShared()循环唤醒队列中多个等待的线程。</p>
+<h2 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h2><p>看过了队列同步器的实现，我们来看看其具体的锁是如何运用AQS实现同步操作的。ReetrantLock是可重入锁，可重入的意思是同一个线程可以多次获取锁，并且可重入锁是独占式的，也就是同一时刻只有一个线程可以获得锁。并且可重入锁支持公平和非公平两种模式，所谓公平，指的是获取锁的请求是否遵循先到先得的FIFO规则，如果是FIFO则是公平的，否则则是非公平的。ReentrantLock持有一个继承了AQS的内部类Sync，并且定义了两个子类NonfairSync和FairSync,他们重写了AQS定义的尝试获取独占锁的tryAquire(int)：boolean方法。我们首先来看非公平的tryAquire的实现。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">nonfairTryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> Thread current = Thread.currentThread();</div><div class="line">    <span class="keyword">int</span> c = getState();</div><div class="line">    <span class="keyword">if</span> (c == <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (compareAndSetState(<span class="number">0</span>, acquires)) &#123;</div><div class="line">            setExclusiveOwnerThread(current);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (current == getExclusiveOwnerThread()) &#123;</div><div class="line">        <span class="keyword">int</span> nextc = c + acquires;</div><div class="line">        <span class="keyword">if</span> (nextc &lt; <span class="number">0</span>) <span class="comment">// overflow</span></div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"Maximum lock count exceeded"</span>);</div><div class="line">        setState(nextc);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其基本流程是：首先判断当前状态是否为0，如果是0使用CAS将设置成acquires，并且设置当前线程为独占线程，否则，如果线程为独占线程，则将状态设置为当前同步状态+acquires,因为独占状态下，不会有其他线程修改同步状态，可以不用CAS进行设置。如果设置成功返回true，否则返回false。<br>对别公平的tryAcquire实现，其代码如下,唯一的区别是在同步状态为0的时候，程序会检查当前是不是头结点持有的线程，如果是的话才可以尝试CAS设置，也就是对应的hasQueuedPredecessors方法。所以，在一个新的线程尝试获取公平锁的时候，如果它不是FIFO队列的头结点，则获取会失败，从而保证了公平性。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">            <span class="keyword">final</span> Thread current = Thread.currentThread();</div><div class="line">            <span class="keyword">int</span> c = getState();</div><div class="line">            <span class="keyword">if</span> (c == <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (!hasQueuedPredecessors() &amp;&amp;</div><div class="line">                    compareAndSetState(<span class="number">0</span>, acquires)) &#123;</div><div class="line">                    setExclusiveOwnerThread(current);</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (current == getExclusiveOwnerThread()) &#123;</div><div class="line">                <span class="keyword">int</span> nextc = c + acquires;</div><div class="line">                <span class="keyword">if</span> (nextc &lt; <span class="number">0</span>)</div><div class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"Maximum lock count exceeded"</span>);</div><div class="line">                setState(nextc);</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>获取完同步状态后，会进行同步状态的释放，也就是重写tryRelease(int)方法，公平锁和非公平锁的共用的Sync的tryRelease方法,只有独占线程才可以释放同步状态，如果同步状态变成了0，才最终释放成功。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">tryRelease</span><span class="params">(<span class="keyword">int</span> releases)</span> </span>&#123;</div><div class="line">     <span class="keyword">int</span> c = getState() - releases;</div><div class="line">     <span class="keyword">if</span> (Thread.currentThread() != getExclusiveOwnerThread())</div><div class="line">         <span class="keyword">throw</span> <span class="keyword">new</span> IllegalMonitorStateException();</div><div class="line">     <span class="keyword">boolean</span> free = <span class="keyword">false</span>;</div><div class="line">     <span class="keyword">if</span> (c == <span class="number">0</span>) &#123;</div><div class="line">         free = <span class="keyword">true</span>;</div><div class="line">         setExclusiveOwnerThread(<span class="keyword">null</span>);</div><div class="line">     &#125;</div><div class="line">     setState(c);</div><div class="line">     <span class="keyword">return</span> free;</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<h3 id="回顾整个流程"><a href="#回顾整个流程" class="headerlink" title="回顾整个流程"></a>回顾整个流程</h3><p>回顾整个流程，自顶向下的看以非公平的ReentrantLock实现过程，在用户需要使用ReentrantLock调用lock()方法，lock()方法会使用Sync的lock()方法使用CAS第一次尝试获取同步状态，如果获取成功，则直接设置当前线程为独占线程，如果失败，则会调用acquire(1)方法尝试一个同步状态，acquire则会调用tryAcquire(1)尝试获取同步状态，这个tryAcquire()是我们在实现AQS的子列NofaireSync中实现的，如果获取成功了，则正常返回，如果失败了，则会调用尝试将当前线程信息打包成Node节点加入到同步队列中，并且自旋尝试获取同步状态，当然只能前驱是头结点的线程才会多次自旋尝试获取同步状态，其余的则会阻塞等待。当同步状态使用完毕后，调用unlock()释放同步状态时，unlock方法会调用release()模板方法，而release模板方法会使用tryRelease()自定义策略释放同步状态，如果成功的话，则使用LockSupport.unpark(Thread)唤醒当前节点的后继节点。<br>回顾了整个流程我们就清晰了AQS在ReentrantLock实现过程中的作用，其中最重要的就是在获取同步状态失败后对同步队列的管理，而AQS提供了模板方法使得我们可以实现抽象方法所依赖的尝试获取同步状态的方法来控制获取同步状态的策略。</p>
+<h2 id="ReentrantReadWriteLock"><a href="#ReentrantReadWriteLock" class="headerlink" title="ReentrantReadWriteLock"></a>ReentrantReadWriteLock</h2><p>可重入读写锁锁包含了两个锁读写锁，这两个锁的同步状态用一个int值的高16位和低16位表示，高16位表示读锁，低16位表示写锁。其中写锁是独占锁，也就是一旦一个线程获取了写锁，其他线程对读锁和写锁的请求都会被阻塞。读锁是共享锁，也就是多个线程可以同时获取读锁，但是在有线程获取读锁的过程中，写锁会被阻塞。我们可以通过ReentrantReadWriteLock中Sync的tryAcquire(int)和tryAcquireShared(int)看到这种读写策略。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * Walkthrough:</div><div class="line">     * 1. If read count nonzero or write count nonzero</div><div class="line">     *    and owner is a different thread, fail.</div><div class="line">     * 2. If count would saturate, fail. (This can only</div><div class="line">     *    happen if count is already nonzero.)</div><div class="line">     * 3. Otherwise, this thread is eligible for lock if</div><div class="line">     *    it is either a reentrant acquire or</div><div class="line">     *    queue policy allows it. If so, update state</div><div class="line">     *    and set owner.</div><div class="line">     */</div><div class="line">    Thread current = Thread.currentThread();</div><div class="line">    <span class="keyword">int</span> c = getState();</div><div class="line">    <span class="keyword">int</span> w = exclusiveCount(c);</div><div class="line">    <span class="keyword">if</span> (c != <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// (Note: if c != 0 and w == 0 then shared count != 0)</span></div><div class="line">        <span class="keyword">if</span> (w == <span class="number">0</span> || current != getExclusiveOwnerThread())</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        <span class="keyword">if</span> (w + exclusiveCount(acquires) &gt; MAX_COUNT)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"Maximum lock count exceeded"</span>);</div><div class="line">        <span class="comment">// Reentrant acquire</span></div><div class="line">        setState(c + acquires);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (writerShouldBlock() ||</div><div class="line">        !compareAndSetState(c, c + acquires))</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    setExclusiveOwnerThread(current);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到上面的注释，在写锁的获取中，如果读锁不为0或者写锁不是当前线程，则获取失败。否则说明是已经获取写锁的独占线程，直接设置同步状态即可。否则的话，如果公平锁控制方法writerShouldBlock返回false并且尝试使用CAS设置，如果成功了，则获取写锁才成功。<br>读锁的过程比较简单，基本思路是如果写锁同步状态不为0并且当前线程不为写锁的持有者，则获取失败，使用与逻辑的原因是如果当前线程获取了写锁，还可以竞争读锁。然后最后使用CAS设置加后的读锁。</p>
+<h2 id="Condition"><a href="#Condition" class="headerlink" title="Condition"></a>Condition</h2><p>每个Lock实现类还实现了newCondition方法，该方法返回一个Condition对象，AQS的内部类ConditionObject实现了Condition接口，一般newCondition方法会返回一个ConditionObject实例。<br>Condition使用await/signal方法实现了比Object类提供的wait/notify更细粒度的线程间通信方式，一个锁可以获取多个Condition实例。那么AQS的ConditionObject是如何实现await/signal来实现线程间的通信的呢。<br>具体来说，每个ConditionObject对象持有一个像同步队列一样的双向队列，其中的每个节点也是Node,当一个获取了锁的线程调用await的时候，会释放同步状态并且将其从同步队列的头部移到当前Condition的等待队列，并且调用unpark方法阻塞当前线程，等待唤醒。<br><img src="https://i.imgur.com/Yxp3OBt.png" alt=""><br>而signal方法则是获取当前ConditionObject等待队列的头部节点，将其移动到同步队列的尾部并且使用LockSupport.unpark唤醒它。<br><img src="https://i.imgur.com/r0Qf58S.png" alt=""></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://shift-alt-ctrl.iteye.com/blog/1839142" target="_blank" rel="external">AQS(AbstractQueuedSynchronizer)深入剖析</a></li>
+<li><a href="https://segmentfault.com/a/1190000008471362#articleHeader0" target="_blank" rel="external">浅谈Java并发编程系列（九）—— AQS结构及原理分析</a></li>
+<li><a href="http://cmsblogs.com/?p=2235" target="_blank" rel="external">深入分析CAS</a></li>
+<li>Java并发编程艺术</li>
+</ul>
+<p>本文首发表于<a href="https://buwenqi.github.io" target="_blank" rel="external">我的博客</a>,欢迎关注！转载须注明文章出处，作者保留文章所有权。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="Wenqi 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java并发系列/" rel="tag"># Java并发系列</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/27/Java中的异步执行Future小结/" rel="next" title="Java中的异步执行Future小结">
+                <i class="fa fa-chevron-left"></i> Java中的异步执行Future小结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/06/Java并发系列笔记之线程池/" rel="prev" title="Java并发系列笔记之线程池">
+                Java并发系列笔记之线程池 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/me.jpg"
+                alt="Wenqi" />
+            
+              <p class="site-author-name" itemprop="name">Wenqi</p>
+              <p class="site-description motion-element" itemprop="description">To do one thing well.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/buwenqi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://cn.linkedin.com/in/buwenqi" target="_blank" title="Linkin">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Linkin</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mijack.github.io/" title="Mi&Jack" target="_blank">Mi&Jack</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://wintercolor.tech/" title="MengNan" target="_blank">MengNan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mengqi92.github.io/" title="MengQi" target="_blank">MengQi</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AbstractQueuedSynchronizer"><span class="nav-number">1.</span> <span class="nav-text">AbstractQueuedSynchronizer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#同步状态status的获取和更新"><span class="nav-number">1.1.</span> <span class="nav-text">同步状态status的获取和更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可重写尝试获取和释放同步状态的方法"><span class="nav-number">1.2.</span> <span class="nav-text">可重写尝试获取和释放同步状态的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步控制的模板方法"><span class="nav-number">1.3.</span> <span class="nav-text">同步控制的模板方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#独占式释放同步状态基本思路"><span class="nav-number">1.3.1.</span> <span class="nav-text">独占式释放同步状态基本思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#共享式获取同步状态基本思路"><span class="nav-number">1.3.2.</span> <span class="nav-text">共享式获取同步状态基本思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#共享式释放同步状态基本思路"><span class="nav-number">1.3.3.</span> <span class="nav-text">共享式释放同步状态基本思路</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ReentrantLock"><span class="nav-number">2.</span> <span class="nav-text">ReentrantLock</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回顾整个流程"><span class="nav-number">2.1.</span> <span class="nav-text">回顾整个流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ReentrantReadWriteLock"><span class="nav-number">3.</span> <span class="nav-text">ReentrantReadWriteLock</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Condition"><span class="nav-number">4.</span> <span class="nav-text">Condition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wenqi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'RPU1pwQvesuCO2LV5JkRjQwQ-gzGzoHsz',
+        appKey: 'gMI3tTWeJP6JoKoS55sW8Ob8',
+        placeholder: '欢迎吐槽！^_^',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("RPU1pwQvesuCO2LV5JkRjQwQ-gzGzoHsz", "gMI3tTWeJP6JoKoS55sW8Ob8");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
