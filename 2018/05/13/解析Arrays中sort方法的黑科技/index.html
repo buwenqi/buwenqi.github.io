@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java基础," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="排序问题是算法里面的经典问题，也是计算机学科数据结构课程里面的必修课，面对诸多的如插入排序，快速排序，堆排序，归并排序等等经典排序算法，JDK的实现者是如何选择排序算法的呢？我们经常使用的对数据进行排序的算法Arrays.sort，Collections.sort方法，那么具体它们是如何实现的呢，本文尝试从jdk 1.8的实现源码上进行分析，学习在实际工业环境下对排序算法的使用方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解析Arrays中sort方法的黑科技">
+<meta property="og:url" content="http://yoursite.com/2018/05/13/解析Arrays中sort方法的黑科技/index.html">
+<meta property="og:site_name" content="Wenqi's Blog">
+<meta property="og:description" content="排序问题是算法里面的经典问题，也是计算机学科数据结构课程里面的必修课，面对诸多的如插入排序，快速排序，堆排序，归并排序等等经典排序算法，JDK的实现者是如何选择排序算法的呢？我们经常使用的对数据进行排序的算法Arrays.sort，Collections.sort方法，那么具体它们是如何实现的呢，本文尝试从jdk 1.8的实现源码上进行分析，学习在实际工业环境下对排序算法的使用方法。">
+<meta property="og:image" content="https://i.imgur.com/XcUJj46.png">
+<meta property="og:image" content="https://i.imgur.com/CG6ybCO.png">
+<meta property="og:image" content="https://i.imgur.com/IuY4k4r.png">
+<meta property="og:image" content="https://i.imgur.com/a9F803z.png">
+<meta property="og:image" content="https://i.imgur.com/VLJ2sEg.png">
+<meta property="og:image" content="https://i.imgur.com/SrhuB9L.png">
+<meta property="og:image" content="https://i.imgur.com/Y0x0e38.png">
+<meta property="og:image" content="https://i.imgur.com/aDAA6Hd.png">
+<meta property="og:image" content="https://i.imgur.com/jannld8.png">
+<meta property="og:image" content="https://i.imgur.com/VEjp9yM.png">
+<meta property="og:image" content="https://i.imgur.com/UHpzukl.png">
+<meta property="og:updated_time" content="2018-05-13T14:36:31.643Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解析Arrays中sort方法的黑科技">
+<meta name="twitter:description" content="排序问题是算法里面的经典问题，也是计算机学科数据结构课程里面的必修课，面对诸多的如插入排序，快速排序，堆排序，归并排序等等经典排序算法，JDK的实现者是如何选择排序算法的呢？我们经常使用的对数据进行排序的算法Arrays.sort，Collections.sort方法，那么具体它们是如何实现的呢，本文尝试从jdk 1.8的实现源码上进行分析，学习在实际工业环境下对排序算法的使用方法。">
+<meta name="twitter:image" content="https://i.imgur.com/XcUJj46.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/13/解析Arrays中sort方法的黑科技/"/>
+
+
+
+
+
+  <title>解析Arrays中sort方法的黑科技 | Wenqi's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Wenqi's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书记
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            勾搭
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/13/解析Arrays中sort方法的黑科技/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wenqi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wenqi's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">解析Arrays中sort方法的黑科技</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-13T09:39:00+08:00">
+                2018-05-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/13/解析Arrays中sort方法的黑科技/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/05/13/解析Arrays中sort方法的黑科技/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/05/13/解析Arrays中sort方法的黑科技/" class="leancloud_visitors" data-flag-title="解析Arrays中sort方法的黑科技">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>排序问题是算法里面的经典问题，也是计算机学科数据结构课程里面的必修课，面对诸多的如插入排序，快速排序，堆排序，归并排序等等经典排序算法，JDK的实现者是如何选择排序算法的呢？我们经常使用的对数据进行排序的算法Arrays.sort，Collections.sort方法，那么具体它们是如何实现的呢，本文尝试从jdk 1.8的实现源码上进行分析，学习在实际工业环境下对排序算法的使用方法。<br><a id="more"></a></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Collections的sort方法的实现最终调用了Arrays的sort方法，所以我们仅仅分析Arrays中的sort方法，这一节，我们尝试从宏观的角度来看Arrays的sort方法。Arrays的sort方法分为两种：基本类型和Object类型。他们的实现方法不同<br>我们从Arrays.sort(int[])方法来概述基本类型排序的基本思路：1.如果数组元素个数小于NSERTION_SORT_THRESHOLD(47),那么使用改进的插入排序进行排序，2.如果元素个数大于插入排序的阈值并且小于快速排序的阈值QUICKSORT_THRESHOLD(286)，则使用改进的双轴快速排序进行排序，3.如果元素个数大于快速排序的阈值，根据数组的无序程度来判定继续使用哪种算法，无序程度通过将数组划分为不同的有序序列的个数来判定，如果有序序列的个数大于MAX_RUN_COUNT(67),则认为原数组基本无序,则仍然使用双轴快速排序，如果小于MAX_RUN_COUNT，则认为原数组基本有序，使用归并排序进行排序。<br>我们从Arrays.sort(Object[])的实现来概述Object对象类型的排序，其基本思路是：1.如果数组元素个数小于MIN_MERGE(32),2.如果大于MIN_MERGE，则将数组划分成多个有序块进行归并排序。<br>综上所述，无论是基本类型的排序还是Object类型的排序，都使用了多种排序的组合，这种组合的原因在于在不同的排序规模下，需要适应性的选用不同的排序方法，例如，在排序规模较小的情况下，复杂度为O(n^2)的插入排序能获得比例如快速排序更好的排序性能，而在数组基本有序的情况下，归并排序比快速排序相比是更好的选择。总的来说，根据不同的数组规模决定使用不同的排序方法。接下来我们通过详细的代码分析其具体实现。</p>
+<h2 id="基本类型排序-Arrays-sort-int"><a href="#基本类型排序-Arrays-sort-int" class="headerlink" title="基本类型排序(Arrays.sort(int[]))"></a>基本类型排序(Arrays.sort(int[]))</h2><p>Arrays的sort方法直接调用了DualQivotQuicksort的sort方法，类名的英语意思是双轴快速排序。可见双轴快速排序是关键。<br><img src="https://i.imgur.com/XcUJj46.png" alt=""><br>接下来进入sort方法，通过英语注释我们可以看到第一步，如果数组长度较小的话（小于QUICKSORT_THRESHOLD）,则使用sort方法进行排序，执行完方法结束。<br><img src="https://i.imgur.com/CG6ybCO.png" alt=""><br>那么sort方法又是如何排序的，判断数组长度是否小于INSERTION_SORT_THRESHOLD，如果是的话，则使用插入排序，并且在插入排序使用leftmost控制使用传统的插入排序还是改进的插入排序。改进的插入排序被称为成对插入排序（pair insertion sort）,其基本思想是一次取出两个未排序数组的元素，并且确保（a1&gt;a2）,那么在a1找到位置后，a2的位置肯定在a1之前，继续查找即可。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (length &lt; INSERTION_SORT_THRESHOLD) &#123;</div><div class="line">      <span class="keyword">if</span> (leftmost) &#123;<span class="comment">//默认情况下，经典插入排序</span></div><div class="line">          <span class="comment">/*</span></div><div class="line">           * Traditional (without sentinel) insertion sort,</div><div class="line">           * optimized for server VM, is used in case of</div><div class="line">           * the leftmost part.</div><div class="line">           */</div><div class="line">          <span class="keyword">for</span> (<span class="keyword">int</span> i = left, j = i; i &lt; right; j = ++i) &#123;</div><div class="line">              <span class="keyword">int</span> ai = a[i + <span class="number">1</span>];</div><div class="line">              <span class="keyword">while</span> (ai &lt; a[j]) &#123;</div><div class="line">                  a[j + <span class="number">1</span>] = a[j];</div><div class="line">                  <span class="keyword">if</span> (j-- == left) &#123;</div><div class="line">                      <span class="keyword">break</span>;</div><div class="line">                  &#125;</div><div class="line">              &#125;</div><div class="line">              a[j + <span class="number">1</span>] = ai;</div><div class="line">          &#125;</div><div class="line">      &#125; <span class="keyword">else</span> &#123;<span class="comment">//否则，使用改进后的成对插入排序</span></div><div class="line">          <span class="comment">/*</span></div><div class="line">           * Skip the longest ascending sequence.</div><div class="line">           */</div><div class="line">          <span class="keyword">do</span> &#123;</div><div class="line">              <span class="keyword">if</span> (left &gt;= right) &#123;</div><div class="line">                  <span class="keyword">return</span>;</div><div class="line">              &#125;</div><div class="line">          &#125; <span class="keyword">while</span> (a[++left] &gt;= a[left - <span class="number">1</span>]);</div><div class="line"></div><div class="line">          <span class="comment">/*</span></div><div class="line">           * Every element from adjoining part plays the role</div><div class="line">           * of sentinel, therefore this allows us to avoid the</div><div class="line">           * left range check on each iteration. Moreover, we use</div><div class="line">           * the more optimized algorithm, so called pair insertion</div><div class="line">           * sort, which is faster (in the context of Quicksort)</div><div class="line">           * than traditional implementation of insertion sort.</div><div class="line">           */</div><div class="line">          <span class="keyword">for</span> (<span class="keyword">int</span> k = left; ++left &lt;= right; k = ++left) &#123;</div><div class="line">              <span class="keyword">int</span> a1 = a[k], a2 = a[left];</div><div class="line"></div><div class="line">              <span class="keyword">if</span> (a1 &lt; a2) &#123;</div><div class="line">                  a2 = a1; a1 = a[left];</div><div class="line">              &#125;</div><div class="line">              <span class="keyword">while</span> (a1 &lt; a[--k]) &#123;</div><div class="line">                  a[k + <span class="number">2</span>] = a[k];</div><div class="line">              &#125;</div><div class="line">              a[++k + <span class="number">1</span>] = a1;</div><div class="line"></div><div class="line">              <span class="keyword">while</span> (a2 &lt; a[--k]) &#123;</div><div class="line">                  a[k + <span class="number">1</span>] = a[k];</div><div class="line">              &#125;</div><div class="line">              a[k + <span class="number">1</span>] = a2;</div><div class="line">          &#125;</div><div class="line">          <span class="keyword">int</span> last = a[right];</div><div class="line"></div><div class="line">          <span class="keyword">while</span> (last &lt; a[--right]) &#123;</div><div class="line">              a[right + <span class="number">1</span>] = a[right];</div><div class="line">          &#125;</div><div class="line">          a[right + <span class="number">1</span>] = last;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span>;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>如果不是小于INSERTION_SORT_THRESHOLD，则使用5分位法找出5个位置的值做双轴快速排序<br><img src="https://i.imgur.com/IuY4k4r.png" alt=""><br>这里有必要解释一下双轴快速排序，双轴快速排序的思想是相对于单轴快速排序，经典的单轴快速排序，每次选择一个元素作为轴值pivot,然后使用双指针将小于pivot移到pivot的左边，大于pivot的值移到右边，使得pivot处于最终位置，这个过程称为一次排序，对两边递归的调用一次排序可以得到最终的排序结果。<br>而双轴快速排序的基本思想是一次可以将两个元素放到最终位置上，假设这两个轴值为pivot1,pivot2,那么一次排序后，最终数组被这两个元素划分成三块：&lt;pivot1, &gt;=pivot1并且&lt;=pivot2, &gt;pivot2。为了达到这种划分，我们需要三个指针来进行操作i,k,j,i左边的是小于pivot1的，j右边的是大于pivot1的，k用来扫描，当k和j相聚的时候，则扫描结束。关于双轴快速排序的具体实现可以参考这篇文章《<a href="https://blog.csdn.net/holmofy/article/details/71168530#t7" target="_blank" rel="external">单轴快排（SinglePivotQuickSort）和双轴快排（DualPivotQuickSort）及其JAVA实现</a>》这篇文章，写的很好。<br>相比单轴快速排序，双轴快速排序能够获取更快的排序效率，我们来看一看源码中的关键实现，从源码上来看，当5分位点所有值都不相同的时候，选取第二个点和第四个点作为双轴进行双轴快速排序。<br><img src="https://i.imgur.com/a9F803z.png" alt=""><br><img src="https://i.imgur.com/VLJ2sEg.png" alt=""><br>否则的话，就使用第三个点进行单轴快速排序<br><img src="https://i.imgur.com/SrhuB9L.png" alt=""><br>以上是数组长度小于QUICKSORT_THRESHOLD（286）时候的排序策略，如果大于这个快速排序的阈值，又是怎么做的呢，我们继续往下看源码，发现这么一段代码，其目的也很明确，就是检查原来数组是不是基本有序，方法是找出有序的数组片段，用count进行统计，如果count一旦等于MAX_RUN_COUNT，则认为基本无序，使用我们上面提到的方法进行快速排序。<br><img src="https://i.imgur.com/Y0x0e38.png" alt=""><br>基本无序状态检查<br><img src="https://i.imgur.com/aDAA6Hd.png" alt=""><br>在上面统计count的过程中，同样使用run数组记录所有的基本有序的数组的最后一个元素的下标，如果判定结果是基本有序，则使用的归并排序进行最终的排序，方法是通过run方法记录的下标每次合并两个有序序列，最终使得数组有序，这里就不贴出很长的归并代码。<br>基本上，基础类型的排序算法就这样讲完了。</p>
+<h2 id="Object类型排序-Arrays-sort-Object"><a href="#Object类型排序-Arrays-sort-Object" class="headerlink" title="Object类型排序(Arrays.sort(Object[]))"></a>Object类型排序(Arrays.sort(Object[]))</h2><p>Arrays.sort方法的Object数组要求实现Comparable接口，因为在其实现过程中有<br>Object类型的排序中legacyMergeSort是经典的归并排序，不过它即将被废弃了，这里只是用来兼容老的排序方法，现在默认使用的是ComparableSort里面的sort方法，我们的分析着重在这个方法。<br><img src="https://i.imgur.com/jannld8.png" alt=""><br>首先，如果数组的长度小于MIN_MERGE(32),那么就会调用二分插入排序binarySort方法进行排序，所谓二分排序，是指在插入的过程中，使用二分查找的方法查找待插入的位置，这种查找方法会比线性查找快一点。<br><img src="https://i.imgur.com/VEjp9yM.png" alt=""><br>如果不答应MIN_MERGE，则使用归并排序，归并的方法是将数组换分成等块的小数组(除最后一块)，在小数组内进行二分插入排序，排序后将当前数组的初始位置，长度使用pushRun方法压栈，mergeCollapse方法每次会从数组中取出两个小数组进行归并排序，最终循环结束后，数组也已经排序完成。<br><img src="https://i.imgur.com/UHpzukl.png" alt=""><br>嗯，基本上就是这样了</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://zongwenlong.github.io/2017/01/06/Java-SourceCode-Sort/" target="_blank" rel="external">Java源码阅读-DualPivotQuicksort</a><br><a href="https://blog.csdn.net/octopusflying/article/details/52388012" target="_blank" rel="external">数据数组排序：Arrays.sort()</a><br><a href="https://blog.csdn.net/holmofy/article/details/71168530#t7" target="_blank" rel="external">单轴快排（SinglePivotQuickSort）和双轴快排（DualPivotQuickSort）及其JAVA实现</a><br><a href="https://blog.csdn.net/qq_16403141/article/details/78234868" target="_blank" rel="external">Arrays.sort()方法的源码分析</a></p>
+<h2 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h2><p>本文首发表于<a href="https://buwenqi.github.io" target="_blank" rel="external">我的博客</a>,欢迎关注！已委托维权骑士为本站的文章进行维权，转载须注明文章出处，作者保留文章所有权。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="Wenqi 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java基础/" rel="tag"># Java基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/08/Java并发系列笔记之并发容器ConcurrentHashMap/" rel="next" title="Java并发系列笔记之并发容器ConcurrentHashMap">
+                <i class="fa fa-chevron-left"></i> Java并发系列笔记之并发容器ConcurrentHashMap
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/me.jpg"
+                alt="Wenqi" />
+            
+              <p class="site-author-name" itemprop="name">Wenqi</p>
+              <p class="site-description motion-element" itemprop="description">To do one thing well.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/buwenqi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://cn.linkedin.com/in/buwenqi" target="_blank" title="Linkin">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Linkin</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mijack.github.io/" title="Mi&Jack" target="_blank">Mi&Jack</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://wintercolor.tech/" title="MengNan" target="_blank">MengNan</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mengqi92.github.io/" title="MengQi" target="_blank">MengQi</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本类型排序-Arrays-sort-int"><span class="nav-number">2.</span> <span class="nav-text">基本类型排序(Arrays.sort(int[]))</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Object类型排序-Arrays-sort-Object"><span class="nav-number">3.</span> <span class="nav-text">Object类型排序(Arrays.sort(Object[]))</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明"><span class="nav-number">5.</span> <span class="nav-text">声明</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wenqi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'RPU1pwQvesuCO2LV5JkRjQwQ-gzGzoHsz',
+        appKey: 'gMI3tTWeJP6JoKoS55sW8Ob8',
+        placeholder: '欢迎吐槽！^_^',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("RPU1pwQvesuCO2LV5JkRjQwQ-gzGzoHsz", "gMI3tTWeJP6JoKoS55sW8Ob8");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

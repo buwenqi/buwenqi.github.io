@@ -90,7 +90,7 @@
 <meta property="og:image" content="https://i.imgur.com/G5In2rj.png">
 <meta property="og:image" content="https://i.imgur.com/Yxp3OBt.png">
 <meta property="og:image" content="https://i.imgur.com/r0Qf58S.png">
-<meta property="og:updated_time" content="2018-05-04T09:34:25.341Z">
+<meta property="og:updated_time" content="2018-05-11T01:46:13.362Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java并发系列笔记之Java中的锁">
 <meta name="twitter:description" content="锁是多线程下进行同步互斥的重要实现依托，Java语言中除了提供了使用synchronized关键字提供的隐式锁，也提供了以Lock接口定义的显示锁。一般Lock的子类实现依赖于一个抽象队列同步器（AbstractQueuedSynchronizer, AQS）的子类实现。AQS的目的是提供对同步状态的获取和释放的基础同步功能给依赖者使用，而屏蔽了同步状态获取和释放的具体实现。AQS是一个抽象类，它">
@@ -380,7 +380,7 @@
 <li>public final boolean tryAcquireSharedNanos(int arg, long nanosTimeout)</li>
 <li>public final boolean releaseShared(int arg) </li>
 </ol>
-<p>那么AQS是如何处理获取同步状态的呢？以独占式的acquire(int)实现为例<br><img src="https://i.imgur.com/KlMgwG8.png" alt=""><br>模板方法首先尝试获取arg个同步状态（tryAcquire），如果成功了，直接方法返回，代表成功获取同步状态；如果失败了，AQS使用一个称为同步队列的双向队列来维护获取失败的线程信息，队列中的存储单元是封装了线程，线程状态和前驱后继的节点信息，AQS持有双向对了的头部（head）和尾部(tail)节点引用。<br>addWaiter就是将当前未获取同步状态的线程封装成Node添加在双向队列的尾部，当然插入的过程使用了CAS并且再失败的时候进行自旋。<br>接着acquireQueue尝试自旋获取同步状态，当然只有前驱节点为头结点的Node等待线程才可以获取同步状态，如果不是头结点或获取同步状态失败，则判断是否应该阻塞当前线程，判断的依据是当前Node前驱节点的waitStaus。如果是应该阻塞，则使用LockSupport的park(Thread)方法阻塞当前线程，否则，继续自旋。如果前驱是头节点并且尝试获取同步状态成功，则设置当前节点为头结点(也就是说头结点是获取同步状态的)，并且返回。<br>总结起来，独占式获取同步状态的状态图如下：<br><img src="https://i.imgur.com/G5In2rj.png" alt=""></p>
+<p>那么AQS是如何处理获取同步状态的呢？以独占式的acquire(int)实现为例<br><img src="https://i.imgur.com/KlMgwG8.png" alt=""><br>模板方法首先尝试获取arg个同步状态（tryAcquire），如果成功了，直接方法返回，代表成功获取同步状态；如果失败了，AQS使用一个称为同步队列的双向队列来维护获取失败的线程信息，队列中的存储单元是封装了线程，线程状态和前驱后继的节点信息，AQS持有双向队列的头部（head）和尾部(tail)节点引用。<br>addWaiter就是将当前未获取同步状态的线程封装成Node添加在双向队列的尾部，当然插入的过程使用了CAS并且再失败的时候进行自旋。<br>接着acquireQueue尝试自旋获取同步状态，当然只有前驱节点为头结点的Node等待线程才可以获取同步状态，如果不是头结点或获取同步状态失败，则判断是否应该阻塞当前线程，判断的依据是当前Node前驱节点的waitStaus。如果是应该阻塞，则使用LockSupport的park(Thread)方法阻塞当前线程，否则，继续自旋。如果前驱是头节点并且尝试获取同步状态成功，则设置当前节点为头结点(也就是说头结点是获取同步状态的)，并且返回。<br>总结起来，独占式获取同步状态的状态图如下：<br><img src="https://i.imgur.com/G5In2rj.png" alt=""></p>
 <h4 id="独占式释放同步状态基本思路"><a href="#独占式释放同步状态基本思路" class="headerlink" title="独占式释放同步状态基本思路"></a>独占式释放同步状态基本思路</h4><p>基本的流程是尝试使用tryRelease(int)释放同步状态，如果释放成功，则当前线程会唤醒同步队列中后继节点的线程，并且返回true,否则返回false。release做的工作相对较少。</p>
 <h4 id="共享式获取同步状态基本思路"><a href="#共享式获取同步状态基本思路" class="headerlink" title="共享式获取同步状态基本思路"></a>共享式获取同步状态基本思路</h4><p>acquireShared(int)首先使用tryAcquireShared尝试获取同步状态，如果返回小于0则获取失败，将失败的线程放入同步队列中，并且自旋式尝试获取同步状态，只有前驱节点是头结点才可以尝试获取同步状态，如果成功了则设置当前节点为头结点，如果失败了则判断是否应该阻塞当前线程。整个过程和独占式acquire类似，不同的是tryAcquiredShared方法在获取锁的时候不用判断当前线程是不是独占式线程，任何线程在开始的时候都可以尝试获取同步状态。而tryAquired的实现应该排斥非独占线程获取锁。</p>
 <h4 id="共享式释放同步状态基本思路"><a href="#共享式释放同步状态基本思路" class="headerlink" title="共享式释放同步状态基本思路"></a>共享式释放同步状态基本思路</h4><p>releaseShared(int)首先尝试释放同步状态，并且使用doReleaseShared()循环唤醒队列中多个等待的线程。</p>
@@ -548,7 +548,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
