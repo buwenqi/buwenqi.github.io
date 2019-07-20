@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-08-06T00:59:40.714Z</updated>
+  <updated>2019-07-20T10:05:20.138Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>test</title>
+    <link href="http://yoursite.com/2019/07/20/test/"/>
+    <id>http://yoursite.com/2019/07/20/test/</id>
+    <published>2019-07-20T10:04:51.000Z</published>
+    <updated>2019-07-20T10:05:20.138Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;这个是用来测试RSS和邮件订阅的！&lt;/p&gt;
+
+        
+      
+    
+    </summary>
+    
+    
+      <category term="test" scheme="http://yoursite.com/tags/test/"/>
+    
+  </entry>
   
   <entry>
     <title>深度优先搜索总结</title>
@@ -360,24 +385,6 @@
     
     
       <category term="Java基础" scheme="http://yoursite.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MySQL-SQL之索引</title>
-    <link href="http://yoursite.com/2017/11/30/MySQL-SQL%E4%B9%8B%E7%B4%A2%E5%BC%95/"/>
-    <id>http://yoursite.com/2017/11/30/MySQL-SQL之索引/</id>
-    <published>2017-11-30T03:09:19.000Z</published>
-    <updated>2018-02-21T14:26:34.723Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;索引具有加快数据库服务器查询数据的速度的作用，其作用目的是为将经常作用于查询标志（比如where语句的查询条件）的列新建一个数据结构，这个数据结构的每一个元素通常包含两个信息：索引列的值和索引值所执行的数据行的地址。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="数据库" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
