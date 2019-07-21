@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-07-20T10:05:20.138Z</updated>
+  <updated>2019-07-21T04:55:42.997Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,27 +17,20 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>test</title>
-    <link href="http://yoursite.com/2019/07/20/test/"/>
-    <id>http://yoursite.com/2019/07/20/test/</id>
+    <title>毕业月记</title>
+    <link href="http://yoursite.com/2019/07/20/%E6%AF%95%E4%B8%9A%E6%9C%88%E8%AE%B0/"/>
+    <id>http://yoursite.com/2019/07/20/毕业月记/</id>
     <published>2019-07-20T10:04:51.000Z</published>
-    <updated>2019-07-20T10:05:20.138Z</updated>
+    <updated>2019-07-21T04:55:42.997Z</updated>
     
     <summary type="html">
     
-      
-      
-        
-        
-          &lt;p&gt;这个是用来测试RSS和邮件订阅的！&lt;/p&gt;
-
-        
-      
+      &lt;p&gt;&lt;img src=&quot;https://i.imgur.com/HbW4Ha9.jpg&quot; alt=&quot;绣球花&quot;&gt;&lt;br&gt;（图片为华东师范大学2019届毕业花：&lt;strong&gt;绣球花&lt;/strong&gt;）&lt;br&gt;
     
     </summary>
     
     
-      <category term="test" scheme="http://yoursite.com/tags/test/"/>
+      <category term="随笔" scheme="http://yoursite.com/tags/%E9%9A%8F%E7%AC%94/"/>
     
   </entry>
   
