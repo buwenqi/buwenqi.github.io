@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-08-18T10:31:35.791Z</updated>
+  <updated>2019-08-18T16:23:20.514Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,19 +21,11 @@
     <link href="http://yoursite.com/2019/08/18/%E5%8D%9A%E5%AE%A2%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97/"/>
     <id>http://yoursite.com/2019/08/18/博客更新日志/</id>
     <published>2019-08-18T10:04:50.000Z</published>
-    <updated>2019-08-18T10:31:35.791Z</updated>
+    <updated>2019-08-18T16:23:20.514Z</updated>
     
     <summary type="html">
     
-      
-      
-        
-        
-          &lt;p&gt;主题采用next主题，这里主题的文件夹默认为next文件夹&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;sidebar添加RSS订阅和邮件订阅&lt;br&gt;目录：next/layout/_macro/sidebar.swing&lt;br&gt;可以看到原来就有一段，在主站_config.yml中配置即可自动
-        
-      
+      &lt;p&gt;主题采用next主题，这里主题的文件夹默认为next文件夹&lt;br&gt;
     
     </summary>
     
