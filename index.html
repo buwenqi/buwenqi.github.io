@@ -263,6 +263,158 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/18/博客更新日志/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wenqi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wenqi's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/18/博客更新日志/" itemprop="url">博客更新日志</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-18T18:04:50+08:00">
+                2019-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/08/18/博客更新日志/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/08/18/博客更新日志/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/08/18/博客更新日志/" class="leancloud_visitors" data-flag-title="博客更新日志">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>主题采用next主题，这里主题的文件夹默认为next文件夹</p>
+<ol>
+<li>sidebar添加RSS订阅和邮件订阅<br>目录：next/layout/_macro/sidebar.swing<br>可以看到原来就有一段，在主站_config.yml中配置即可自动生成<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">##RSS feed</div><div class="line">feed:</div><div class="line">  type: atom</div><div class="line">  path: atom.xml</div><div class="line">  limit: 20</div><div class="line">  hub:</div><div class="line">  content:</div><div class="line">  content_limit: 140</div><div class="line">  content_limit_delim: &apos; &apos;</div><div class="line">  order_by: -date</div><div class="line">  icon: icon.png</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;% if theme.rss %&#125;</div><div class="line">   &lt;div class=&quot;feed-link motion-element&quot;&gt;</div><div class="line">     &lt;a href=&quot;&#123;&#123; url_for(theme.rss) &#125;&#125;&quot; rel=&quot;alternate&quot;&gt;</div><div class="line">       &lt;i class=&quot;fa fa-rss&quot;&gt;&lt;/i&gt;</div><div class="line">       RSS</div><div class="line">     &lt;/a&gt;</div><div class="line">   &lt;/div&gt;</div><div class="line"> &#123;% endif %&#125;</div></pre></td></tr></table></figure>
+<p>邮件订阅添加如下代码,在主站_config.yml中添加emailsubscribe: true开关<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;% if theme.emailsubscribe %&#125;</div><div class="line">        &lt;div class=&quot;feed-link motion-element&quot;&gt;</div><div class="line"> &lt;a href=&quot;邮件订阅地址&quot; target=&quot;_blank&quot; title=&quot;email&quot;&gt;Email 订阅&lt;/a&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">      &#123;% endif %&#125;</div></pre></td></tr></table></figure></p>
+<p>2.在每个文章下面添加邮件订阅链接<br>在next/layout/_macro/下添加email订阅的样式,我是用的mailchimp生成的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;div&gt;</div><div class="line">&lt;link href=&quot;//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;&gt;</div><div class="line">&lt;style type=&quot;text/css&quot;&gt;</div><div class="line">	#mc_embed_signup&#123;background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;&#125;</div><div class="line">	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.</div><div class="line">	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */</div><div class="line">&lt;/style&gt;</div><div class="line">&lt;div id=&quot;mc_embed_signup&quot;&gt;&lt;form action=&quot;https://126.us3.list-manage.com/subscribe/post?u=6dc0f11f3e10812c48ba02b6c&amp;amp;id=3c20629afe&quot; method=&quot;post&quot; id=&quot;mc-embedded-subscribe-form&quot; name=&quot;mc-embedded-subscribe-form&quot; class=&quot;validate&quot; target=&quot;_blank&quot; novalidate&gt;&lt;div id=&quot;mc_embed_signup_scroll&quot;&gt;&lt;input type=&quot;email&quot; value=&quot;&quot; name=&quot;EMAIL&quot; class=&quot;email&quot; id=&quot;mce-EMAIL&quot; placeholder=&quot;email address&quot; required&gt;&lt;div style=&quot;position: absolute; left: -5000px;&quot; aria-hidden=&quot;true&quot;&gt;&lt;input type=&quot;text&quot; name=&quot;b_6dc0f11f3e10812c48ba02b6c_3c20629afe&quot; tabindex=&quot;-1&quot; value=&quot;&quot;&gt;&lt;/div&gt;&lt;div class=&quot;clear&quot;&gt;&lt;input type=&quot;submit&quot; value=&quot;邮件订阅&quot; name=&quot;subscribe&quot; id=&quot;mc-embedded-subscribe&quot; class=&quot;button&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/form&gt;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure></p>
+<p>然后在next/layout/_macro/post.swig文章的样式中，post body之后以include的方式插入刚刚的邮件订阅样式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">   &#123;#####################&#125;</div><div class="line">   &#123;### END POST BODY ###&#125;</div><div class="line">   &#123;#####################&#125;</div><div class="line"></div><div class="line">&#123;% if not is_index %&#125;</div><div class="line">&#123;% include &apos;email-subscribe.swig&apos; %&#125;</div><div class="line">&#123;% endif %&#125;</div></pre></td></tr></table></figure></p>
+<p>not is_index的作用是不让在首页折叠状态下显示</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+	
+	
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/20/毕业月记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1579,153 +1731,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/27/Java中的异步执行Future小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wenqi">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/me.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wenqi's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/27/Java中的异步执行Future小结/" itemprop="url">Java中的异步执行Future小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-27T09:39:00+08:00">
-                2018-03-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/03/27/Java中的异步执行Future小结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/03/27/Java中的异步执行Future小结/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2018/03/27/Java中的异步执行Future小结/" class="leancloud_visitors" data-flag-title="Java中的异步执行Future小结">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>最近碰到的异步处理的操作比较多，异步就是不等想要的结果返回执行接下来的其他操作，等异步结果返回后直接调用已经注册好的处理方法完成后续操作。异步的思想是非常棒的，相比轮询的方式而言，异步的实现方式无疑是高效并且优雅的。本文介绍了包括Future，AIO和有点类似于单机版的Map-Reduce的fork/join框架。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/27/Java中的异步执行Future小结/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-	
-	
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1780,7 +1785,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1793,7 +1798,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2035,7 +2040,7 @@
 
 
 
-  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
   <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
   
   <script type="text/javascript">
@@ -2068,7 +2073,7 @@
   
 
   
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script src="/js/av-core-mini-0.6.4.js"></script>
   <script>AV.initialize("oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI", "12aldjQVARwR70CFQ2qy8SQX");</script>
   <script>
     function showTime(Counter) {
