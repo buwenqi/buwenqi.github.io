@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Wenqi&#39;s Blog</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2019-08-18T16:23:20.514Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>Wenqi</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>博客更新日志</title>
+    <link href="http://yoursite.com/2019/08/18/%E5%8D%9A%E5%AE%A2%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97/"/>
+    <id>http://yoursite.com/2019/08/18/博客更新日志/</id>
+    <published>2019-08-18T10:04:50.000Z</published>
+    <updated>2019-08-18T16:23:20.514Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;主题采用next主题，这里主题的文件夹默认为next文件夹&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="博客更新" scheme="http://yoursite.com/tags/%E5%8D%9A%E5%AE%A2%E6%9B%B4%E6%96%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>毕业月记</title>
+    <link href="http://yoursite.com/2019/07/20/%E6%AF%95%E4%B8%9A%E6%9C%88%E8%AE%B0/"/>
+    <id>http://yoursite.com/2019/07/20/毕业月记/</id>
+    <published>2019-07-20T10:04:51.000Z</published>
+    <updated>2019-07-21T09:14:00.647Z</updated>
+    
+    <summary type="html">
+    
+      &lt;!-- ![绣球花](https://i.imgur.com/HbW4Ha9.jpg)--&gt;
+&lt;p&gt;&lt;img src=&quot;http://ww1.sinaimg.cn/large/0077E6V4ly1g57kpjdowyj30u00gv0vw.jpg&quot; alt=&quot;&quot;&gt;&lt;br&gt;（图片为华东师范大学2019届毕业花：&lt;strong&gt;绣球花&lt;/strong&gt;，花语是让希望、永恒与团聚永存心间）&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="随笔" scheme="http://yoursite.com/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深度优先搜索总结</title>
+    <link href="http://yoursite.com/2018/06/25/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2%E6%80%BB%E7%BB%93/"/>
+    <id>http://yoursite.com/2018/06/25/深度优先搜索总结/</id>
+    <published>2018-06-25T01:39:00.000Z</published>
+    <updated>2018-08-06T00:59:40.714Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;深度优先搜索(DFS)和广度优先搜索(BFS)都是一种对可能解答路径的枚举方式，深度优先搜索每次都从一个方向一直搜索到最终状态，然后进行回溯尝试枚举其他到达最终状态的路径。回溯的过程需要存储回溯点当前的状态，递归方法可以很好的完成这个任务，在递归方法之前设置状态信息，在递归后将状态信息设置回原值。如果设计递归方法是关键，递归方法对应着深度优先搜索的策略。本文尝试从几个例子尝试探索使用深度优先搜索方法的一般设计方法。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="算法" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>背包问题总结</title>
+    <link href="http://yoursite.com/2018/06/24/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"/>
+    <id>http://yoursite.com/2018/06/24/背包问题总结/</id>
+    <published>2018-06-24T08:56:08.000Z</published>
+    <updated>2018-08-06T00:59:29.182Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;背包问题是经典动态规划思想的应用实例。其基本问题是:在拥有一个固定容量的背包的情况下，如何选择不同体积并且价值不同的物品装入背包中，使得背包中的物品的价值最大。也就是说物品有两个维度的属性：体积和价值，而背包限制了总体积。针对这个问题，衍生出不同的背包问题。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="算法" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Spring学习笔记之bean的生命周期</title>
+    <link href="http://yoursite.com/2018/06/21/Spring%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8Bbean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/"/>
+    <id>http://yoursite.com/2018/06/21/Spring学习笔记之bean的生命周期/</id>
+    <published>2018-06-21T01:39:00.000Z</published>
+    <updated>2018-08-06T00:59:20.370Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;理解spring bean的生命周期对于细粒度的控制bean的创建、使用和销毁具有重要的意义，比如我们想要在一个bean创建之后做些额外的操作，合理的使用spring在生命周期中的调用方法，就可以轻易的完成这个任务，不过，首先，我们要理解bean在整个生命周期调用的方法链，才能正确的完成所需的功能。本文的目的是尝试使用实验的方式探索一个bean的生命周期。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="spring" scheme="http://yoursite.com/tags/spring/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java并发系列笔记之阻塞队列</title>
+    <link href="http://yoursite.com/2018/06/10/Java%E5%B9%B6%E5%8F%91%E7%B3%BB%E5%88%97%E7%AC%94%E8%AE%B0%E4%B9%8B%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97/"/>
+    <id>http://yoursite.com/2018/06/10/Java并发系列笔记之阻塞队列/</id>
+    <published>2018-06-10T01:39:00.000Z</published>
+    <updated>2018-08-06T00:59:10.474Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;阻塞队列是Java并发中重要的并发容器，而且这个并发容器首先是队列，提供队列FIFO的特性，而且是这个队列是具有阻塞特性的，也就是说在队列满和队列空的情况下，会对添加线程和获取线程进行阻塞，以等待相应的同步状态释放，方法才得以返回。这种特性大有用武之地，比如典型的并发问题，生产者消费者问题，就可以将这种阻塞队列抽象出来，实现一种具有并发控制的容器，作为一种新的数据结构提供给应用层使用。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="Java并发系列" scheme="http://yoursite.com/tags/Java%E5%B9%B6%E5%8F%91%E7%B3%BB%E5%88%97/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解析Arrays中sort方法的黑科技</title>
+    <link href="http://yoursite.com/2018/05/13/%E8%A7%A3%E6%9E%90Arrays%E4%B8%ADsort%E6%96%B9%E6%B3%95%E7%9A%84%E9%BB%91%E7%A7%91%E6%8A%80/"/>
+    <id>http://yoursite.com/2018/05/13/解析Arrays中sort方法的黑科技/</id>
+    <published>2018-05-13T01:39:00.000Z</published>
+    <updated>2018-05-13T14:36:31.643Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;排序问题是算法里面的经典问题，也是计算机学科数据结构课程里面的必修课，面对诸多的如插入排序，快速排序，堆排序，归并排序等等经典排序算法，JDK的实现者是如何选择排序算法的呢？我们经常使用的对数据进行排序的算法Arrays.sort，Collections.sort方法，那么具体它们是如何实现的呢，本文尝试从jdk 1.8的实现源码上进行分析，学习在实际工业环境下对排序算法的使用方法。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="Java基础" scheme="http://yoursite.com/tags/Java%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java并发系列笔记之并发容器ConcurrentHashMap</title>
+    <link href="http://yoursite.com/2018/05/08/Java%E5%B9%B6%E5%8F%91%E7%B3%BB%E5%88%97%E7%AC%94%E8%AE%B0%E4%B9%8B%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8ConcurrentHashMap/"/>
+    <id>http://yoursite.com/2018/05/08/Java并发系列笔记之并发容器ConcurrentHashMap/</id>
+    <published>2018-05-08T01:39:00.000Z</published>
+    <updated>2018-05-09T08:08:08.647Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;线程不安全的HashMap&quot;&gt;&lt;a href=&quot;#线程不安全的HashMap&quot; class=&quot;headerlink&quot; title=&quot;线程不安全的HashMap&quot;&gt;&lt;/a&gt;线程不安全的HashMap&lt;/h2&gt;&lt;p&gt;多线程情况下，HashMap由于在扩容的时候会导致链变成环，在下一次查询的时候会使得出现死循环的出现。变成环的主要原因在于HashMap扩容的逻辑是不具有原子性的，扩容的基本逻辑包括下面三条：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;当前节点为e，获取当前节点的下一个节点next&lt;/li&gt;
+&lt;li&gt;将e按照hash移到到扩容后的hash表中，置e.next等于newtable[i],头插法&lt;/li&gt;
+&lt;li&gt;将e置为next进入下一次循环&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+    
+      <category term="Java并发系列" scheme="http://yoursite.com/tags/Java%E5%B9%B6%E5%8F%91%E7%B3%BB%E5%88%97/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java并发系列笔记之线程池</title>
+    <link href="http://yoursite.com/2018/05/06/Java%E5%B9%B6%E5%8F%91%E7%B3%BB%E5%88%97%E7%AC%94%E8%AE%B0%E4%B9%8B%E7%BA%BF%E7%A8%8B%E6%B1%A0/"/>
+    <id>http://yoursite.com/2018/05/06/Java并发系列笔记之线程池/</id>
+    <published>2018-05-06T01:39:00.000Z</published>
+    <updated>2018-05-09T08:03:08.694Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;线程池是资源复用的典范之作，其基本思想是维护一个含有一定数量的在运行的线程集合，在需要运行线程任务的时候直接从这个集合中取出一个线程去运行任务，而不是重新创建一个。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="Java并发系列" scheme="http://yoursite.com/tags/Java%E5%B9%B6%E5%8F%91%E7%B3%BB%E5%88%97/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java并发系列笔记之Java中的锁</title>
+    <link href="http://yoursite.com/2018/05/02/Java%E5%B9%B6%E5%8F%91%E7%B3%BB%E5%88%97%E7%AC%94%E8%AE%B0%E4%B9%8BJava%E4%B8%AD%E7%9A%84%E9%94%81/"/>
+    <id>http://yoursite.com/2018/05/02/Java并发系列笔记之Java中的锁/</id>
+    <published>2018-05-02T01:39:00.000Z</published>
+    <updated>2018-05-11T01:46:13.362Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;锁是多线程下进行同步互斥的重要实现依托，Java语言中除了提供了使用synchronized关键字提供的隐式锁，也提供了以Lock接口定义的显示锁。一般Lock的子类实现依赖于一个抽象队列同步器（AbstractQueuedSynchronizer, AQS）的子类实现。AQS的目的是提供对同步状态的获取和释放的基础同步功能给依赖者使用，而屏蔽了同步状态获取和释放的具体实现。AQS是一个抽象类，它使用模板模式定义获取和释放同步状态的模板方法，而将模板方法所依赖的获取同步，阻塞管理等其他方法交给需要不同并发策略的子类去实现。本文从AQS的具体实现讲起，接着分析不同锁机制的实现原理。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="Java并发系列" scheme="http://yoursite.com/tags/Java%E5%B9%B6%E5%8F%91%E7%B3%BB%E5%88%97/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java中的异步执行Future小结</title>
+    <link href="http://yoursite.com/2018/03/27/Java%E4%B8%AD%E7%9A%84%E5%BC%82%E6%AD%A5%E6%89%A7%E8%A1%8CFuture%E5%B0%8F%E7%BB%93/"/>
+    <id>http://yoursite.com/2018/03/27/Java中的异步执行Future小结/</id>
+    <published>2018-03-27T01:39:00.000Z</published>
+    <updated>2018-03-31T01:55:03.116Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近碰到的异步处理的操作比较多，异步就是不等想要的结果返回执行接下来的其他操作，等异步结果返回后直接调用已经注册好的处理方法完成后续操作。异步的思想是非常棒的，相比轮询的方式而言，异步的实现方式无疑是高效并且优雅的。本文介绍了包括Future，AIO和有点类似于单机版的Map-Reduce的fork/join框架。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="Java进阶" scheme="http://yoursite.com/tags/Java%E8%BF%9B%E9%98%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于常用设计模式的一些思考</title>
+    <link href="http://yoursite.com/2018/03/15/%E5%85%B3%E4%BA%8E%E5%B8%B8%E7%94%A8%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/"/>
+    <id>http://yoursite.com/2018/03/15/关于常用设计模式的一些思考/</id>
+    <published>2018-03-15T03:57:05.000Z</published>
+    <updated>2018-05-07T06:23:03.992Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;很早就接触了设计模式，今天在看一些文章的时候发现自己在学习理解设计模式的时候有些偏差。设计模式应该服务于特定的场景，并且是经过前人经验总结而来的代码解决思路，这种解决思路考虑的点在于如何能够让代码之间的耦合度更低并且减少冗余，使得代码耦合度更低的目的是为了程序更好的扩展，所谓的更好的扩展是指在功能的变动或者扩展的情况下尽可能触发较少的改动。所以在学习设计模式的时候，一个好的学习方式应该是模拟程序的扩展来比较在使用前人总结的设计模式和现有代码的不同之处，只有真正体会到其优点，才能尽得其精髓。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>机器学习总结系列之逻辑回归</title>
+    <link href="http://yoursite.com/2018/02/23/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E7%B3%BB%E5%88%97%E4%B9%8B%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/"/>
+    <id>http://yoursite.com/2018/02/23/机器学习总结系列之逻辑回归/</id>
+    <published>2018-02-23T13:54:29.000Z</published>
+    <updated>2018-03-29T09:03:44.283Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;线性回归适合连续型的函数拟合任务（也就是回归任务），即对于不同的输入x，输出y所属于的域是一个连续的空间，而对于y是确定的离散的空间的分类任务，比如y只取0，1的二分类问题，仍然使用线性回归的直线拟合无法适应大量输入x而y只限制在0-1的情况，我们需要一种值域在0-1的函数来作为我们的假设函数。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="机器学习" scheme="http://yoursite.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>机器学习总结系列之Octave常用操作</title>
+    <link href="http://yoursite.com/2018/02/23/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E7%B3%BB%E5%88%97%E4%B9%8BOctave%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/"/>
+    <id>http://yoursite.com/2018/02/23/机器学习总结系列之Octave常用操作/</id>
+    <published>2018-02-23T12:49:42.000Z</published>
+    <updated>2018-02-23T13:33:35.380Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;记录了常用的或难记的一些Octave命令，以备查找。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="机器学习" scheme="http://yoursite.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>机器学习总结系列之Introduction</title>
+    <link href="http://yoursite.com/2018/02/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E7%B3%BB%E5%88%97%E4%B9%8BIntroduction/"/>
+    <id>http://yoursite.com/2018/02/19/机器学习总结系列之Introduction/</id>
+    <published>2018-02-19T01:58:59.000Z</published>
+    <updated>2018-03-29T08:51:10.186Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;人工智能在如今无疑是如日中天，它的各个子领域也因此得到了极大的发展，&lt;strong&gt;机器学习&lt;/strong&gt;作为人工智能的一个子领域以赋予机器以人类特有的学习能力也得以大放异彩，它被应用在各个领域，典型的例子如个性化推荐，数据挖掘，垃圾邮件识别等等，机器学习算法和传统算法的不同之处在于传统算法研究的是如何解决一个有特定结果的问题，而机器学习算法则是挖掘数据中潜在的规律，然后对输入做出预测。按1959年Arthur Samuel的说法来说，机器学习领域研究的是如何赋予计算机解决不能被明确编程解决的问题的学习能力。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="机器学习" scheme="http://yoursite.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>python和shell基础语法对比</title>
+    <link href="http://yoursite.com/2018/01/12/python%E5%92%8Cshell%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E5%AF%B9%E6%AF%94/"/>
+    <id>http://yoursite.com/2018/01/12/python和shell基础语法对比/</id>
+    <published>2018-01-12T07:56:48.000Z</published>
+    <updated>2018-02-21T14:26:34.728Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;python和shell都是我们经常使用的脚本语言，平时python主要用来写一些小型的任务，shell则在使用liunx系统部署任务的时候用的比较多，由于两者有一些相似之处，时间长了容易混掉，所以这里作文对一些基础的语法需求总结、比较、归纳，以为后用。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="脚本语言" scheme="http://yoursite.com/tags/%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深入理解红黑树原理与实现</title>
+    <link href="http://yoursite.com/2018/01/02/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E7%BA%A2%E9%BB%91%E6%A0%91%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/"/>
+    <id>http://yoursite.com/2018/01/02/深入理解红黑树原理与实现/</id>
+    <published>2018-01-02T06:10:04.000Z</published>
+    <updated>2019-07-02T14:15:30.174Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;红黑树(RBTree)是一种相比平衡二叉树(AVL)平衡要求较低的的一种二叉搜索树，所谓平衡要求较低的意思是相比AVL树的每个节点的左右子树的高度差不能超过2，红黑树使用红黑两种颜色来标记二叉搜索树中的节点，并对这种着色进行限制，使得在插入删除操作后对不符合的情况必须进行调整来保持这样一种限制，从而实现自我平衡。我们先来看一下红黑树的定义，也就是着色限制&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="数据结构" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MyBatis之关联映射解析</title>
+    <link href="http://yoursite.com/2017/12/30/MyBatis%E4%B9%8B%E5%85%B3%E8%81%94%E6%98%A0%E5%B0%84%E8%A7%A3%E6%9E%90/"/>
+    <id>http://yoursite.com/2017/12/30/MyBatis之关联映射解析/</id>
+    <published>2017-12-30T08:49:51.000Z</published>
+    <updated>2018-02-21T14:26:34.722Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;ORM框架一个重要的技术点是处理对象间的关联映射，比如一对一，一对多的关系，和Hibernate不同的是，Mybatis的使用需要开发人员直接和SQL语句进行打交道，所以在处理关联映射的时候不论是文件配置还是实现原理都是大有不同的，本文致力于使用一个例子讲清楚不同关联映射关系的配置和使用方法，以及作者在使用过程中对不同的参数的作用的深入理解。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="ssm" scheme="http://yoursite.com/tags/ssm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MyBatis之TypeHandler解析</title>
+    <link href="http://yoursite.com/2017/12/17/MyBatis%E4%B9%8BTypeHandler%E8%A7%A3%E6%9E%90/"/>
+    <id>http://yoursite.com/2017/12/17/MyBatis之TypeHandler解析/</id>
+    <published>2017-12-17T11:15:48.000Z</published>
+    <updated>2018-02-21T14:26:34.721Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;MyBatis作为一个ORM框架，在实现对象到关系数据库映射的过程中，一个无法避免的问题就是Java类型和JDBC类型之间的相互转换，而TypeHandler的作用就在于此，其作用是实现Java类型向JDBC类型之间的转换。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="ssm" scheme="http://yoursite.com/tags/ssm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>idea使用maven构建mybatis程序遇到的几个问题</title>
+    <link href="http://yoursite.com/2017/12/06/idea%E4%BD%BF%E7%94%A8maven%E6%9E%84%E5%BB%BAmybatis%E7%A8%8B%E5%BA%8F%E9%81%87%E5%88%B0%E7%9A%84%E5%87%A0%E4%B8%AA%E9%97%AE%E9%A2%98/"/>
+    <id>http://yoursite.com/2017/12/06/idea使用maven构建mybatis程序遇到的几个问题/</id>
+    <published>2017-12-06T03:42:29.000Z</published>
+    <updated>2018-02-21T14:26:34.726Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近在学习Mabatis的使用，在使用idea maven构建mabatis程序的时候遇到了以往在非maven构建的问题，总结如下，以备后查。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="ssm" scheme="http://yoursite.com/tags/ssm/"/>
+    
+  </entry>
+  
+</feed>

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="算法," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Wenqi's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="深度优先搜索(DFS)和广度优先搜索(BFS)都是一种对可能解答路径的枚举方式，深度优先搜索每次都从一个方向一直搜索到最终状态，然后进行回溯尝试枚举其他到达最终状态的路径。回溯的过程需要存储回溯点当前的状态，递归方法可以很好的完成这个任务，在递归方法之前设置状态信息，在递归后将状态信息设置回原值。如果设计递归方法是关键，递归方法对应着深度优先搜索的策略。本文尝试从几个例子尝试探索使用深度优先搜索方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度优先搜索总结">
+<meta property="og:url" content="http://yoursite.com/2018/06/25/深度优先搜索总结/index.html">
+<meta property="og:site_name" content="Wenqi's Blog">
+<meta property="og:description" content="深度优先搜索(DFS)和广度优先搜索(BFS)都是一种对可能解答路径的枚举方式，深度优先搜索每次都从一个方向一直搜索到最终状态，然后进行回溯尝试枚举其他到达最终状态的路径。回溯的过程需要存储回溯点当前的状态，递归方法可以很好的完成这个任务，在递归方法之前设置状态信息，在递归后将状态信息设置回原值。如果设计递归方法是关键，递归方法对应着深度优先搜索的策略。本文尝试从几个例子尝试探索使用深度优先搜索方">
+<meta property="og:updated_time" content="2018-08-06T00:59:40.714Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度优先搜索总结">
+<meta name="twitter:description" content="深度优先搜索(DFS)和广度优先搜索(BFS)都是一种对可能解答路径的枚举方式，深度优先搜索每次都从一个方向一直搜索到最终状态，然后进行回溯尝试枚举其他到达最终状态的路径。回溯的过程需要存储回溯点当前的状态，递归方法可以很好的完成这个任务，在递归方法之前设置状态信息，在递归后将状态信息设置回原值。如果设计递归方法是关键，递归方法对应着深度优先搜索的策略。本文尝试从几个例子尝试探索使用深度优先搜索方">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/25/深度优先搜索总结/"/>
+
+
+
+
+
+  <title>深度优先搜索总结 | Wenqi's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Wenqi's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书记
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            勾搭
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/深度优先搜索总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wenqi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wenqi's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深度优先搜索总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T09:39:00+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/25/深度优先搜索总结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/06/25/深度优先搜索总结/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/06/25/深度优先搜索总结/" class="leancloud_visitors" data-flag-title="深度优先搜索总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>深度优先搜索(DFS)和广度优先搜索(BFS)都是一种对可能解答路径的枚举方式，深度优先搜索每次都从一个方向一直搜索到最终状态，然后进行回溯尝试枚举其他到达最终状态的路径。回溯的过程需要存储回溯点当前的状态，递归方法可以很好的完成这个任务，在递归方法之前设置状态信息，在递归后将状态信息设置回原值。如果设计递归方法是关键，递归方法对应着深度优先搜索的策略。本文尝试从几个例子尝试探索使用深度优先搜索方法的一般设计方法。<br><a id="more"></a></p>
+<h2 id="二维矩阵两点之间的路径遍历"><a href="#二维矩阵两点之间的路径遍历" class="headerlink" title="二维矩阵两点之间的路径遍历"></a>二维矩阵两点之间的路径遍历</h2><p>一个典型的问题是迷宫问题，给出一个迷宫矩阵，0代表可以走的位置，1代表墙的位置，给出起始和出口位置的坐标，求出最小步数走出迷宫的路径，并且打印出这个路径。<br>解决这个问题的基本想法是枚举所有的从起始位置到出口位置的路径，并记录最短的那条路径，那么应该怎么样才可以全面不漏的列举所有的路径呢？我们从一个坐标点(x,y)出发，那么经过一步可以走的方向有上下左右四个方向，也就是（x-1,y）,(x+1,y),(x,y-1),(x,y+1)。计算了下一步的位置，我们需要判断，新的位置是否在矩阵内，是否是墙，是否是出口节点，如果不是上面以上特殊节点，我们就可以把新的节点作为基地继续上面的搜索过程。<br>很显然，以上的搜索过程可以用递归写出来，其中定义递归转移的状态是当前的的坐标，出口为下一个位置为出口位置，对于在矩阵内的不是墙，不是出口节点的搜索方法是朝4个方向进行探索。<br>除了输入信息：矩阵行列数，迷宫矩阵，起始坐标，输出信息：最小步数，最小步数路径，我们还需要一些辅助容器，为了方便我们对下一个位置的计算，我们定义一个4*2的二维数组，可以使用循环的方式对下一个位置进行计算，如向上可以使用（-1,0）加上原来的（x,y）进行计算。总的来说，我们需要的信息如下,可以通过声明全局变量的方式进行声明<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//输入值定义为全局变量</span></div><div class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> maze[][];</div><div class="line">   <span class="comment">//行，列</span></div><div class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> xlen, ylen;</div><div class="line">   <span class="keyword">public</span> <span class="keyword">static</span> Position start,end;</div><div class="line"></div><div class="line">   <span class="comment">//辅助全局常量</span></div><div class="line">   <span class="comment">//上下，左右</span></div><div class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> directions[][]=&#123;&#123;-<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">0</span>,-<span class="number">1</span>&#125;,&#123;<span class="number">0</span>,<span class="number">1</span>&#125;&#125;;</div><div class="line"></div><div class="line">   <span class="comment">//结果容器</span></div><div class="line">   <span class="comment">//用于存储最优的路径</span></div><div class="line">   <span class="keyword">public</span> <span class="keyword">static</span> Stack&lt;Position&gt; optimalStack=<span class="keyword">null</span>;</div><div class="line">   <span class="comment">//设置为最大值</span></div><div class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> optimalStep=Integer.MAX_VALUE;</div></pre></td></tr></table></figure></p>
+<p>定义好需要的信息，我们就可以设计算法获取结果，如何进行计算呢，其基本思路是下面这样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">输入行列数</div><div class="line">输入矩阵</div><div class="line">输入起始位置和出口位置</div><div class="line"></div><div class="line">将初始位置作为初始点进行搜索并将最优结果存储到结果容器中</div><div class="line"></div><div class="line">输出最优的结果</div></pre></td></tr></table></figure></p>
+<p>那么如何”将初始位置作为初始点进行搜索并将最优结果存储到结果容器中”,这个是算法核心，因为求的是最优的结果，所以我们不能直接在optimalStep和optimalStack进行存储，需要在算法计算的时候为它们声明一个副本，然后在到达出口节点的时候将副本step与optimalStep比较，如果step小于optimalStep，那么应该将optimalStep变成step，并且用optimalStack记录当前的stack路径。<br>按照上面的思路，我们的递归方法的参数应该是（x,y,step,stack），即当前的坐标，当前已走的步数，当前的路径坐标栈。因为结果会在全局变量中更新，所以不需要返回值，按此思路，设计算法如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">描述：深度搜索过程</div><div class="line">输入：当前的坐标(x,y),当前已走的步数，当前的路径栈</div><div class="line">输出：结果在全局变量中更新</div><div class="line">对于4个方向选取一个当前方向，做如下循环</div><div class="line">	计算在从当前坐标走向当前方向的的新坐标(nx,ny)</div><div class="line">	如果(nx,ny)超出当前矩阵的范围，则尝试下一个方向</div><div class="line">	如果(nx,ny)是墙，则尝试下一个方向</div><div class="line">	如果(nx,ny)是出口坐标，做如下动作</div><div class="line">		将当前步数step+1，并将出口节点存储到路径stack中</div><div class="line">		如果当前step&lt;optimalStep，则optimalStep=step,optimalStack=stack</div><div class="line">		将步数step-1,弹出出口位置，为下一次探索做准备</div><div class="line">	如果不是以上三种情况，则执行如下动作</div><div class="line">		将当前步数step+1,并且将(nx,ny)存储到stack中，并将(nx,ny)置为墙</div><div class="line">		以（nx,ny,step,stack）为新的状态做搜索</div><div class="line">		将步数回溯置为step-1,并且将(nx,ny)弹栈，将(nx,ny)置为非墙</div></pre></td></tr></table></figure></p>
+<p>以上即为深度搜索的算法，可见深度优先搜索是依赖于递归进行的，其中状态，特殊位置处理，搜索方法是三驾马车，其中状态的设计是根本。使用栈存储变量的路径是十分有效的方法，在递归方法上的路径存储基本上都是使用栈来进行，在递归回来的时候可以使用弹栈的方式继续进行搜索。其中看在递归的前后还将当前位置设置为墙，为的是方式新的状态返回到当前状态，递归返回后，我要将其设置回来。<br>每个状态都是递归计算的，这意味着每个状态的计算都是可以重复的，一样的，不一样之处应该在特殊位置进行处理，通常剪枝和出口都在特殊位置状态进行处理。<br>如此，我们便可以轻松写出深度搜索的方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,Stack&lt;Position&gt; stack, <span class="keyword">int</span> step)</span></span>&#123;</div><div class="line">      <span class="comment">//从当前的节点网四个方向试探</span></div><div class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;i++)&#123;</div><div class="line">          <span class="comment">//获取下一个位置的坐标进行判断</span></div><div class="line">          <span class="keyword">int</span> nx=x+directions[i][<span class="number">0</span>];</div><div class="line">          <span class="keyword">int</span> ny=y+directions[i][<span class="number">1</span>];</div><div class="line">          <span class="comment">//超过迷宫范围</span></div><div class="line">          <span class="keyword">if</span>(nx&lt;<span class="number">1</span>||nx&gt;xlen||ny&lt;<span class="number">1</span>||ny&gt;ylen)</div><div class="line">              <span class="keyword">continue</span>;</div><div class="line">          <span class="comment">//新节点位置为墙</span></div><div class="line">          <span class="keyword">if</span>(maze[nx][ny]==<span class="number">1</span>)</div><div class="line">              <span class="keyword">continue</span>;</div><div class="line">          <span class="keyword">if</span>(nx==end.x&amp;&amp;ny==end.y)&#123;</div><div class="line">              <span class="comment">//到达节点目标位置</span></div><div class="line">              <span class="comment">//如果当前步数小于最优步数，则更新最优步数为当前步数</span></div><div class="line">              step++;</div><div class="line">              stack.push(<span class="keyword">new</span> Position(nx,ny));</div><div class="line">              <span class="keyword">if</span>(step&lt;optimalStep)&#123;</div><div class="line">                  optimalStack =(Stack&lt;Position&gt;)stack.clone();</div><div class="line">                  optimalStep=step;</div><div class="line">              &#125;</div><div class="line">              step--;</div><div class="line">              stack.pop();</div><div class="line">              <span class="keyword">return</span>;</div><div class="line">          &#125;</div><div class="line"></div><div class="line">          <span class="comment">//如果不是最终节点的处理方式,可以跳到步子上，从新的节点上张望</span></div><div class="line">          <span class="comment">//站到下一个节点上（步数加一，压栈），并在新的节点上做深度遍历</span></div><div class="line">          step++;</div><div class="line">          stack.push(<span class="keyword">new</span> Position(nx,ny));</div><div class="line">          maze[nx][ny]=<span class="number">1</span>;</div><div class="line">          dfs(nx,ny,stack,step);</div><div class="line">          step--;</div><div class="line">          stack.pop();</div><div class="line">          maze[nx][ny]=<span class="number">0</span>;</div><div class="line"></div><div class="line">      &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>在main函数中，我们就可以直接调用dfs(start.x,start.y,0,new Stack())后获取最优的结果。</p>
+<h2 id="二维矩阵连通区域计算"><a href="#二维矩阵连通区域计算" class="headerlink" title="二维矩阵连通区域计算"></a>二维矩阵连通区域计算</h2><p>再来一个二维矩阵的深度优先搜索例子：给出一个矩阵，其中*代表空，@代表油田，一块油田的上下左右和对角相邻位置视为连通，连通的油田是一块区域，给出一个这样的矩阵，计算出连通区域的个数。<br>明确我们的目的是求出所有的连通区域的个数，基本想法是遍历所有的矩阵点，对于所有的油田点进行深度搜索，目的是将与当前油田点标记为已访问状态；而对于已访问的矩阵点或者空点不做处理。<br>我们的输入变量有矩阵行列，矩阵，输出变量是连通区域数，我们还需要辅助变量方向数组和标记数组，其中标记数组用来标记一个节点是否已经被访问到了。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//输入变量</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">char</span> maze[][];</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> row,col;</div><div class="line"></div><div class="line"><span class="comment">//辅助变量</span></div><div class="line"><span class="comment">//标志是否已经归入某个区域</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> mark[][];</div><div class="line"><span class="comment">//分别是左上，上，右上，左，右，左下，下，右下</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> directions[][]=&#123;&#123;-<span class="number">1</span>,-<span class="number">1</span>&#125;,&#123;-<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;-<span class="number">1</span>,<span class="number">1</span>&#125;,&#123;<span class="number">0</span>,-<span class="number">1</span>&#125;,&#123;<span class="number">0</span>,<span class="number">1</span>&#125;,&#123;<span class="number">1</span>,-<span class="number">1</span>&#125;,&#123;<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">1</span>,<span class="number">1</span>&#125;&#125;;</div><div class="line"></div><div class="line"><span class="comment">//结果变量</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> ans;</div></pre></td></tr></table></figure></p>
+<p>递归方法的设计，转移状态应该是当前的油田节点的坐标(x,y)，计算新的节点(nx,ny)有三个特殊状态:出界，空点，已访问的点，这三种状态应该直接跳过，进行下一个方向的尝试，处理以上三个特殊状态，那么就剩下未访问的相邻油田，应该设置新的油田节点为已访问状态，并且以(nx,ny)为新基点进行递归探寻。其核心思想如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">描述：标记和一个油田节点在同一连通区域的所有油田点</div><div class="line">输入：当前油田点的坐标位置</div><div class="line">输出：标记即可，标记完后结果数加一</div><div class="line">对于8个方向计算新的下一个节点，做如下操作</div><div class="line">	新的节点为(nx,ny)</div><div class="line">	如果新的节点不再矩阵内，尝试下一个方向</div><div class="line">	如果新的节点是空或者已被访问，尝试下一个方向</div><div class="line">	不是以上三种情况，做如下操作</div><div class="line">		标记（nx,ny）为已访问状态</div><div class="line">		以(nx,ny)为基础状态递归调用</div></pre></td></tr></table></figure></p>
+<p>根据以上，我们写出java代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">8</span>;i++)&#123;</div><div class="line">        <span class="keyword">int</span> nx=x+directions[i][<span class="number">0</span>];</div><div class="line">        <span class="keyword">int</span> ny=y+directions[i][<span class="number">1</span>];</div><div class="line">        <span class="keyword">if</span>(nx&lt;<span class="number">1</span>||ny&lt;<span class="number">1</span>||nx&gt;row||ny&gt;col)</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        <span class="keyword">if</span>(maze[nx][ny]==<span class="string">'*'</span>)</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        <span class="keyword">if</span>(mark[nx][ny]==<span class="keyword">true</span>)</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        <span class="comment">//设置相邻位置为已连通状态</span></div><div class="line">        mark[nx][ny]=<span class="keyword">true</span>;</div><div class="line">        dfs(nx,ny);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="二叉树的最长路径"><a href="#二叉树的最长路径" class="headerlink" title="二叉树的最长路径"></a>二叉树的最长路径</h2><p>说完了二维矩阵的深度优先遍历，下面我们举个二叉树的深度优先遍历的应用，即给出一个二叉树，打印出最长的从根到叶子节点的路径。<br>如果仅仅是求最长的路径是多少，我们使用层次遍历即可，也就是对应于广度优先遍历，而如果要把路径求出来，需要深度优先遍历所有的路径，记录最长的那一条。<br>我们的输入是一个树根，需要辅助的变量有临时的路径栈和临时路径长，输出是最长的路径和路径长，临时路径栈和临时路径长可以作为方法参数传递，所以我们只需要定义全局的输出信息。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//输出信息</span></div><div class="line">   <span class="keyword">public</span> <span class="keyword">static</span> Stack&lt;TreeNode&gt; longestTrace;</div><div class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> longestLength=<span class="number">0</span>;</div></pre></td></tr></table></figure></p>
+<p>深度优先递归的状态是当前的节点，还有作为参数传递的临时路径栈和临时路径长。特殊位置点有两个，一是如果当前节点是null，则直接返回，二是如果当前节点是叶子节点，则应该比较当前的路径长度和最长的路径长度，如果当前的路径长度更长，则应该更新最长的路径长度和路径栈。<br>其他情况，递归遍历左子树和右子树。其实现过程如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">findLongestTrace</span><span class="params">(TreeNode root,<span class="keyword">long</span> length,Stack&lt;TreeNode&gt; trace)</span></span>&#123;</div><div class="line">      <span class="keyword">if</span>(root==<span class="keyword">null</span>)</div><div class="line">          <span class="keyword">return</span>;</div><div class="line">      <span class="keyword">if</span>(isLeaf(root))&#123;</div><div class="line">          length++;</div><div class="line">          trace.push(root);</div><div class="line">          <span class="keyword">if</span>(length&gt;longestLength)&#123;</div><div class="line">              longestTrace=(Stack&lt;TreeNode&gt;) trace.clone();</div><div class="line">              longestLength=length;</div><div class="line">          &#125;</div><div class="line">          length--;</div><div class="line">          trace.pop();</div><div class="line">      &#125;</div><div class="line">      <span class="comment">//非叶子节点</span></div><div class="line"><span class="comment">//左子树不空</span></div><div class="line">      <span class="keyword">if</span>(root.left!=<span class="keyword">null</span>)&#123;</div><div class="line">          length++;</div><div class="line">          trace.push(root);</div><div class="line">          findLongestTrace(root.left,length,trace);</div><div class="line">          length--;</div><div class="line">          trace.pop();</div><div class="line">      &#125;</div><div class="line"><span class="comment">//右子树不空</span></div><div class="line">      <span class="keyword">if</span>(root.right!=<span class="keyword">null</span>)&#123;</div><div class="line">          length++;</div><div class="line">          trace.push(root);</div><div class="line">          findLongestTrace(root.right,length,trace);</div><div class="line">          length--;</div><div class="line">          trace.pop();</div><div class="line">      &#125;</div><div class="line"></div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="隐式深度优先搜索-素数环"><a href="#隐式深度优先搜索-素数环" class="headerlink" title="隐式深度优先搜索-素数环"></a>隐式深度优先搜索-素数环</h2><p>有的问题可以通过优先搜索的方式解决，但是状态的定义并不像上面二维数组，树啊的那么容易定义，一个典型的例子就是素数环问题，给你一个数，比如6，让你将1-6所有能组成素数环的排列全部列出，素数环排列必须以1开始。所谓素数环，指的是任意相邻的数和都为素数，最后一个数和第一个数和也为素数。<br>我们的输入只有一个数，但是却隐含了一个数组，解决这个问题的基本想法是遍历所有的以1开始的所有排列，但是怎么遍历，肯定不能用多个循环，我们可以定义状态为当前放入的位置index,以6为例，我们尝试从放入6个位置的数，每个数从2-6中选取，如果一个状态不符合，可以立即进行回退尝试下一个数字，如果符合，则可以尝试下一个位置，直至到达容量。<br>为了完成这个任务，我们需要对6个数字进行标记是否处于已选入状态，如果是，则不应该再次选入。所以我们需要以下变量的支持。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//输入变量</div><div class="line">    private static int n;</div><div class="line"></div><div class="line">    //辅助变量</div><div class="line">    //标记变量是否被访问到过</div><div class="line">    private static boolean[] flag;</div><div class="line"></div><div class="line">    //结果容器</div><div class="line">    private static int caseNum;</div><div class="line">    //代替栈</div><div class="line">    private static int[] ans;</div></pre></td></tr></table></figure></p>
+<p>我们的状态是当前已经放置的位置index，刚开始我们会将1放入，并且标记1为已选中状态。对于一个已放入状态的index，我们需要检查比较index和index-1位置的和是否为素数，这是每一个index都需要做的事情。对于特殊位置index==n,意味着位置已经放完，应该检查index位置和1位置的值和是否为素数，如果是，则成功查找到一个，将其放入到结果容器中，然后返回。搜索的过程是查找2-n中未选中的数，尝试将其放入index+1位置，并递归调用index+1位置。在此之前应该设置选中的数为已选中状态，返回的时候将其设置为未选中状态。整个思路如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> index)</span></span>&#123;</div><div class="line">    <span class="keyword">if</span>(index&gt;<span class="number">1</span>)&#123;</div><div class="line">        <span class="comment">//开始检查后两个和是否为质数,不是的话直接返回</span></div><div class="line">        <span class="keyword">if</span>(!prime.contains(ans[index]+ans[index-<span class="number">1</span>]))</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span>(index==n)&#123;</div><div class="line">        <span class="comment">//已经放入最后一个数，检查第一个数和最后一个数的和是否仍为质数</span></div><div class="line">        <span class="keyword">if</span>(prime.contains(ans[index]+ans[<span class="number">1</span>]))&#123;</div><div class="line">            caseNum++;</div><div class="line">            System.out.println(<span class="string">"Case "</span>+caseNum);</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</div><div class="line">                System.out.print(ans[i]+<span class="string">" "</span>);</div><div class="line">            &#125;</div><div class="line">            System.out.println();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//非出口节点</span></div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=n;i++) &#123;</div><div class="line">       <span class="keyword">if</span>(flag[i]==<span class="keyword">false</span>)&#123;</div><div class="line">           <span class="comment">//i可以尝试放入结果中</span></div><div class="line">           ans[index+<span class="number">1</span>]=i;</div><div class="line">           <span class="comment">//将i位置的值设置为已用</span></div><div class="line">           flag[i]=<span class="keyword">true</span>;</div><div class="line">           dfs(index+<span class="number">1</span>);</div><div class="line">           <span class="comment">//递归回来设置i为可以用的状态</span></div><div class="line">           flag[i]=<span class="keyword">false</span>;</div><div class="line">       &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这种隐式的深度优先递归的放入位置比较难想，这里一个数就相当于一个尝试的点，需要在递归的内部进行循环遍历，这样就变相的实现了多重循环的实现。</p>
+<h2 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h2><p>本文首发表于<a href="https://buwenqi.github.io" target="_blank" rel="external">我的博客</a>,欢迎关注！已委托维权骑士为本站的文章进行维权，转载须注明文章出处，作者保留文章所有权。</p>
+
+      
+    </div>
+    
+    
+    
+	
+	
+	<div>
+<link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup"><form action="https://126.us3.list-manage.com/subscribe/post?u=6dc0f11f3e10812c48ba02b6c&amp;id=3c20629afe" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate><div id="mc_embed_signup_scroll"><input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required><div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6dc0f11f3e10812c48ba02b6c_3c20629afe" tabindex="-1" value=""></div><div class="clear"><input type="submit" value="邮件订阅" name="subscribe" id="mc-embedded-subscribe" class="button"></div></div></form></div>
+</div>
+	
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="Wenqi 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag"># 算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/24/背包问题总结/" rel="next" title="背包问题总结">
+                <i class="fa fa-chevron-left"></i> 背包问题总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/20/毕业月记/" rel="prev" title="毕业月记">
+                毕业月记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/me.jpg"
+                alt="Wenqi" />
+            
+              <p class="site-author-name" itemprop="name">Wenqi</p>
+              <p class="site-description motion-element" itemprop="description">To do one thing well.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+		  
+		  
+            <div class="feed-link motion-element">
+			  <a href="http://eepurl.com/gxouGP" target="_blank" title="email">Email 订阅</a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/buwenqi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://cn.linkedin.com/in/buwenqi" target="_blank" title="Linkin">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Linkin</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mijack.github.io/" title="Mi&Jack" target="_blank">Mi&Jack</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mengqi92.github.io/" title="MengQi" target="_blank">MengQi</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#二维矩阵两点之间的路径遍历"><span class="nav-number">1.</span> <span class="nav-text">二维矩阵两点之间的路径遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二维矩阵连通区域计算"><span class="nav-number">2.</span> <span class="nav-text">二维矩阵连通区域计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树的最长路径"><span class="nav-number">3.</span> <span class="nav-text">二叉树的最长路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隐式深度优先搜索-素数环"><span class="nav-number">4.</span> <span class="nav-text">隐式深度优先搜索-素数环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明"><span class="nav-number">5.</span> <span class="nav-text">声明</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wenqi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI',
+        appKey: '12aldjQVARwR70CFQ2qy8SQX',
+        placeholder: '欢迎吐槽！^_^',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI", "12aldjQVARwR70CFQ2qy8SQX");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

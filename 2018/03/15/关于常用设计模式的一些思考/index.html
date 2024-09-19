@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="设计模式," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Wenqi's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="很早就接触了设计模式，今天在看一些文章的时候发现自己在学习理解设计模式的时候有些偏差。设计模式应该服务于特定的场景，并且是经过前人经验总结而来的代码解决思路，这种解决思路考虑的点在于如何能够让代码之间的耦合度更低并且减少冗余，使得代码耦合度更低的目的是为了程序更好的扩展，所谓的更好的扩展是指在功能的变动或者扩展的情况下尽可能触发较少的改动。所以在学习设计模式的时候，一个好的学习方式应该是模拟程序的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于常用设计模式的一些思考">
+<meta property="og:url" content="http://yoursite.com/2018/03/15/关于常用设计模式的一些思考/index.html">
+<meta property="og:site_name" content="Wenqi's Blog">
+<meta property="og:description" content="很早就接触了设计模式，今天在看一些文章的时候发现自己在学习理解设计模式的时候有些偏差。设计模式应该服务于特定的场景，并且是经过前人经验总结而来的代码解决思路，这种解决思路考虑的点在于如何能够让代码之间的耦合度更低并且减少冗余，使得代码耦合度更低的目的是为了程序更好的扩展，所谓的更好的扩展是指在功能的变动或者扩展的情况下尽可能触发较少的改动。所以在学习设计模式的时候，一个好的学习方式应该是模拟程序的">
+<meta property="og:image" content="https://i.imgur.com/03cbYjx.png">
+<meta property="og:image" content="https://i.imgur.com/KV8IGZY.png">
+<meta property="og:image" content="https://i.imgur.com/Fk7UYkD.png">
+<meta property="og:image" content="https://i.imgur.com/MUdhZ9F.png">
+<meta property="og:image" content="https://i.imgur.com/tBSFBiw.png">
+<meta property="og:image" content="https://i.imgur.com/B5bPhNM.png">
+<meta property="og:image" content="https://i.imgur.com/lWm1rOr.png">
+<meta property="og:image" content="https://i.imgur.com/m3ocIHM.png">
+<meta property="og:image" content="https://i.imgur.com/pCyubN5.png">
+<meta property="og:updated_time" content="2018-05-07T06:23:03.992Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于常用设计模式的一些思考">
+<meta name="twitter:description" content="很早就接触了设计模式，今天在看一些文章的时候发现自己在学习理解设计模式的时候有些偏差。设计模式应该服务于特定的场景，并且是经过前人经验总结而来的代码解决思路，这种解决思路考虑的点在于如何能够让代码之间的耦合度更低并且减少冗余，使得代码耦合度更低的目的是为了程序更好的扩展，所谓的更好的扩展是指在功能的变动或者扩展的情况下尽可能触发较少的改动。所以在学习设计模式的时候，一个好的学习方式应该是模拟程序的">
+<meta name="twitter:image" content="https://i.imgur.com/03cbYjx.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/15/关于常用设计模式的一些思考/"/>
+
+
+
+
+
+  <title>关于常用设计模式的一些思考 | Wenqi's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Wenqi's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书记
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            勾搭
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/15/关于常用设计模式的一些思考/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wenqi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wenqi's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于常用设计模式的一些思考</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-15T11:57:05+08:00">
+                2018-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/15/关于常用设计模式的一些思考/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/03/15/关于常用设计模式的一些思考/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/03/15/关于常用设计模式的一些思考/" class="leancloud_visitors" data-flag-title="关于常用设计模式的一些思考">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>很早就接触了设计模式，今天在看一些文章的时候发现自己在学习理解设计模式的时候有些偏差。设计模式应该服务于特定的场景，并且是经过前人经验总结而来的代码解决思路，这种解决思路考虑的点在于如何能够让代码之间的耦合度更低并且减少冗余，使得代码耦合度更低的目的是为了程序更好的扩展，所谓的更好的扩展是指在功能的变动或者扩展的情况下尽可能触发较少的改动。所以在学习设计模式的时候，一个好的学习方式应该是模拟程序的扩展来比较在使用前人总结的设计模式和现有代码的不同之处，只有真正体会到其优点，才能尽得其精髓。</p>
+<a id="more"></a>
+<h2 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h2><p>创建行模式抽象了对象的实例化过程，它帮助一个系统如独立于如何创建、组合和表示那些对象。</p>
+<h3 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h3><p><img src="https://i.imgur.com/03cbYjx.png" alt=""><br>抽象工厂模式用于创建具有不同产品族的工厂，所谓产品族是值得是多个不同对象的组合，不同对象值得是相对于实现同一接口的对象来说，所以同一产品族的对象肯定不是实现同一接口。</p>
+<p>抽象工厂模式包括7个主要角色，A类抽象角色和A类具体角色（AbstractProductA,ProductA）,B类抽象角色和B类具体角色（AbstractProductB,ProductB）,抽象工厂（AbstractFactory）提供A类产品和B类产品的两个方法接口，具体工厂（ConcreteFactory）实现抽象工厂的两个方法接口，两个方法接口的实现依赖于A，B不同的产品（createProductA从A产品的实现类中挑选一个实现类，createProductB从B产品的实现类中挑选一个实现类）。客户短（Client）依赖于抽象工厂的具体实现类，生产一个具体工厂的产品族产品。</p>
+<p>抽象工厂模式实现了多个产品的产品族工厂的提供，实现了多个产品的多维组合，一个典型的例子的产品族如UnixButton和WindowsButton。适用于不同产品组合的工厂提供。从扩展的角度来看，具体工厂的实现了抽象工厂，如果需要一个新的产品族，只要再实现一个产品族即可，实现了热插拔。对比工厂模式，具体工厂面临的是一个产品，而抽象工厂面临的是一系列产品。<br><img src="https://i.imgur.com/KV8IGZY.png" alt=""></p>
+<h3 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h3><p><img src="https://i.imgur.com/Fk7UYkD.png" alt=""><br>建造者模式的作用是将一个对象的构建步骤抽象出来，使得易于重写一个对象的构建过程。</p>
+<p>建造者模式包括4个主要角色，建造者接口（Builder），具体建造者（ConcreteBuilder），产品对象(Product)和导演类(Director)。导演类的construct方法负责调用抽象建造者的多个buildPart方法进行组装，Builder接口定义多个部分组建过程buildPart()方法和组建结果方法retrieveResult()方法供具体建造者实现，ConcreteBuilder实现部分组建方法和结果返回方法，具体的建造者完成对应的组装任务，并且使用retrieveResult获取对应的组装结果。</p>
+<p>从目的上来看，建造者模式实现了对象的不同组装方式的最简实现方式，组建的顺序由导演类控制，而具体的组装任务分布在不同的构建者手里，导演类和抽象建造者的聚合关系使得产品构建的实际操作可以实现热插拔，使得构建的具体实现更容易扩展或替换。反观，如果使用导演类直接操作产品实现产品的组装过程，如果需要更改建造的过程，那么必须要修改导演类，这是我们不想看到的。</p>
+<h2 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h2><p>结构型模式侧重于解决如何组装现有的类，设计他们之间的交互，以达到一定的目的，比如扩展性，封装性。</p>
+<h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p><img src="https://i.imgur.com/MUdhZ9F.png" alt=""><br>适配器模式的目的是将一个类的方法接口转换成另一个客户端将要使用的另一个方法接口。</p>
+<p>适配器模式含有三个主要角色，客户端需要的目标接口（Target）及其方法sampleOperation()；被适配的类Adaptee，它是实际的执行者；适配器Adapter，Adapter继承了Target接口，并且继承了Adaptee，Adapter的sampleOperation方法调用Adptee的sampleOperation方法。实际上，对Adaptee类方法的调用可以使用继承的方式，也可以使用直接依赖的方式，前者被称为类适配器，后者被称为对象适配器。</p>
+<p>适配器模式实现了一个接口到另一个接口之间的兼容性转换。在扩展性方面并无特别的地方。</p>
+<h3 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h3><p><img src="https://i.imgur.com/tBSFBiw.png" alt=""><br>装饰器模式又称为包装模式，其目的是在不改变原有继承关系的情况下，动态的扩展类的功能。这里所说的扩展的类的功能可以是已有方法的改变，也可以是提供更多的方法。</p>
+<p>装饰器模式含有4个主要角色，系统已经存在的继承关系，组件接口（Component）和其实现类（ConcreteComponent）,装饰者（Decorator）实现了组件接口依赖于被装饰的具体实现类，其sampleOperateration()方法依赖于被装饰的具体组建类的sampleOperation()方法，然后具体的装饰者（ConcreateDecorator）继承自Decorator，可以实现增加其他方法或者修改对应的sampleOperation方法，从而实现了不改变原有类并且实现继承同样的动态方法扩充，并且对于客户端来说这种扩充是透明的。</p>
+<p>从扩展的角度来看，Decorator代替的原来ConCreteComponent的位置，并且替代其完成继承的动态扩充，相比直接继承自ConcreteComponent，这种方法的依赖性更小，其装饰的对象也是可以动态插拔的，并且ConcreteComponent并需要知道装饰类的存在，免去复杂类关系的维护。</p>
+<p>一个应用的具体例子就是BufferInputStream和FileInputStream之间的关系，InputStream是Component, FileInputStream、ByteArrayInputStream等是具体组件，FilterInputStream是装饰者，BufferInputStream等继承自FilterInputStream,是具体的装饰者。<br><img src="https://i.imgur.com/B5bPhNM.png" alt=""></p>
+<h3 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h3><p><img src="https://i.imgur.com/lWm1rOr.png" alt=""><br>代理模式的目的是为一个对象提供一个代理，代理对象可以增强，修改甚至删除原有的功能。<br>因为代理模式应用十分广泛，所以代理模式已经在另一篇博客中详加叙述了，这里不再累赘。</p>
+<h2 id="结构型模式-1"><a href="#结构型模式-1" class="headerlink" title="结构型模式"></a>结构型模式</h2><p>结构型设计模式专注于类或对象之间的职责分配，研究的是多个类或对象如何高效的合作来完成一个任务。</p>
+<h3 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h3><p><img src="https://i.imgur.com/m3ocIHM.png" alt=""><br>观察者模式的目的是实现一种一对多的依赖关系，使得主题更新的时候能够将这种更新以特定的方式通知与主题绑定的观察者。</p>
+<p>观察者模式包含4个参与者，主题接口和具体实现主题（Subject,ConcreteSubject），观察者和具体观察者（Observer,ConcreateObserver）。observer通过聚合方式注册到Subject中，由于依赖关系定义接口中，具体主题可以实现不同的通知策略，并且具体观察者和具体主题之间可以实现低耦合依赖。<br>两者之间的依赖关系可以通过attach和detach方法进行建立和解除，subject在状态改变时可以通过notifyObserver通知所有的observers,调用对应observer的update方法。<br>从扩展的角度来看，观察者模式的好处在于在新增observer的时候只需要实现observer接口，然后在想要监听的具体subject中attach就实现了添加；同样的，如果想要删除一个subject中的一个observer也仅仅需要调用attach方法，实现了热插拔。如果不采用这种设计方式，任何一方不适用接口都会导致一方的添加困难。</p>
+<h3 id="中介者模式"><a href="#中介者模式" class="headerlink" title="中介者模式"></a>中介者模式</h3><p><img src="https://i.imgur.com/pCyubN5.png" alt=""><br>中介者模式的作用是使用一个中介对象封装一系列对象的交互，使得各个对象的交互不需要显示的相互依赖。简单来讲，就是让不同对象之间的交互由多对多的网状关联转换成一对多的星状关联。</p>
+<p>中介者模式由四个主要角色来构建，中介者接口（Mediator）定义公用交互方法changed(); 具体中介者（ConcreteMediator）实现具体的交互方法changed()，并且获取需要持有需要通信的colleague的引用，changed()方法的具体实现依赖于持有的colleague引用; 同事抽象类(Colleague)定义同事接口对中介者接口的关联关系，并且提供获取中介者的接口方法; 具体的同事实现类（ConcreteColleague）可能有多个，主要是实现具体的交互操作，交互操作依赖于其关联的中介者的changed方法。至于为什么说是变成了一对多的关系，从上面四个角色的关系来看，每个colleague都持有一个mediator的引用，而每个mediator持有所有colleage的引用。</p>
+<p>中介者模式优点在于解耦复杂系统对象的交互，使得再增加或者删除colleage时仅需要修改中间的中介者。中介者也可以替换成另一个具体中介者，替换相应的交互行为。缺点之处在于随着需要交互同事的不断增加，具体中介者也会不断膨胀。</p>
+<h2 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h2><p>本文首发表于<a href="https://buwenqi.github.io" target="_blank" rel="external">Wenqi’s Blog</a>,更多技术分享欢迎关注！转载须注明文章出处，已委托维权骑士为本站的文章进行维权, 作者保留文章所有权。</p>
+
+      
+    </div>
+    
+    
+    
+	
+	
+	<div>
+<link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup"><form action="https://126.us3.list-manage.com/subscribe/post?u=6dc0f11f3e10812c48ba02b6c&amp;id=3c20629afe" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate><div id="mc_embed_signup_scroll"><input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required><div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6dc0f11f3e10812c48ba02b6c_3c20629afe" tabindex="-1" value=""></div><div class="clear"><input type="submit" value="邮件订阅" name="subscribe" id="mc-embedded-subscribe" class="button"></div></div></form></div>
+</div>
+	
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="Wenqi 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/23/机器学习总结系列之逻辑回归/" rel="next" title="机器学习总结系列之逻辑回归">
+                <i class="fa fa-chevron-left"></i> 机器学习总结系列之逻辑回归
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/27/Java中的异步执行Future小结/" rel="prev" title="Java中的异步执行Future小结">
+                Java中的异步执行Future小结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/me.jpg"
+                alt="Wenqi" />
+            
+              <p class="site-author-name" itemprop="name">Wenqi</p>
+              <p class="site-description motion-element" itemprop="description">To do one thing well.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+		  
+		  
+            <div class="feed-link motion-element">
+			  <a href="http://eepurl.com/gxouGP" target="_blank" title="email">Email 订阅</a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/buwenqi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://cn.linkedin.com/in/buwenqi" target="_blank" title="Linkin">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Linkin</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mijack.github.io/" title="Mi&Jack" target="_blank">Mi&Jack</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mengqi92.github.io/" title="MengQi" target="_blank">MengQi</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建型模式"><span class="nav-number">1.</span> <span class="nav-text">创建型模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象工厂模式"><span class="nav-number">1.1.</span> <span class="nav-text">抽象工厂模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#建造者模式"><span class="nav-number">1.2.</span> <span class="nav-text">建造者模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构型模式"><span class="nav-number">2.</span> <span class="nav-text">结构型模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#适配器模式"><span class="nav-number">2.1.</span> <span class="nav-text">适配器模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#装饰器模式"><span class="nav-number">2.2.</span> <span class="nav-text">装饰器模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代理模式"><span class="nav-number">2.3.</span> <span class="nav-text">代理模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构型模式-1"><span class="nav-number">3.</span> <span class="nav-text">结构型模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#观察者模式"><span class="nav-number">3.1.</span> <span class="nav-text">观察者模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#中介者模式"><span class="nav-number">3.2.</span> <span class="nav-text">中介者模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明"><span class="nav-number">4.</span> <span class="nav-text">声明</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wenqi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI',
+        appKey: '12aldjQVARwR70CFQ2qy8SQX',
+        placeholder: '欢迎吐槽！^_^',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI", "12aldjQVARwR70CFQ2qy8SQX");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

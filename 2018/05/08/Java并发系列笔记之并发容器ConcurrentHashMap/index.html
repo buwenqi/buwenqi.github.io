@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java并发系列," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Wenqi's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="线程不安全的HashMap多线程情况下，HashMap由于在扩容的时候会导致链变成环，在下一次查询的时候会使得出现死循环的出现。变成环的主要原因在于HashMap扩容的逻辑是不具有原子性的，扩容的基本逻辑包括下面三条：
+
+当前节点为e，获取当前节点的下一个节点next
+将e按照hash移到到扩容后的hash表中，置e.next等于newtable[i],头插法
+将e置为next进入下一次循环">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发系列笔记之并发容器ConcurrentHashMap">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/Java并发系列笔记之并发容器ConcurrentHashMap/index.html">
+<meta property="og:site_name" content="Wenqi's Blog">
+<meta property="og:description" content="线程不安全的HashMap多线程情况下，HashMap由于在扩容的时候会导致链变成环，在下一次查询的时候会使得出现死循环的出现。变成环的主要原因在于HashMap扩容的逻辑是不具有原子性的，扩容的基本逻辑包括下面三条：
+
+当前节点为e，获取当前节点的下一个节点next
+将e按照hash移到到扩容后的hash表中，置e.next等于newtable[i],头插法
+将e置为next进入下一次循环">
+<meta property="og:image" content="https://i.imgur.com/chIJPq5.png">
+<meta property="og:updated_time" content="2018-05-09T08:08:08.647Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发系列笔记之并发容器ConcurrentHashMap">
+<meta name="twitter:description" content="线程不安全的HashMap多线程情况下，HashMap由于在扩容的时候会导致链变成环，在下一次查询的时候会使得出现死循环的出现。变成环的主要原因在于HashMap扩容的逻辑是不具有原子性的，扩容的基本逻辑包括下面三条：
+
+当前节点为e，获取当前节点的下一个节点next
+将e按照hash移到到扩容后的hash表中，置e.next等于newtable[i],头插法
+将e置为next进入下一次循环">
+<meta name="twitter:image" content="https://i.imgur.com/chIJPq5.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/08/Java并发系列笔记之并发容器ConcurrentHashMap/"/>
+
+
+
+
+
+  <title>Java并发系列笔记之并发容器ConcurrentHashMap | Wenqi's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Wenqi's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书记
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            勾搭
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/Java并发系列笔记之并发容器ConcurrentHashMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wenqi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wenqi's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发系列笔记之并发容器ConcurrentHashMap</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-08T09:39:00+08:00">
+                2018-05-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/08/Java并发系列笔记之并发容器ConcurrentHashMap/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/05/08/Java并发系列笔记之并发容器ConcurrentHashMap/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/05/08/Java并发系列笔记之并发容器ConcurrentHashMap/" class="leancloud_visitors" data-flag-title="Java并发系列笔记之并发容器ConcurrentHashMap">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="线程不安全的HashMap"><a href="#线程不安全的HashMap" class="headerlink" title="线程不安全的HashMap"></a>线程不安全的HashMap</h2><p>多线程情况下，HashMap由于在扩容的时候会导致链变成环，在下一次查询的时候会使得出现死循环的出现。变成环的主要原因在于HashMap扩容的逻辑是不具有原子性的，扩容的基本逻辑包括下面三条：</p>
+<ol>
+<li>当前节点为e，获取当前节点的下一个节点next</li>
+<li>将e按照hash移到到扩容后的hash表中，置e.next等于newtable[i],头插法</li>
+<li>将e置为next进入下一次循环</li>
+</ol>
+<a id="more"></a>
+<p>这个过程在单线程中没有问题，如果原来hash值相同的值在新的hash表中仍然相同，假设原来的链表为A-B,那么走完第一步e为A,next为B，此时该线程挂起，另一个线程进入，执行完以上三步后newtable[i]中的链表为B-A,如果第一个线程继续执行，则会使A.next指向newtable[i],而newtable[i]是B-A，此时明显出现了环。而下一次遍历该链表的时候，会出现死循环。</p>
+<h2 id="volatile和CAS"><a href="#volatile和CAS" class="headerlink" title="volatile和CAS"></a>volatile和CAS</h2><p>volatile保证可见性是指：volatile变量读取的始终是内存中最后写入的值，volatile变量的写入会使其他线程工作内存的变量失效。也就是说只保证get这个值的时候返回的是内存中的值，保证修改单一变量时候的原子性，但不保证复合操作的原子性，复合操作有可能还在使用旧值进行操作，如i++。Java只保证了基本数据类型的变量和赋值操作才是原子性的，如i=1。<br>CAS则是使用预期值判断内存中的值是否一致，如果一致则进行修改，否则修改失败，整个读取-对比-写入是原子操作。CAS是一种高效的乐观锁技术，它被广泛使用在jdk的并发实现中。<br>使用CAS轮询和volatile类型状态变量，可以实现轻量级的乐观锁技术。</p>
+<h2 id="线程安全的ConcurrentHashMap"><a href="#线程安全的ConcurrentHashMap" class="headerlink" title="线程安全的ConcurrentHashMap"></a>线程安全的ConcurrentHashMap</h2><p>jdk1.7和jdk1.8中的ConcurrentHashMap实现有了较大的区别，其中jdk1.7中使用分段锁的Segment实现，而jdk1.8则使用CAS+synchronized相结合的方式</p>
+<h2 id="jdk1-7中的ConcurrentHashMap关键方法"><a href="#jdk1-7中的ConcurrentHashMap关键方法" class="headerlink" title="jdk1.7中的ConcurrentHashMap关键方法"></a>jdk1.7中的ConcurrentHashMap关键方法</h2><h3 id="put方法"><a href="#put方法" class="headerlink" title="put方法"></a>put方法</h3><p>put的基本思想是将根据hash的高位获取Segment的下标(如果Segment数组是16，则取高4位)，然后获取锁，使用ReentrantLock的trylock方法获取锁，如果获取成功，首先会是否超过负载值，如果超过了，就进行扩容，否则，直接插入，扩容的过程是在Segment的内部进行的，扩容会将数组扩大两倍。</p>
+<h3 id="get方法"><a href="#get方法" class="headerlink" title="get方法"></a>get方法</h3><p>get也是首先获取Segment，然后在Segment的HashEntry数组的(hash &amp; tablesize-1)下标下进行查找。</p>
+<h3 id="size方法"><a href="#size方法" class="headerlink" title="size方法"></a>size方法</h3><p>size方法的基本策略是将所有Segment中count相加，但是这样会导致不准确，jdk的做法是首先直接统计两次，如果两次相同，则成功，如果失败，则将所有的segment加锁统计。</p>
+<h2 id="jdk1-8中ConcurrentHashMap实现要点"><a href="#jdk1-8中ConcurrentHashMap实现要点" class="headerlink" title="jdk1.8中ConcurrentHashMap实现要点"></a>jdk1.8中ConcurrentHashMap实现要点</h2><h3 id="关键数据结构"><a href="#关键数据结构" class="headerlink" title="关键数据结构"></a>关键数据结构</h3><p>Node,用来包装基本的hash,key,value值。<br>TreeNode树节点，确切的说是红黑树节点，继承了Node，用来作为TreeBin红黑树的节点，<br>ForwardingNode,继承自Node,其hash为-1，用来在扩容时指示当前节点已经完成转移。<br>其中ConcurrentHashMap维护一个Node的数组，在非扩容阶段，只有Node和TreeBin节点，扩容阶段会出现ForwardingNode</p>
+<h3 id="CAS的使用"><a href="#CAS的使用" class="headerlink" title="CAS的使用"></a>CAS的使用</h3><p>除了对状态变量的更新使用到的CAS，对Node数组的操作也是包含了三个核心CAS方法，分别是获取数组的第i个元素，替换数组中的第i个元素，设置数组中第i个位置的值。<br><img src="https://i.imgur.com/chIJPq5.png" alt=""></p>
+<h3 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h3><p>扩容的时机是在容量超过负载的时候进行的，这段逻辑在插入一个元素并且统计总数的方法里面实现的。jdk1.8的扩容和之前不一样之处在于允许多个线程参与扩容过程。其基本过程如下</p>
+<ol>
+<li>如果newTable为空，则创建一个原来两倍的数组。</li>
+<li>将table中的数据复制到newTable中，可以多线程操作，</li>
+<li>复制阶段，如果遍历的节点为forward节点，则说明此节点已经复制过，调到下一个节点</li>
+<li>如果节点不为forward节点，则使用synchronized对节点加锁，并且复制这个链表或者树到i或者i+n位置</li>
+<li>复制结束后将table指向newtable</li>
+</ol>
+<h3 id="put方法要点总结"><a href="#put方法要点总结" class="headerlink" title="put方法要点总结"></a>put方法要点总结</h3><p>put方法主要有四个大的判断逻辑，也就是主要的四步</p>
+<ol>
+<li>table是否为空，如果为空的话，则初始化表</li>
+<li>如果table不为空，则查看(n-1)&amp;hash位置的值是否为null,如果为null的话，CAS插入待插入节点，插入结束</li>
+<li>如果遍历到的节点为forward节点，则使用helpTransfer方法帮助其扩容，helpTransfer会调用扩容的transfer方法</li>
+<li>否则的话，将当前遍历的节点加锁，根据是Node还是TreeBin执行不同的插入逻辑，如果链表的长度大于阈值，则将其转换成红黑树</li>
+<li>最后调用addCount方法将ConcurrentHashMap的size+1</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> putVal(key, value, <span class="keyword">false</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/** Implementation for put and putIfAbsent */</span></div><div class="line"><span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(K key, V value, <span class="keyword">boolean</span> onlyIfAbsent)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span> || value == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">    <span class="keyword">int</span> hash = spread(key.hashCode());</div><div class="line">    <span class="keyword">int</span> binCount = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (Node&lt;K,V&gt;[] tab = table;;) &#123;</div><div class="line">        Node&lt;K,V&gt; f; <span class="keyword">int</span> n, i, fh;</div><div class="line">        <span class="keyword">if</span> (tab == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>)</div><div class="line">            tab = initTable();</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ((f = tabAt(tab, i = (n - <span class="number">1</span>) &amp; hash)) == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (casTabAt(tab, i, <span class="keyword">null</span>,</div><div class="line">                         <span class="keyword">new</span> Node&lt;K,V&gt;(hash, key, value, <span class="keyword">null</span>)))</div><div class="line">                <span class="keyword">break</span>;                   <span class="comment">// no lock when adding to empty bin</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ((fh = f.hash) == MOVED)</div><div class="line">            tab = helpTransfer(tab, f);</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            V oldVal = <span class="keyword">null</span>;</div><div class="line">            <span class="keyword">synchronized</span> (f) &#123;</div><div class="line">                <span class="keyword">if</span> (tabAt(tab, i) == f) &#123;</div><div class="line">                    <span class="keyword">if</span> (fh &gt;= <span class="number">0</span>) &#123;</div><div class="line">                        binCount = <span class="number">1</span>;</div><div class="line">                        <span class="keyword">for</span> (Node&lt;K,V&gt; e = f;; ++binCount) &#123;</div><div class="line">                            K ek;</div><div class="line">                            <span class="keyword">if</span> (e.hash == hash &amp;&amp;</div><div class="line">                                ((ek = e.key) == key ||</div><div class="line">                                 (ek != <span class="keyword">null</span> &amp;&amp; key.equals(ek)))) &#123;</div><div class="line">                                oldVal = e.val;</div><div class="line">                                <span class="keyword">if</span> (!onlyIfAbsent)</div><div class="line">                                    e.val = value;</div><div class="line">                                <span class="keyword">break</span>;</div><div class="line">                            &#125;</div><div class="line">                            Node&lt;K,V&gt; pred = e;</div><div class="line">                            <span class="keyword">if</span> ((e = e.next) == <span class="keyword">null</span>) &#123;</div><div class="line">                                pred.next = <span class="keyword">new</span> Node&lt;K,V&gt;(hash, key,</div><div class="line">                                                          value, <span class="keyword">null</span>);</div><div class="line">                                <span class="keyword">break</span>;</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                    <span class="keyword">else</span> <span class="keyword">if</span> (f <span class="keyword">instanceof</span> TreeBin) &#123;</div><div class="line">                        Node&lt;K,V&gt; p;</div><div class="line">                        binCount = <span class="number">2</span>;</div><div class="line">                        <span class="keyword">if</span> ((p = ((TreeBin&lt;K,V&gt;)f).putTreeVal(hash, key,</div><div class="line">                                                       value)) != <span class="keyword">null</span>) &#123;</div><div class="line">                            oldVal = p.val;</div><div class="line">                            <span class="keyword">if</span> (!onlyIfAbsent)</div><div class="line">                                p.val = value;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (binCount != <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD)</div><div class="line">                    treeifyBin(tab, i);</div><div class="line">                <span class="keyword">if</span> (oldVal != <span class="keyword">null</span>)</div><div class="line">                    <span class="keyword">return</span> oldVal;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    addCount(<span class="number">1L</span>, binCount);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="get方法要点"><a href="#get方法要点" class="headerlink" title="get方法要点"></a>get方法要点</h3><p>get方法主要是区分是链表还是树，其中实现是通过设置TreeBin的hash为-2,以此来区分不同的实现，然后根据不同的数据结构进行查询。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; e, p; <span class="keyword">int</span> n, eh; K ek;</div><div class="line">    <span class="keyword">int</span> h = spread(key.hashCode());</div><div class="line">    <span class="keyword">if</span> ((tab = table) != <span class="keyword">null</span> &amp;&amp; (n = tab.length) &gt; <span class="number">0</span> &amp;&amp;</div><div class="line">        (e = tabAt(tab, (n - <span class="number">1</span>) &amp; h)) != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">if</span> ((eh = e.hash) == h) &#123;</div><div class="line">            <span class="keyword">if</span> ((ek = e.key) == key || (ek != <span class="keyword">null</span> &amp;&amp; key.equals(ek)))</div><div class="line">                <span class="keyword">return</span> e.val;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (eh &lt; <span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> (p = e.find(h, key)) != <span class="keyword">null</span> ? p.val : <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">while</span> ((e = e.next) != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (e.hash == h &amp;&amp;</div><div class="line">                ((ek = e.key) == key || (ek != <span class="keyword">null</span> &amp;&amp; key.equals(ek))))</div><div class="line">                <span class="keyword">return</span> e.val;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="size方法要点"><a href="#size方法要点" class="headerlink" title="size方法要点"></a>size方法要点</h3><p>为了统计ConcurrentHashMap的数量，jdk设计了那个变量，一个是baseCount整型,一个是CounterCell数组，其值都是volatile变量，获取size的过程就是要统计baseCount和CounterCell数组中所有值的和。<br>至于为什么要用两个数据结构，是考虑到多线程情况下，如果有多个线程在进行put操作，那么HashMap的size都要加一，首先是尝试CAS增加baseCount，如果加入成功，则成功，如果失败，再尝试CAS修改CounterCell数组，如果成功，也算成功。如果还是失败，则轮训以上两个步骤，结束。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>ConcurrentHashMap在jdk 1.7和1.8之间的差异主要体现在一下几个方面</p>
+<ol>
+<li>基本的数据结构转换：1.7中使用Segment+HashEntry的数据结构，而1.8中使用Node数组存储，Node分为链表Node和红黑树TreeNode</li>
+<li>1.7中以Segment为单位实现锁分离，1.8中大量使用CAS+状态位来控制同步，单位是Node，锁的粒度更小</li>
+<li>1.7中的扩容机制是以Segment中加锁进行的，而1.8中可以有多个线程参与扩容的过程，速度更快。</li>
+</ol>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://www.ctolib.com/topics-2226.html#articleHeader17" target="_blank" rel="external">ConcurrentHashMap总结</a><br><a href="http://cmsblogs.com/?p=2283" target="_blank" rel="external">J.U.C之Java并发容器：ConcurrentHashMap</a><br>Java并发编程艺术</p>
+<h2 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h2><p>本文首发表于<a href="https://buwenqi.github.io" target="_blank" rel="external">我的博客</a>,欢迎关注！转载须注明文章出处，作者保留文章所有权。</p>
+
+      
+    </div>
+    
+    
+    
+	
+	
+	<div>
+<link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup"><form action="https://126.us3.list-manage.com/subscribe/post?u=6dc0f11f3e10812c48ba02b6c&amp;id=3c20629afe" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate><div id="mc_embed_signup_scroll"><input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required><div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6dc0f11f3e10812c48ba02b6c_3c20629afe" tabindex="-1" value=""></div><div class="clear"><input type="submit" value="邮件订阅" name="subscribe" id="mc-embedded-subscribe" class="button"></div></div></form></div>
+</div>
+	
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="Wenqi 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java并发系列/" rel="tag"># Java并发系列</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/06/Java并发系列笔记之线程池/" rel="next" title="Java并发系列笔记之线程池">
+                <i class="fa fa-chevron-left"></i> Java并发系列笔记之线程池
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/13/解析Arrays中sort方法的黑科技/" rel="prev" title="解析Arrays中sort方法的黑科技">
+                解析Arrays中sort方法的黑科技 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/me.jpg"
+                alt="Wenqi" />
+            
+              <p class="site-author-name" itemprop="name">Wenqi</p>
+              <p class="site-description motion-element" itemprop="description">To do one thing well.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+		  
+		  
+            <div class="feed-link motion-element">
+			  <a href="http://eepurl.com/gxouGP" target="_blank" title="email">Email 订阅</a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/buwenqi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://cn.linkedin.com/in/buwenqi" target="_blank" title="Linkin">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Linkin</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mijack.github.io/" title="Mi&Jack" target="_blank">Mi&Jack</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mengqi92.github.io/" title="MengQi" target="_blank">MengQi</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程不安全的HashMap"><span class="nav-number">1.</span> <span class="nav-text">线程不安全的HashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile和CAS"><span class="nav-number">2.</span> <span class="nav-text">volatile和CAS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程安全的ConcurrentHashMap"><span class="nav-number">3.</span> <span class="nav-text">线程安全的ConcurrentHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jdk1-7中的ConcurrentHashMap关键方法"><span class="nav-number">4.</span> <span class="nav-text">jdk1.7中的ConcurrentHashMap关键方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#put方法"><span class="nav-number">4.1.</span> <span class="nav-text">put方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#get方法"><span class="nav-number">4.2.</span> <span class="nav-text">get方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#size方法"><span class="nav-number">4.3.</span> <span class="nav-text">size方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jdk1-8中ConcurrentHashMap实现要点"><span class="nav-number">5.</span> <span class="nav-text">jdk1.8中ConcurrentHashMap实现要点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关键数据结构"><span class="nav-number">5.1.</span> <span class="nav-text">关键数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CAS的使用"><span class="nav-number">5.2.</span> <span class="nav-text">CAS的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩容"><span class="nav-number">5.3.</span> <span class="nav-text">扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#put方法要点总结"><span class="nav-number">5.4.</span> <span class="nav-text">put方法要点总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#get方法要点"><span class="nav-number">5.5.</span> <span class="nav-text">get方法要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#size方法要点"><span class="nav-number">5.6.</span> <span class="nav-text">size方法要点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">7.</span> <span class="nav-text">参考文献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#声明"><span class="nav-number">8.</span> <span class="nav-text">声明</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wenqi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI',
+        appKey: '12aldjQVARwR70CFQ2qy8SQX',
+        placeholder: '欢迎吐槽！^_^',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI", "12aldjQVARwR70CFQ2qy8SQX");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

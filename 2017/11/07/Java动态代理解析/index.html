@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java基础," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Wenqi's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="代理模式是一个高频使用的设计模式，其原因在于我们可以在不改变被代理类的情况下，提供一个和被代理类一样的代理类，并负责预处理被代理类的方法，过滤或执行被代理类的方法以及后续操作。这里所说的一样是指代理类对象可以替代被代理类对象，实现这种效果有两种，一种是代理类和被代理类实现同一个接口，另一种是代理类直接继承自被代理类，这两种方式在接下来的jdk动态代理和cglib中均有体现。在深入了解动态代理之前，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java动态代理解析">
+<meta property="og:url" content="http://yoursite.com/2017/11/07/Java动态代理解析/index.html">
+<meta property="og:site_name" content="Wenqi's Blog">
+<meta property="og:description" content="代理模式是一个高频使用的设计模式，其原因在于我们可以在不改变被代理类的情况下，提供一个和被代理类一样的代理类，并负责预处理被代理类的方法，过滤或执行被代理类的方法以及后续操作。这里所说的一样是指代理类对象可以替代被代理类对象，实现这种效果有两种，一种是代理类和被代理类实现同一个接口，另一种是代理类直接继承自被代理类，这两种方式在接下来的jdk动态代理和cglib中均有体现。在深入了解动态代理之前，">
+<meta property="og:image" content="https://i.imgur.com/mJYaaMp.png">
+<meta property="og:image" content="https://i.imgur.com/uhygKW5.jpg">
+<meta property="og:updated_time" content="2018-02-21T14:26:34.719Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java动态代理解析">
+<meta name="twitter:description" content="代理模式是一个高频使用的设计模式，其原因在于我们可以在不改变被代理类的情况下，提供一个和被代理类一样的代理类，并负责预处理被代理类的方法，过滤或执行被代理类的方法以及后续操作。这里所说的一样是指代理类对象可以替代被代理类对象，实现这种效果有两种，一种是代理类和被代理类实现同一个接口，另一种是代理类直接继承自被代理类，这两种方式在接下来的jdk动态代理和cglib中均有体现。在深入了解动态代理之前，">
+<meta name="twitter:image" content="https://i.imgur.com/mJYaaMp.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/07/Java动态代理解析/"/>
+
+
+
+
+
+  <title>Java动态代理解析 | Wenqi's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Wenqi's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书记
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            勾搭
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/07/Java动态代理解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wenqi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wenqi's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java动态代理解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-07T08:38:38+08:00">
+                2017-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/11/07/Java动态代理解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/11/07/Java动态代理解析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/11/07/Java动态代理解析/" class="leancloud_visitors" data-flag-title="Java动态代理解析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>代理模式是一个高频使用的设计模式，其原因在于我们可以在不改变被代理类的情况下，提供一个和被代理类一样的代理类，并负责预处理被代理类的方法，过滤或执行被代理类的方法以及后续操作。这里所说的一样是指代理类对象可以替代被代理类对象，实现这种效果有两种，一种是代理类和被代理类实现同一个接口，另一种是代理类直接继承自被代理类，这两种方式在接下来的jdk动态代理和cglib中均有体现。在深入了解动态代理之前，我们先了解一下Java的反射机制和静态代理，其中反射机制是动态代理实现的基础。<br><a id="more"></a></p>
+<h2 id="Java的反射机制"><a href="#Java的反射机制" class="headerlink" title="Java的反射机制"></a>Java的反射机制</h2><h3 id="通过反射实例化对象"><a href="#通过反射实例化对象" class="headerlink" title="通过反射实例化对象"></a>通过反射实例化对象</h3><p>Java反射实例化对象主要依赖于java.lang.Class对象，其中一个重要的方法是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//通过全限名称获取Class对象</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> Class&lt;?&gt; forName(String className)</div></pre></td></tr></table></figure></p>
+<p>通过全限名称获取Class对象，完成类加载的过程，如果需要调用无参的构造方法用Class对象的<code>newInstance()</code>即可完成实例化过程，一个具体的例子如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">result=(ReflectService) Class.forName(serviceFullName).newInstance();</div></pre></td></tr></table></figure></p>
+<p>如果需要调用有参数的构造方法，则还需要调用<code>public Constructor&lt;T&gt; getConstructor(Class&lt;?&gt;... parameterTypes)</code>方法指明构造方法的参数类型列表，然后执行<code>public T newInstance(Object ... initargs)</code>指明构造方法的参数值的表。具体的例子如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">result=(ReflectService) Class.forName(serviceName).getConstructor(String.class).newInstance(param);</div></pre></td></tr></table></figure></p>
+<h3 id="执行反射方法"><a href="#执行反射方法" class="headerlink" title="执行反射方法"></a>执行反射方法</h3><p>执行反射方法需要先获取Class对象，获取Class对象除了使用Class.forName方法之外，还可以通过对象的getClass()方法，接下来执行</p>
+<ol>
+<li><code>public Method getMethod(String name, Class&lt;?&gt;... parameterTypes)</code>,通过Class的getMethod方法获取method对象，name为方法名，parameterTypes为参数类型表。</li>
+<li><code>public Object invoke(Object obj, Object... args)</code>,执行method对象的invoke方法，obj为执行方法的对象，args为方法参数值</li>
+</ol>
+<p>如果方法没有参数，可以不写parameterTypes和args，一个调用的具体例子如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//有参数</span></div><div class="line">Method method=service2.getClass().getMethod(<span class="string">"sayToTwo"</span>, String.class,String.class);</div><div class="line">method.invoke(service2, <span class="string">"person1"</span>,<span class="string">"person2"</span>);</div><div class="line"><span class="comment">//无参数</span></div><div class="line">Method method2=service2.getClass().getMethod(<span class="string">"sayHello"</span>);</div><div class="line">method2.invoke(service2);</div></pre></td></tr></table></figure></p>
+<h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><p>假设我们有一个UserManager接口，其中定义了三个方法，用来增加用户，删除用户，修改用户信息。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserManager</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addUser</span><span class="params">(String username,String password)</span></span>;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delUser</span><span class="params">(<span class="keyword">int</span> userId)</span></span>;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">modifyUser</span><span class="params">(<span class="keyword">int</span> userId,String username,String password)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>并且我们有一个实现类UserManager实现了这个接口，<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserManagerImpl</span> <span class="keyword">implements</span> <span class="title">UserManager</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addUser</span><span class="params">(String username, String password)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"---UserManagerImpl:addUser---"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delUser</span><span class="params">(<span class="keyword">int</span> userId)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"---UserManagerImpl:delUser---"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">modifyUser</span><span class="params">(<span class="keyword">int</span> userId, String username, String password)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"---UserManagerImpl:modifyUser---"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addBatch</span><span class="params">(List&lt;String&gt;users)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"---UserManagerImpl:addBatch---"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>假设我们想要在每次操作之前都想加一个日志操作，那么最简单的方式是直接在UserManagerImpl中增加一个logging()方法，然后加到方法实际调用之前，但是这样的坏处是日志记录和业务代码混在了一起，这不是我们想要的，另一种情况是这个类在第三方的jar包中，我们不能直接修改这个类代码。静态代理可以解决这个问题，我们不必要修改原有的代码也可以把想要的日志操作加进去，它的类图是这样设计的。</p>
+<p><center><br><img src="https://i.imgur.com/mJYaaMp.png" alt=""><br>图1：静态代理关系图<br></center><br>其中，被代理对象是UserManagerImpl,代理对象UserManagerProxy,它们都实现了UserManager接口，而UserManagerImplProxy持有UserManagerImpl对象，在addUser方法之前插入logging方法。这样UserManagerImpl和UserManagerProxy对于使用了UserManager接口的对象的地方是等同的，我们实现了在方法之前插入方法。<br>虽然我们实现了在不修改原有代码的情况下，在原有的业务逻辑之前加入日志记录的操作，将日志操作与原有的业务逻辑代码解耦，但是在代理类中，日志操作仍然和业务逻辑耦合在一起，我们将这种耦合关系转移到了代理类中，代理类中的耦合关系是不可避免的。对于每个业务逻辑如果都有不同的日志操作过程，也就是代理的粒度细粒度到这种操作，静态代理是适合的。但是如果插入的逻辑，比如日志操作，是同样的，并且需要插入的方法数是很多的，比如有1000个方法之前需要插入业务逻辑，那么静态代理就显得不那么合适了，因为我们需要在代理类中插入1000次logging的调用。</p>
+<h2 id="JDK动态代理"><a href="#JDK动态代理" class="headerlink" title="JDK动态代理"></a>JDK动态代理</h2><p>相比静态代理，动态代理的动态在于方法，我们可以拦截所有接口定义的方法，并且在实际方法调用的过程中获取到实际调用的方法，然后进行一些逻辑处理。JDK动态代理实现的过程如下：</p>
+<ol>
+<li>首先，继承InvocationHandler,重写<code>public Object invoke(Object proxy, Method method, Object[] args)</code>方法，其中proxy为自动生成的代理对象，method为被调用的方法，args为方法参数</li>
+<li>使用Proxy的静态方法<code>public static Object newProxyInstance(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler h)</code>生成对应的代理实例</li>
+<li>将代理实例上转型到对应的接口，执行接口中的方法</li>
+</ol>
+<p>例如我们上面的例子，我们首先实现一个InvocationHandler的实现类，然后用createProxy生成了代理对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</div><div class="line">	</div><div class="line">	<span class="keyword">public</span> Object target;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">		logging();</div><div class="line">		Object result=method.invoke(target, args);</div><div class="line">		<span class="keyword">return</span> result;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">logging</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"start logging now!"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">createProxy</span><span class="params">(Object target)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.target=target;</div><div class="line">		<span class="keyword">return</span> Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), <span class="keyword">this</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用的过程<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//动态代理调用</span></div><div class="line">LogHandler logHandler=<span class="keyword">new</span> LogHandler();</div><div class="line">UserManager dynamicProxy=(UserManager) logHandler.createProxy(userManager);</div><div class="line">dynamicProxy.addUser(<span class="string">"hello"</span>, <span class="string">"hello"</span>);</div><div class="line">dynamicProxy.delUser(<span class="number">1</span>);</div><div class="line">dynamicProxy.modifyUser(<span class="number">1</span>, <span class="string">"hello"</span>, <span class="string">"hello"</span>);</div></pre></td></tr></table></figure></p>
+<p>从调用过程来看，我们就很明白自动生成的代理类实现了UserManager接口，实际上代理类还继承了Proxy类。另外一个问题，如果我们想要执行被代理类原有的方法，必须给InvocationHandler传入一个被代理类的对象target，在invoke方法中执行method.invoke放在中执行执行的类。为什么我们不能用invoke方法中的proxy，它不是也是实现了同样的接口吗？回答这个问题很简单，因为proxy类的对应方法增强了，如果用proxy的话，它会递归的调用该方法，直至虚拟机栈溢出。<br>从原理上来看，动态代理的关键在于可以动态的确定是哪个方法被调用，并且可以统一路由到InvocationHandler的invoke方法上，使得所有方法之前插入同样的逻辑操作得以归结到一个方法只内，不可以不说设计之精妙，至于jdk是如何路由到invoke方法上的，有待继续探究。<br>另外有趣的一点是，如果抛开代理的本意，我可以仅在提供接口的情况下而不提供具体实现类（被代理类）的情况下使用这种分发技术，执行对应的逻辑，实际上，这里的接口就仅仅充当了一组规范而已，而这一组规范路由到同一个处理方法，在注解方式提供参数信息的帮助下，这种方式也大有用武之处。<br>在上面的UserManagerImpl类中，我不仅实现了接口方法，而且提供了一个子类特有的方法<code>addBatch(List&lt;String&gt;users)</code>,加了这个方法目的是为了说明JDK动态代理是基于接口的，从上面的实现过程也可以看出我们需要将生成的代理类强转换成接口，而接口子类对象的特有的方法显然不能被代理，但是如果我想代理具体类中所有的方法呢，那么只能使用cglib来实现了</p>
+<h2 id="cglib动态代理"><a href="#cglib动态代理" class="headerlink" title="cglib动态代理"></a>cglib动态代理</h2><p>不同于JDK动态代理代理类要和被代理类实现同样的接口，cglib动态代理使用asm字节码增强生成代理对象直接继承自被代理对象，从而实现动态代理的过程。其实现过程如下</p>
+<ol>
+<li>实现MethodInterceptor接口，实现其中的<code>public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy)</code>方法</li>
+<li>配置增强类Enhancer的父类，MethodInterceptor处理对象</li>
+<li>Enhanceer对象强转型被代理类，执行对应的方法</li>
+</ol>
+<p>其基本过程和JDK动态代理类似，唯一的不同是我们不用传入被代理类，而只是被代理类的Class对象，重要的实现代码如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@param</span> proxy 代理对象,当前对象</div><div class="line"> * <span class="doctag">@param</span> method 方法</div><div class="line"> * <span class="doctag">@param</span> args 方法参数</div><div class="line"> * <span class="doctag">@param</span> methodProxy代理方法,用于执行原来的代理方法</div><div class="line"> * <span class="doctag">@return</span> 代理逻辑返回值</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object proxy, Method method, Object[] args, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">	logging();</div><div class="line">	System.out.println(proxy.getClass().getSuperclass());</div><div class="line">	<span class="comment">//这里只能拿到代理对象proxy,所以只能通过找代理对象的父方法执行原来的方法</span></div><div class="line">	<span class="comment">//如果能够拿到原始的被代理对象(比如通过构造函数传入)，则可以通过method来进行执行</span></div><div class="line">	Object result=methodProxy.invokeSuper(proxy, args);</div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>intercept每个参数代表的含义不同，我们如果需要调用被代理类的方法，需要通过MethodProxy的invokeSuper方法调用。<br>设置增强类的过程<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getProxy</span><span class="params">(Class&lt;?&gt; cls)</span> </span>&#123;</div><div class="line">		<span class="comment">//增强类</span></div><div class="line">		Enhancer enhancer=<span class="keyword">new</span> Enhancer();</div><div class="line">		<span class="comment">//设置增强的对象</span></div><div class="line">		enhancer.setSuperclass(cls);</div><div class="line">		<span class="comment">//设置代理逻辑</span></div><div class="line">		enhancer.setCallback(<span class="keyword">this</span>);</div><div class="line">		<span class="keyword">return</span> enhancer.create();</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
+<p>调用过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//cglib动态代理</div><div class="line">CglibProxy cglibProxy=new CglibProxy();</div><div class="line">UserManagerImpl cglibUserManager=(UserManagerImpl)cglibProxy.getProxy(UserManagerImpl.class);</div><div class="line">cglibUserManager.addBatch(new ArrayList&lt;&gt;());</div><div class="line">cglibUserManager.delUser(1);</div></pre></td></tr></table></figure></p>
+<h2 id="关于源码"><a href="#关于源码" class="headerlink" title="关于源码"></a>关于源码</h2><p>你可以在<a href="https://github.com/buwenqi/JavaBasis/tree/master/src/main/java/reflection" target="_blank" rel="external">这里</a>找到本文的所有源码,你同样可以在<a href="https://buwenqi.github.io/" target="_blank" rel="external">我的博客</a>看到这篇博客，欢迎评论！</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ol>
+<li><a href="https://www.ibm.com/developerworks/cn/java/j-lo-proxy1/" target="_blank" rel="external">Java 动态代理机制分析及扩展</a></li>
+<li><a href="https://www.kancloud.cn/digest/ysc-1123/125694" target="_blank" rel="external">静态代理和动态代理的再学习</a><br><center><br><img src="https://i.imgur.com/uhygKW5.jpg" alt=""></center></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+	
+	
+	<div>
+<link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup"><form action="https://126.us3.list-manage.com/subscribe/post?u=6dc0f11f3e10812c48ba02b6c&amp;id=3c20629afe" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate><div id="mc_embed_signup_scroll"><input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required><div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6dc0f11f3e10812c48ba02b6c_3c20629afe" tabindex="-1" value=""></div><div class="clear"><input type="submit" value="邮件订阅" name="subscribe" id="mc-embedded-subscribe" class="button"></div></div></form></div>
+</div>
+	
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="Wenqi 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java基础/" rel="tag"># Java基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/01/再探Java泛型/" rel="next" title="再探Java泛型">
+                <i class="fa fa-chevron-left"></i> 再探Java泛型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/23/MySQL-SQL之表的基本操作/" rel="prev" title="MySQL-SQL之表的基本操作">
+                MySQL-SQL之表的基本操作 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/me.jpg"
+                alt="Wenqi" />
+            
+              <p class="site-author-name" itemprop="name">Wenqi</p>
+              <p class="site-description motion-element" itemprop="description">To do one thing well.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+		  
+		  
+            <div class="feed-link motion-element">
+			  <a href="http://eepurl.com/gxouGP" target="_blank" title="email">Email 订阅</a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/buwenqi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://cn.linkedin.com/in/buwenqi" target="_blank" title="Linkin">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Linkin</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mijack.github.io/" title="Mi&Jack" target="_blank">Mi&Jack</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mengqi92.github.io/" title="MengQi" target="_blank">MengQi</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java的反射机制"><span class="nav-number">1.</span> <span class="nav-text">Java的反射机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过反射实例化对象"><span class="nav-number">1.1.</span> <span class="nav-text">通过反射实例化对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行反射方法"><span class="nav-number">1.2.</span> <span class="nav-text">执行反射方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态代理"><span class="nav-number">2.</span> <span class="nav-text">静态代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK动态代理"><span class="nav-number">3.</span> <span class="nav-text">JDK动态代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cglib动态代理"><span class="nav-number">4.</span> <span class="nav-text">cglib动态代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于源码"><span class="nav-number">5.</span> <span class="nav-text">关于源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">6.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wenqi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI',
+        appKey: '12aldjQVARwR70CFQ2qy8SQX',
+        placeholder: '欢迎吐槽！^_^',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI", "12aldjQVARwR70CFQ2qy8SQX");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

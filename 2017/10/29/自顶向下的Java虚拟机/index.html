@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java虚拟机," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Wenqi's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="最近看了《深入理解Java虚拟机》这本书，感觉书中的章节写的很零散，如果能够通过一个完整的例子将所有的知识点串联起来，将整个故事讲清楚，无疑对Java虚拟机运作原理的学习有更好的帮助，本文之所以称为自上而下的Java虚拟机是受《计算机网络：自顶向下方法》启发，想要从上层开始讲起，然后逐步了解这些我们习以为常背后Java虚拟机所做的工作，以期这篇总结能够让Java虚拟机运作的脉络更加清晰。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自顶向下的Java虚拟机">
+<meta property="og:url" content="http://yoursite.com/2017/10/29/自顶向下的Java虚拟机/index.html">
+<meta property="og:site_name" content="Wenqi's Blog">
+<meta property="og:description" content="最近看了《深入理解Java虚拟机》这本书，感觉书中的章节写的很零散，如果能够通过一个完整的例子将所有的知识点串联起来，将整个故事讲清楚，无疑对Java虚拟机运作原理的学习有更好的帮助，本文之所以称为自上而下的Java虚拟机是受《计算机网络：自顶向下方法》启发，想要从上层开始讲起，然后逐步了解这些我们习以为常背后Java虚拟机所做的工作，以期这篇总结能够让Java虚拟机运作的脉络更加清晰。">
+<meta property="og:image" content="https://i.imgur.com/iN485WR.png">
+<meta property="og:image" content="https://i.imgur.com/hBXlBmC.png">
+<meta property="og:image" content="https://i.imgur.com/vMC9JB4.png">
+<meta property="og:image" content="https://i.imgur.com/BgJlhs1.jpg">
+<meta property="og:updated_time" content="2018-02-21T14:26:34.736Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自顶向下的Java虚拟机">
+<meta name="twitter:description" content="最近看了《深入理解Java虚拟机》这本书，感觉书中的章节写的很零散，如果能够通过一个完整的例子将所有的知识点串联起来，将整个故事讲清楚，无疑对Java虚拟机运作原理的学习有更好的帮助，本文之所以称为自上而下的Java虚拟机是受《计算机网络：自顶向下方法》启发，想要从上层开始讲起，然后逐步了解这些我们习以为常背后Java虚拟机所做的工作，以期这篇总结能够让Java虚拟机运作的脉络更加清晰。">
+<meta name="twitter:image" content="https://i.imgur.com/iN485WR.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/29/自顶向下的Java虚拟机/"/>
+
+
+
+
+
+  <title>自顶向下的Java虚拟机 | Wenqi's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Wenqi's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书记
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            勾搭
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/29/自顶向下的Java虚拟机/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wenqi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/me.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wenqi's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">自顶向下的Java虚拟机</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-29T19:36:30+08:00">
+                2017-10-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/10/29/自顶向下的Java虚拟机/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/10/29/自顶向下的Java虚拟机/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/10/29/自顶向下的Java虚拟机/" class="leancloud_visitors" data-flag-title="自顶向下的Java虚拟机">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近看了《深入理解Java虚拟机》这本书，感觉书中的章节写的很零散，如果能够通过一个完整的例子将所有的知识点串联起来，将整个故事讲清楚，无疑对Java虚拟机运作原理的学习有更好的帮助，本文之所以称为自上而下的Java虚拟机是受《计算机网络：自顶向下方法》启发，想要从上层开始讲起，然后逐步了解这些我们习以为常背后Java虚拟机所做的工作，以期这篇总结能够让Java虚拟机运作的脉络更加清晰。<br><a id="more"></a></p>
+<h2 id="将Java程序编译成Class文件"><a href="#将Java程序编译成Class文件" class="headerlink" title="将Java程序编译成Class文件"></a>将Java程序编译成Class文件</h2><p>在我们写完Java程序后，我们需要利用Javac命令将Java文件编译成Class文件，也就是字节码文件，字节码文件包含Java虚拟机能够执行的指令。Java是面向对象的语言，每个类都会被编译成一个Class文件，这个文件必须符合一定的格式才能够被Java虚拟机所加载。一个Class文件会包含一下几个域：</p>
+<ul>
+<li>魔数与版本信息</li>
+<li>常量池，分为字面量和符号变量两种，从内容上来说包含了：类和接口的全限定名，字段的名称和描述符，方法的名称和描述符</li>
+<li>类的访问标识符</li>
+<li>字段表集合，包含元数据信息和属性表（常量时会用到，ConstantValue）</li>
+<li>方法表集合，包含元数据信息和属性表（Code属性）</li>
+<li>属性表集合<ul>
+<li><strong>Code属性</strong>，最重要的一个属性，里面存储了方法编译后字节码指令，并且含有最大操作栈深度，最大局部变量表空间，这些都是在编译后决定的</li>
+<li>ConstantValue属性，用于存储final关键字定义的常量值</li>
+<li>还有其他的如Exceptions异常表等等</li>
+</ul>
+</li>
+</ul>
+<h2 id="加载将要运行的类"><a href="#加载将要运行的类" class="headerlink" title="加载将要运行的类"></a>加载将要运行的类</h2><p>在编译Java文件生成Class文件后，要想使用Java命令运行刚刚生成的Java程序的main函数，Java虚拟机首先要加载要执行main函数的主类，Java虚拟机加载一个类的过程5个阶段：加载，验证，准备，解析和初始化。每个阶段都有不同的目的，整个类加载的总的目的我总结为一句话：加载Class文件到Java虚拟机的方法区，并且做必要的安全验证和初始化工作。下面列出了类加载5个阶段的主要目的。</p>
+<ul>
+<li><strong>加载</strong> 加载的主要目的是通过类的全限定名获取类的二进制流，并将二进制流转换成Java虚拟机方法区的运行时数据结构，生成java.langClass对象（方法区中）作为该类各种数据的访问接口。</li>
+<li><strong>验证</strong> 验证的主要目的是为了确保Class文件的字节流包含的信息符合虚拟机的要求</li>
+<li><strong>准备</strong> 准备的主要目的是类变量分配内存并设置初始值，也就是给static的变量设置初始值，例如static int类型的类变量会在方法区初始化为0</li>
+<li><strong>解析</strong> 解析的主要目的是将常量池的符号引用转换成直接引用的过程</li>
+<li><strong>初始化</strong> 初始化阶段的目的是执行类构造器的<clinit>方法，<clinit>方法是为将执行程序中类变量的赋值动作和静态语句块，在执行当前类的初始化之前，Java虚拟机会先初始化其父类，所以这个过程可能会出发新的类加载过程。</clinit></clinit></li>
+</ul>
+<p>解释完类加载的过程，我们还缺少两个问题的答案，一个是<strong>什么时候会触发类加载的过程</strong>，另一个是<strong>类加载的过程是由谁来实现的</strong>，下面我们来回答这两个问题。<br>第一个问题其实我们已经知道了两种情况，一种是在执行主类main函数的时候，主类会被加载，另一种是在类加载的初始化阶段，当当前加载的类有父类的时候，会出发父类的类加载过程，除了这两种情况，还有一下几种情况会出发类加载过程</p>
+<ul>
+<li>遇到new，getstatic，putstatic,invokestatic指令时</li>
+<li>使用java.lang.reflect包的方法对类的反射调用时</li>
+</ul>
+<p>其他的被动引用不会引发类的初始化，典型的有</p>
+<ul>
+<li>通过子类来引用父类的静态字段只会出发父类的初始化，不会出发子类的初始化</li>
+<li>new 数组并不会出发对应类的初始化过程</li>
+<li>引用类的final常量也不会引发初始化</li>
+</ul>
+<p>第二个问题类的加载过程是由谁来实现的，Java虚拟机使用类加载器来显现类加载的加载动作，类加载器使用双亲委派模型，一句话来解释双亲委派模型就是：只有当父类加载器反馈自己无法完成加载请求时，子加载器才会尝试自己去加载。下面的图解释了这个模型。</p>
+<center><br><img src="https://i.imgur.com/iN485WR.png" alt=""><br>图1：类加载器双亲委派模型<br></center>
+
+<h2 id="开始运行Java程序"><a href="#开始运行Java程序" class="headerlink" title="开始运行Java程序"></a>开始运行Java程序</h2><p>类加载使得Java程序做好了正式运行Java程序的准备工作，接下来就是如何运行这些已经读入Java虚拟机的字节码了，在这之前，我们有必要知道Java虚拟机的运行时数据区域，这些区域的作用解释了Java虚拟机是如果分配空间，执行字节码的，从这个角度来说，Java虚拟机就是一个小型的操作系统。</p>
+<p><center><br><img src="https://i.imgur.com/hBXlBmC.png" alt=""><br>图2：Java虚拟机运行时数据区域划分<br></center><br>如图2显示了Java虚拟机在运行时的数据区域划分，类加载子系统的加载步骤将Class文件的加载到了Java虚拟机的方法区，并且生成了java.lang.Class对象，所以<strong>方法区</strong>是用来存储编译后的字节码，包括类信息，常量，静态变量，编译后的代码数据。方法区是所有线程所共享的，这个区域也被称为永久代，所以这里面的数据的生命周期和应用程序的生命周期一样，如果出现过大过多的静态变量，常量，这个区域会出现内存溢出的异常。<br><strong>堆</strong> 堆是存放对象实例的地方，是所有线程所共享的，同时也是垃圾回收的主要区域<br><strong>虚拟机栈</strong> 虚拟机栈是用来支持Java方法调用的内存模型，它是线程私有的内存区域。每个方法在执行的同时都会在虚拟机栈中创建一个栈帧，用于存储局部变量表，操作数栈，动态链接，方法出口等信息。每一个方法从调用至执行完成的过程，就对应着一个栈帧在虚拟机栈中的入栈到出栈的过程。Java虚拟机栈会在之后详细介绍。<br><strong>本地方法栈</strong> 本地方法栈执行Native方法时候使用<br><strong>程序计数器</strong> 程序计数器指向下一条字节码的行号，用来实现跳转。</p>
+<h3 id="运行时栈帧结构"><a href="#运行时栈帧结构" class="headerlink" title="运行时栈帧结构"></a>运行时栈帧结构</h3><p><center><br><img src="https://i.imgur.com/vMC9JB4.png" alt=""><br>图3：运行时栈帧结构<br></center><br>如图3所示，虚拟机栈包含了n个栈帧，每个栈帧对应着一个方法，栈顶对应着当前正在执行的方法，在一个栈帧中含有4个主要的域：局部变量表，操作栈，动态链接，返回地址。</p>
+<ul>
+<li>局部变量表，用于存放方法参数和方法内部定义的局部变量</li>
+<li>操作数栈，用于字节码指令操作数的写入和提取，例如iadd指令运行时会弹出操作数栈的两个数相加，并把结果压入栈中</li>
+<li>动态连接，用于支持方法调用过程中的动态连接</li>
+<li>方法返回地址<br>所以完整的故事是这样的，在我们调用Java命令运行Java主类的main函数导致Java主类被加载到Java虚拟机的方法区，然后Java虚拟机栈中装入Java main函数的栈帧，程序计数器记录main函数的第一行指令，根据指令进行操作数栈压栈操作或者分配本地变量表，将指令交给JVM执行引擎执行相应的操作，或者遇到其他的方法调用，引入更多的方法栈帧，重复以上操作。</li>
+</ul>
+<p>另外还有一个问题，对于方法调用，当遇到invokevirtual指令时有个分派的问题，分派有两种分派方法静态分派和动态分派，静态分派的典型例子是重载，在Parent-Sub关系的方法参数上，如果Parent p=new Sub()的情况，method（p）只会根据Parent类型进行方法调用。动态分派的典型例子是重写，如果在p.method()的情况只会根据p的实际类型进行方法调用。</p>
+<h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><p>Java和C++之间最大的差别是Java有自动的垃圾回收机制，理解Java的垃圾回收机制只需要回答一下三个问题。</p>
+<ul>
+<li>哪些内存需要回收？</li>
+</ul>
+<p>Java垃圾回收的主要区域是堆区，主流的实现中是通过<strong>可达性</strong>分析来判断对象是否存活，搜索的路径是通过GC Roots对象作为起始点，GC Roots包括虚拟机栈中引用的对象，方法去中类静态属性引用的对象，常量引用的对象。</p>
+<ul>
+<li><p>什么时候进行垃圾回收？<br>新生代没有空间的时候将会发生GC，新生代的GC称为Minor GC,在15次没有被回收的对象移到老年代，如果老年代也没有足够的空间容纳对象，将会发起一次Full GC.</p>
+</li>
+<li><p>采用什么方法回收垃圾对象？</p>
+</li>
+</ul>
+<p>有四种常用算法回收垃圾对象：</p>
+<ul>
+<li>标记清除算法</li>
+<li>复制算法</li>
+<li>标记整理算法</li>
+<li>分代收集算法，将堆划分为新生代和老年代，新生代一般使用复制算法，老年代使用标记清除算法或者标记整理算法</li>
+</ul>
+<h2 id="对象的创建和内存布局"><a href="#对象的创建和内存布局" class="headerlink" title="对象的创建和内存布局"></a>对象的创建和内存布局</h2><h3 id="对象的创建"><a href="#对象的创建" class="headerlink" title="对象的创建"></a>对象的创建</h3><p>当执行new指令创建新的对象时，会依次做如下步骤</p>
+<ol>
+<li>检查类是否被加载到方法区中，如果没有被加载，执行类的加载过程</li>
+<li>在堆中为新生对象分配内存，用指针碰撞或者空闲列表方式</li>
+<li>初始化内存为零值，设置对象头信息</li>
+<li>执行<init>构造方法</init></li>
+</ol>
+<h3 id="对象的内存分布"><a href="#对象的内存分布" class="headerlink" title="对象的内存分布"></a>对象的内存分布</h3><p>对象在内存中分为3块：对象头、实例数据和对齐填充<br>对象头存储对象自身的运行时数据，例如哈希码，GC分布年龄等等。可能会包含类型指针，指向类元数据。<br>实例数据包含对象的实例字段等等。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://gudong.name/2017/04/24/jvm_oom_gc.html" target="_blank" rel="external">漫谈 JVM 内存分代、垃圾回收</a><br><a href="http://blog.csdn.net/zhangjg_blog/article/details/24271275" target="_blank" rel="external">深入理解Java运行时数据区</a><br><a href="http://blog.csdn.net/tjiyu/article/details/53923392" target="_blank" rel="external">Java对象在Java虚拟机中的创建过程</a><br><a href="https://segmentfault.com/a/1190000003871183#articleHeader2" target="_blank" rel="external">Java虚拟机 ：Java字节码指令的执行</a></p>
+<p><center><br><img src="https://i.imgur.com/BgJlhs1.jpg" alt=""></center></p>
+
+      
+    </div>
+    
+    
+    
+	
+	
+	<div>
+<link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup"><form action="https://126.us3.list-manage.com/subscribe/post?u=6dc0f11f3e10812c48ba02b6c&amp;id=3c20629afe" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate><div id="mc_embed_signup_scroll"><input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required><div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6dc0f11f3e10812c48ba02b6c_3c20629afe" tabindex="-1" value=""></div><div class="clear"><input type="submit" value="邮件订阅" name="subscribe" id="mc-embedded-subscribe" class="button"></div></div></form></div>
+</div>
+	
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="Wenqi 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java虚拟机/" rel="tag"># Java虚拟机</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/19/深入理解排序算法java版/" rel="next" title="深入理解排序算法java版">
+                <i class="fa fa-chevron-left"></i> 深入理解排序算法java版
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/01/再探Java泛型/" rel="prev" title="再探Java泛型">
+                再探Java泛型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/me.jpg"
+                alt="Wenqi" />
+            
+              <p class="site-author-name" itemprop="name">Wenqi</p>
+              <p class="site-description motion-element" itemprop="description">To do one thing well.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+		  
+		  
+            <div class="feed-link motion-element">
+			  <a href="http://eepurl.com/gxouGP" target="_blank" title="email">Email 订阅</a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/buwenqi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://cn.linkedin.com/in/buwenqi" target="_blank" title="Linkin">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Linkin</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mijack.github.io/" title="Mi&Jack" target="_blank">Mi&Jack</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mengqi92.github.io/" title="MengQi" target="_blank">MengQi</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#将Java程序编译成Class文件"><span class="nav-number">1.</span> <span class="nav-text">将Java程序编译成Class文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载将要运行的类"><span class="nav-number">2.</span> <span class="nav-text">加载将要运行的类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始运行Java程序"><span class="nav-number">3.</span> <span class="nav-text">开始运行Java程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#运行时栈帧结构"><span class="nav-number">3.1.</span> <span class="nav-text">运行时栈帧结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#垃圾回收"><span class="nav-number">4.</span> <span class="nav-text">垃圾回收</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象的创建和内存布局"><span class="nav-number">5.</span> <span class="nav-text">对象的创建和内存布局</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对象的创建"><span class="nav-number">5.1.</span> <span class="nav-text">对象的创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象的内存分布"><span class="nav-number">5.2.</span> <span class="nav-text">对象的内存分布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">6.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wenqi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI',
+        appKey: '12aldjQVARwR70CFQ2qy8SQX',
+        placeholder: '欢迎吐槽！^_^',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("oNExjC02JMs4aQFUDMo6V7Mt-MdYXbMMI", "12aldjQVARwR70CFQ2qy8SQX");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
